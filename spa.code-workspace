@@ -1,0 +1,12 @@
+{
+  "folders": [
+    {
+      "name": "spa",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
+}
