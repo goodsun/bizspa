@@ -1,0 +1,1 @@
+(()=>{window.location.href;var o=window.location.pathname,n=window.location.hostname,a=window.location.search;const t=new URLSearchParams(a);o.split("/"),console.log("host: "+n),console.log("path: "+o);const e=t.get("mode"),l=t.get("lang");console.log(e,l)})();

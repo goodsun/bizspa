@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./public/js",
+    "module": "ESNext" /* Specify what module code is generated. */,
+    "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "strict": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/types/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
