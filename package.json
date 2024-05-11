@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npx webpack; node server.js",
+    "deploy": "npx webpack; aws s3 sync ./public s3://bizendao"
   },
   "keywords": [],
   "author": "",

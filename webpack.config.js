@@ -4,7 +4,6 @@ export default {
   mode: 'production',
   entry: {
     main: './src/main.ts',
-    router: './src/router.ts',
   },
   output: {
     filename: '[name].bundle.js',

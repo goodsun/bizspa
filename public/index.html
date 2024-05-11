@@ -3,17 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <title>SPA FRONT END</title>
-    <link rel="stylesheet" href="./css/reset.css" media="all" />
-    <link rel="stylesheet" href="./css/main.css" media="all" />
-    <link rel="stylesheet" href="./css/modal.css" media="all" />
+    <link rel="stylesheet" href="/css/reset.css" media="all" />
+    <link rel="stylesheet" href="/css/main.css" media="all" />
+    <link rel="stylesheet" href="/css/modal.css" media="all" />
   </head>
   <body>
-    <h1>wallet connect</h1>
-    <button id="connectButton">connect</button>
-    <button id="disconnectButton">disconnect</button>
-    <button id="checkButton">check</button>
-    <div id="status">not connect</div>
+    <section class="headerArea">
+      <h1>SPA FRONT END</h1>
+      <p>
+        <a href="/creators">creators</a>
+        <a href="/tokens">tokens</a>
+        <a href="/admins">admins</a>
+      </p>
+    </section>
+    <section class="mainContainer">
+      <button id="mintButton">mint</button>
+      <button id="makeTbaButton">makeTba</button>
+      <div id="mainContents"></div>
+      <div class="dummyarea"></div>
+    </section>
+    <div id="modalbase" class="modal-container">
+      <div class="modal-body">
+        <div class="modal-content">
+          <p id="modalcontent">SPA FRONT END</p>
+        </div>
+      </div>
+    </div>
+    <section id="footerArea">
+      <p>wallet connect</p>
+      <div>
+        <button id="connectButton">connect</button>
+        <button id="disconnectButton">disconnect</button>
+        <span id="status"> not connectk</spanspan>
+      </div>
+    </section>
   </body>
-  <script src="./js/main.bundle.js"></script>
-  <script src="./js/router.bundle.js"></script>
+  <script src="/js/main.bundle.js"></script>
 </html>

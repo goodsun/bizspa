@@ -1,158 +1,216 @@
-body { 
-	background-color: #000000;
-	padding: 0;
-	color:#888;
+body {
+  background-color: #000000;
+  padding: 0;
+  color: #888;
 }
 .linknum {
-	color:#666;
-	font-size:15px;
+  color: #666;
+  font-size: 15px;
 }
 .noview {
-	color:#000;
-	width:1px;
-	height:1px;
-	overflow: hidden;
+  color: #000;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 h1 {
-	font-size:40px;
-	color: #cccccc;
-	span {
-		color: #990000;
-	}
+  font-size: 40px;
+  color: #cccccc;
+  span {
+    color: #990000;
+  }
 }
 h2 {
-	font-size:80px;
-	color: #ffffff;
-	margin: 10px;
+  font-size: 50px;
+  color: #ffffff;
+  margin: 10px;
 }
 h3 {
-	font-size:40px;
-	color: #ffffff;
-	margin: 10px;
+  font-size: 40px;
+  color: #ffffff;
+  margin: 10px;
 }
 p {
-	color: #9999bb;
-	text-decoration: none;
+  color: #9999bb;
+  text-decoration: none;
 }
 span {
-	color: #bbbbbb;
-	text-decoration: none;
+  color: #bbbbbb;
+  text-decoration: none;
 }
 a {
-	color: #9999bb;
-	text-decoration: none;
+  color: #9999bb;
+  text-decoration: none;
 }
 .lang {
-	margin: 0 15px
+  margin: 0 15px;
 }
 .list {
-	font-size:50px;
-	color: #FFFFFF;
-	text-decoration: none;
-	text-align: center;
+  font-size: 50px;
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
 }
 .button {
-	margin:20px 2px;
-	padding:20px ;
-	width:48%;
-	font-size:50px;
-	color: #666666;
-	background-color: #BBBBBB;
-	border-radius: 20px;
+  margin: 20px 2px;
+  padding: 20px;
+  width: 48%;
+  font-size: 50px;
+  color: #666666;
+  background-color: #bbbbbb;
+  border-radius: 20px;
 }
 .selbutton {
-	margin:20px 2px;
-	padding:20px ;
-	width:32%;
-	font-size:50px;
-	background-color: #BBBBBB;
-	border-radius: 20px;
+  margin: 20px 2px;
+  padding: 20px;
+  width: 32%;
+  font-size: 50px;
+  background-color: #bbbbbb;
+  border-radius: 20px;
 }
-.menu-base{
-	position: fixed;
-	top: 0;
-	left: 0;
-	width:100%;
-	height:80px;
-	background-color: #111111;
+.menu-base {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #111111;
 }
-.title-area{
-	position: absolute;
-	top: 15px;
-	left: 20px; 
-	color: #AAAAAA;
-	font-size:40px;
-	font-weight:bold;
+.title-area {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  color: #aaaaaa;
+  font-size: 40px;
+  font-weight: bold;
 }
-.menu-area{
-	position: absolute;
-	top: 15px;
-	right: 20px; 
-	color: #64a193;
-	font-size:40px;
-	font-weight:bold;
+.menu-area {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  color: #64a193;
+  font-size: 40px;
+  font-weight: bold;
 }
-.main-content{
-	width:100%;
-	margin:100px 20px 0px 20px;
+.main-content {
+  width: 100%;
+  margin: 100px 20px 0px 20px;
 }
-.controller-adv{
-	position: fixed;
-	bottom: 120px;
-	left: 0; 
-	width:100%;
-	height:120px;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
+.controller-adv {
+  position: fixed;
+  bottom: 120px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
-.controller-base{
-	position: fixed;
-	bottom: 0;
-	left: 0; 
-	width:100%;
-	height:120px;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
+.controller-base {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
-.controller-area{
-	flex: 1;
-	padding: 30px;
-	text-align: center; 
-	background-color: #111111;
-	color: #64a193;
-	font-size:50px;
-	font-weight:bold;
+.controller-area {
+  flex: 1;
+  padding: 30px;
+  text-align: center;
+  background-color: #111111;
+  color: #64a193;
+  font-size: 50px;
+  font-weight: bold;
 }
-.menutitle{
-	color: #666666;
+#footerArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+  width: 100%;
+  height: 80px;
 }
-.sectionlink{
-	color: #64a193;
-	margin-right:20px;
+.menutitle {
+  color: #666666;
 }
-.dummyarea{
-	display: block;
-	width:100%;
-	height:240px;
+.sectionlink {
+  color: #64a193;
+  margin-right: 20px;
+}
+.dummyarea {
+  display: block;
+  width: 100%;
+  height: 80px;
 }
 .wordlink {
-	color: #64a193;
+  color: #64a193;
 }
 .fail {
-	color: #8888FF;
+  color: #8888ff;
 }
 .seccess {
-	color: #FF8888;
+  color: #ff8888;
 }
 .clear {
-	color: #666666;
+  color: #666666;
 }
 .master {
-	color: #AA0000;
+  color: #aa0000;
 }
 .rev {
-	color: #0000AA;
+  color: #0000aa;
+}
+.childNftArea {
+  width: 100%;
+}
+.childNft {
+  float: left;
+  margin-right: 10px;
+  width: 170px;
+  background: #222;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px #274d7b3d;
+  box-sizing: border-box;
+  height: 220px;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  position: relative;
+  text-align: left;
+  text-overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  width: 170;
+}
+.titleThumb {
+  font-size: 13px;
+  font-weight: bold;
+  height: 2em;
+  line-height: 1em;
+  overflow: scroll;
+}
+.nftImage {
+  width: 750px;
+}
+.nftThumbSquare {
+  width: 150px; /* 正方形のサイズを指定 */
+  height: 150px;
+  overflow: hidden; /* 不要な部分を切り捨てる */
+  position: relative; /* 子要素を相対的に配置するために親要素にpositionを指定 */
 }
 
+.nftThumb {
+  width: auto; /* 親要素に合わせて画像の幅を100%にする */
+  height: 100%; /* アスペクト比を維持するために高さを自動で調整 */
+  display: block; /* 余分なスペースを削除するために画像をブロック要素として表示 */
+  position: absolute; /* 画像を相対的に配置 */
+  top: 50%; /* 上端を親要素の50%の位置に配置 */
+  left: 50%; /* 左端を親要素の50%の位置に配置 */
+  transform: translate(-50%, -50%); /* 画像を中央に移動 */
+  object-fit: cover; /* 画像が親要素にフィットするように調整 */
+}
+
+.contractLinkList {
+  margin: 10px 30px;
+}
