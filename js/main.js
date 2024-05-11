@@ -1,14 +1,18 @@
+import { ethers } from "./vendor/ethers.min.js";
+
 const connectButton = document.getElementById('connectButton');
 const disconnectButton = document.getElementById('disconnectButton');
+const checkButton = document.getElementById('checkButton');
+
 const status = document.getElementById('status');
 let connected = null;
 connectButton.addEventListener('click', async () => {
     if (typeof window.ethereum !== 'undefined') {
         try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const provider = new ethers.BrowserProvider(window.ethereum);
             await provider.send("eth_requestAccounts", []);
-
-            const signer = provider.getSigner();
+            
+            const signer = await provider.getSigner();
             connected = await signer.getAddress();
 
             status.innerHTML = `connected: ${connected}`;
@@ -28,13 +32,13 @@ disconnectButton.addEventListener('click', async () => {
   }
 });
 
-const check = () => {
+checkButton.addEventListener('click', async () => {
   if (connected){
     alert('connected' + connected);
   }else{
     alert('not connected'); 
   }
-}
+});
 
 const updateDisplay = () => {
   if (connected){
