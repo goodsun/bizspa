@@ -21,17 +21,22 @@ h1 {
   }
 }
 h2 {
-  font-size: 50px;
-  color: #ffffff;
+  font-size: 35px;
+  color: #dddddd;
   margin: 10px;
 }
 h3 {
-  font-size: 40px;
-  color: #ffffff;
+  font-size: 20px;
+  color: #cccccc;
+  margin: 10px;
+}
+h4 {
+  font-size: 20px;
+  color: #99bb99;
   margin: 10px;
 }
 p {
-  color: #9999bb;
+  color: #cccccc;
   text-decoration: none;
 }
 span {
@@ -213,4 +218,8 @@ a {
 
 .contractLinkList {
   margin: 10px 30px;
+}
+
+.floatClear {
+  clear: both;
 }

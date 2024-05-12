@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
-import { fetchData } from "../common/util";
 
 export const getToken = async (
   method: string,
@@ -42,7 +41,7 @@ export const getToken = async (
       const result = await contract.tokenURI(id).then((response) => {
         return response;
       });
-      return await fetchData(result);
+      return result;
     } else if (method == "balanceOf") {
       const result = await contract.balanceOf(id).then((response) => {
         return response;

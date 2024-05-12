@@ -1,3 +1,6 @@
+export const getLocalTime = () => {
+  return new Date().toLocaleTimeString();
+};
 export const sleep = (waitTime) => {
   if (waitTime < 1) {
     return;
@@ -9,6 +12,7 @@ export const sleep = (waitTime) => {
 export const fetchData = async (Url) => {
   // IPSFの場合URLを置換
   Url = Url.replace("ipfs://", "https://ipfs.io/ipfs/");
+  console.log(getLocalTime() + " fetchData:" + Url);
   try {
     const response = await fetch(Url);
     if (!response.ok) {
