@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { router } from "./module/common/router";
 import { manager } from "./module/connect/manager";
 import { getToken } from "./module/connect/getToken";
+import { getTba } from "./module/connect/getTba";
 
 const connectButton = document.getElementById("connectButton");
 const disconnectButton = document.getElementById("disconnectButton");
@@ -189,6 +190,16 @@ const setToken = async () => {
   const result = await getToken("tokenURI", router.params[2], router.params[3]);
   const owner = await getToken("ownerOf", router.params[2], router.params[3]);
   const caName = await getToken("name", router.params[2], router.params[3]);
+  const tokenBoundAccount = await getTba(
+    "0x63c8A3536E4A647D48fC0076D442e3243f7e773b", // contractAddress: string,
+    "0xa8a05744C04c7AD0D31Fcee368aC18040832F1c1", // implementation: string,
+    "137", //chainId: string,
+    router.params[2], //tokenContract: string,
+    router.params[3], // tokenId: string,
+    "1" // salt: string
+  );
+  console.log("TODO: active get params|tba address:" + tokenBoundAccount);
+
   const divElement = document.createElement("div");
 
   // ----------------------------------------
@@ -237,6 +248,13 @@ const setToken = async () => {
   divElement.appendChild(imgElement);
 
   mainContents.appendChild(divElement);
+  const divTbaElement = document.createElement("div");
+  divTbaElement.classList.add("nftImage");
+  mainContents.appendChild(divTbaElement);
+
+  const tbaInfoElement = document.createElement("p");
+  tbaInfoElement.textContent = "TokenBoundAccount : " + tokenBoundAccount;
+  divTbaElement.appendChild(tbaInfoElement);
 };
 
 const setTokens = async () => {
