@@ -1,17 +1,22 @@
 import { manager } from "../connect/manager";
 import { getToken } from "../connect/getToken";
-import { fetchData, getLocalTime } from "../common/util";
+import { getOwn } from "../connect/getOwn";
+import utils from "../common/util";
+//import { fetchData, getLocalTime } from "../common/util";
 const mainContents = document.getElementById("mainContents");
 
 export const displayToken = async (
   displayTokenElement,
   ca,
   id,
-  tokenBoundAccount
+  tokenBoundAccount,
+  tbaOwner
 ) => {
   console.log("displayToken:" + ca + "/" + id);
   const divElement = document.createElement("div");
   const tokenUri = await getToken("tokenURI", ca, id);
+  const caName = await getToken("name", ca, id);
+  const owner = await getToken("ownerOf", ca, id);
   divElement.classList.add("tokenUri_" + tokenUri);
   displayTokenElement.appendChild(divElement);
 
@@ -20,7 +25,18 @@ export const displayToken = async (
   displayTokenElement.appendChild(divTbaElement);
 
   const tbaInfoElement = document.createElement("p");
-  tbaInfoElement.textContent = "TokenBoundAccount : " + tokenBoundAccount;
+
+  if (tbaOwner) {
+    tbaInfoElement.innerHTML =
+      "tokenBoundAccount: <a href='/assets/" +
+      tokenBoundAccount +
+      "'>" +
+      tokenBoundAccount +
+      "</a>";
+  } else {
+    console.log("TBA未発行 : TBAオーナーならここでTBA発行できる");
+  }
+
   divTbaElement.appendChild(tbaInfoElement);
 
   const pElement = document.createElement("p");
@@ -35,7 +51,6 @@ export const displayToken = async (
   spanSpace.textContent = " | ";
   pElement.appendChild(spanSpace);
 
-  const caName = await getToken("name", ca, id);
   var caLink = document.createElement("a");
   caLink.href = "/tokens/" + ca;
   caLink.textContent = caName;
@@ -45,8 +60,8 @@ export const displayToken = async (
   spanSpace2.textContent = " | ";
   pElement.appendChild(spanSpace2);
 
-  console.log(getLocalTime() + " 遅延実行開始 " + tokenUri);
-  fetchData(tokenUri).then(async (result) => {
+  console.log(utils.getLocalTime() + " 遅延実行開始 " + tokenUri);
+  utils.fetchData(tokenUri).then(async (result) => {
     const tokenName = document.createElement("span");
     tokenName.textContent = result["name"];
     pElement.appendChild(tokenName);
@@ -59,16 +74,69 @@ export const displayToken = async (
     pDescriptionElement.textContent = result["description"];
     divElement.appendChild(pDescriptionElement);
 
-    const owner = await getToken("ownerOf", ca, id);
     const pOwnerElement = document.createElement("p");
-    pOwnerElement.textContent = "owner: " + owner;
+    pOwnerElement.innerHTML =
+      "owner: <a href='/assets/" + owner + "'>" + owner + "</a>";
     divElement.appendChild(pOwnerElement);
 
     const imgElement = document.createElement("img");
     imgElement.classList.add("nftImage");
     imgElement.src = result["image"];
     divElement.appendChild(imgElement);
-    console.log(getLocalTime() + " 遅延実行完了 " + tokenUri);
+    console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
+  });
+};
+
+export const displayOwnTokens = async (
+  tokensElement,
+  ca,
+  eoa,
+  parentElement
+) => {
+  var newArea = document.createElement("div");
+  newArea.classList.add("childNftArea");
+  newArea.id = "child_nft_area_" + ca;
+  tokensElement.appendChild(newArea);
+  const floatClear = document.createElement("div");
+  floatClear.classList.add("floatClear");
+  tokensElement.appendChild(floatClear);
+
+  getOwn(eoa, ca).then(async (result) => {
+    if (result.length > 0) {
+      for (const key in result) {
+        parentElement.style.display = "block";
+        tokensElement.style.display = "block";
+        const tokenData = result[key];
+        var childNftDiv = document.createElement("div");
+        childNftDiv.classList.add("childNft");
+        childNftDiv.id = "token_" + ca + "_" + tokenData.tokenId;
+        document
+          .getElementById("child_nft_area_" + ca)
+          .appendChild(childNftDiv);
+
+        utils.fetchData(tokenData.tokenURI).then((nftinfo) => {
+          var newLink = document.createElement("a");
+          newLink.href = "/tokens/" + ca + "/" + tokenData.tokenId;
+          var newTitle = document.createElement("h3");
+          newTitle.classList.add("titleThumb");
+          newTitle.textContent = nftinfo["name"];
+          newLink.appendChild(newTitle);
+          var squareImg = document.createElement("div");
+          squareImg.classList.add("nftThumbSquare");
+          var newImage = document.createElement("img");
+          newImage.src = nftinfo["image"];
+          newImage.classList.add("nftThumb");
+          squareImg.appendChild(newImage);
+          newLink.appendChild(squareImg);
+          document
+            .getElementById("token_" + ca + "_" + tokenData.tokenId)
+            .appendChild(newLink);
+          console.log(
+            utils.getLocalTime() + " 遅延実行完了" + tokenData.tokenURI
+          );
+        });
+      }
+    }
   });
 };
 
@@ -91,7 +159,7 @@ export const displayTokens = async (tokensElement, ca, filter) => {
     document.getElementById("child_nft_area_" + ca).appendChild(childNftDiv);
 
     getToken("tokenURI", ca, i).then(async (tokenUri) => {
-      const newLink = await fetchData(tokenUri).then((nftinfo) => {
+      const newLink = await utils.fetchData(tokenUri).then((nftinfo) => {
         var newLink = document.createElement("a");
         newLink.href = "/tokens/" + ca + "/" + i;
         var newTitle = document.createElement("h3");
@@ -109,15 +177,13 @@ export const displayTokens = async (tokensElement, ca, filter) => {
       });
 
       document.getElementById("token_" + ca + "_" + i).appendChild(newLink);
-      console.log(getLocalTime() + " 遅延実行完了" + tokenUri);
+      console.log(utils.getLocalTime() + " 遅延実行完了" + tokenUri);
     });
   }
 };
 
 export const displayManagedData = async (type, title, filter) => {
   const result = await manager(type);
-  console.log("manage type:" + type);
-  console.dir(result);
   const header = document.createElement("h2");
   header.textContent = title;
   mainContents.appendChild(header);
@@ -138,6 +204,68 @@ export const displayManagedData = async (type, title, filter) => {
       dataList.appendChild(link);
       const lineBreak = document.createElement("br");
       dataList.appendChild(lineBreak);
+    }
+  }
+};
+
+export const displayOwns = async (parentElement, result, eoa) => {
+  console.log(utils.getLocalTime() + " DisplayOwns:開始");
+  const nftArea = document.createElement("div");
+  nftArea.classList.add("nftContractArea");
+  nftArea.style.display = "none";
+  const nftHeader = document.createElement("h3");
+  nftHeader.textContent = "NFT COLLECTIONS";
+  const nftList = document.createElement("div");
+  nftList.style.display = "none";
+  nftList.classList.add("contractLinkList");
+  nftArea.appendChild(nftHeader);
+  nftArea.appendChild(nftList);
+  parentElement.appendChild(nftArea);
+
+  const nftfloatClear = document.createElement("div");
+  nftfloatClear.classList.add("floatClear");
+  parentElement.appendChild(nftfloatClear);
+
+  const sbtArea = document.createElement("div");
+  sbtArea.style.display = "none";
+  sbtArea.classList.add("sbtContractArea");
+  const sbtHeader = document.createElement("h3");
+  sbtHeader.textContent = "SBT COLLECTIONS";
+  const sbtList = document.createElement("div");
+  sbtList.style.display = "none";
+  sbtList.classList.add("contractLinkList");
+  parentElement.appendChild(sbtList);
+  sbtArea.appendChild(sbtHeader);
+  sbtArea.appendChild(sbtList);
+  parentElement.appendChild(sbtArea);
+
+  const sbtfloatClear = document.createElement("div");
+  sbtfloatClear.classList.add("floatClear");
+  parentElement.appendChild(sbtfloatClear);
+
+  for (const key in result) {
+    if (!result[key][3]) {
+      console.log(utils.getLocalTime() + "非表示判定" + result[key]);
+    } else if (result[key][2] === "nft") {
+      console.log(utils.getLocalTime() + "NFT add:" + result[key][1]);
+      // nftArea.style.display = "block";
+      const link = document.createElement("a");
+      link.href = "/tokens/" + result[key][0];
+      link.textContent = result[key][1];
+      nftList.appendChild(link);
+      displayOwnTokens(nftList, result[key][0], eoa, nftArea);
+      const floatClear = document.createElement("div");
+      floatClear.classList.add("floatClear");
+    } else if (result[key][2] === "sbt") {
+      console.log(utils.getLocalTime() + "SBT add:" + result[key][1]);
+      // sbtArea.style.display = "block";
+      const link = document.createElement("a");
+      link.href = "/tokens/" + result[key][0];
+      link.textContent = result[key][1];
+      sbtList.appendChild(link);
+      displayOwnTokens(sbtList, result[key][0], eoa, sbtArea);
+      const floatClear = document.createElement("div");
+      floatClear.classList.add("floatClear");
     }
   }
 };
@@ -175,8 +303,10 @@ export const displayTokenContracts = async (result, filter) => {
   mainContents.appendChild(sbtfloatClear);
 
   for (const key in result) {
-    if (!filter || filter(result[key])) {
-      if (result[key][2] === "nft") {
+    filteringJudge(result[key], filter).then((judge) => {
+      if (!judge) {
+        console.log("非表示判定" + result[key]);
+      } else if (result[key][2] === "nft") {
         console.log("NFT add:" + result[key][1]);
         nftArea.style.display = "block";
         const link = document.createElement("a");
@@ -197,7 +327,7 @@ export const displayTokenContracts = async (result, filter) => {
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
       }
-    }
+    });
   }
 };
 
@@ -226,8 +356,10 @@ export const displayAssets = async (result, filter) => {
   mainContents.appendChild(sbtArea);
 
   for (const key in result) {
-    if (!filter || filter(result[key])) {
-      if (result[key][2] === "nft") {
+    filteringJudge(result[key], filter).then((judge) => {
+      if (!judge) {
+        console.log("非表示判定" + result[key]);
+      } else if (result[key][2] === "nft") {
         nftArea.style.display = "block";
         const dataList = document.createElement("div");
         dataList.classList.add("tokenLinkList");
@@ -260,6 +392,15 @@ export const displayAssets = async (result, filter) => {
         floatClear.classList.add("floatClear");
         divAssetList.appendChild(floatClear);
       }
-    }
+    });
   }
+};
+
+const filteringJudge = async (target, filter: Function | false) => {
+  if (!filter) {
+    return true;
+  } else if (filter(target)) {
+    return true;
+  }
+  return false;
 };

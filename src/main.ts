@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { router } from "./module/common/router";
-import { fetchData, getLocalTime } from "./module/common/util";
 import { manager } from "./module/connect/manager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
@@ -10,6 +9,7 @@ import {
   displayTokenContracts,
   displayTokens,
   displayToken,
+  displayOwns,
 } from "./module/snipet/display";
 
 const connectButton = document.getElementById("connectButton");
@@ -95,6 +95,53 @@ const setAdmins = async () => {
   await displayManagedData("admins", "Admins", false);
 };
 
+const setOwner = async (eoa) => {
+  const divOwnerElement = document.createElement("div");
+  divOwnerElement.classList.add("ownerArea");
+  mainContents.appendChild(divOwnerElement);
+
+  const ownerTitle = document.createElement("h2");
+  ownerTitle.textContent = "Owner Info";
+  divOwnerElement.appendChild(ownerTitle);
+
+  const pElement = document.createElement("p");
+  pElement.textContent = "EOA : " + eoa;
+  divOwnerElement.appendChild(pElement);
+
+  const tbaOwner = await getTba.checkOwner(eoa);
+  const tbaToken = await getTba.checkToken(eoa);
+  if (tbaOwner) {
+    pElement.textContent = "TokenBoundAccount : " + eoa;
+    const tbaOwnerElement = document.createElement("p");
+    tbaOwnerElement.innerHTML =
+      "TBA OWNER: <a href='/assets/" + tbaOwner + "'>" + tbaOwner + "</a>";
+    divOwnerElement.appendChild(tbaOwnerElement);
+    const tbaTokenElement = document.createElement("p");
+    tbaTokenElement.innerHTML =
+      "TOKEN: <a href='/tokens/" +
+      tbaToken[1] +
+      "/" +
+      tbaToken[2] +
+      "'>" +
+      tbaToken[1] +
+      "/" +
+      tbaToken[2] +
+      "</a>";
+    divOwnerElement.appendChild(tbaTokenElement);
+    console.dir(tbaToken);
+  }
+  setOwns(eoa);
+};
+
+const setOwns = async (eoa) => {
+  const divAssetElement = document.createElement("div");
+  divAssetElement.classList.add("assetArea");
+  mainContents.appendChild(divAssetElement);
+
+  const result = await manager("contracts");
+  displayOwns(divAssetElement, result, eoa);
+};
+
 const setAssets = async (filter) => {
   const result = await manager("contracts");
   displayAssets(result, filter);
@@ -107,31 +154,32 @@ const setTokenContracts = async (filter) => {
 
 const setOwnTokenContracts = async (filter) => {
   const allList = await manager("contracts");
-  let result = [];
+  //displayTokenContracts(allList, filter);
+  console.log("ここですべて判定する");
   for (const key in allList) {
     if (allList[key][2] == "nft") {
-      const owner = await getToken("getInfo", allList[key][0], "").then(
-        (response) => {
-          return response[0];
+      getToken("getInfo", allList[key][0], "").then((response) => {
+        if (response[0] == router.params[2]) {
+          console.dir("owner :" + router.params[2]);
+          displayTokenContracts([allList[key]], filter);
         }
-      );
-
-      if (owner == router.params[2]) {
-        console.dir(owner + ":" + router.params[2]);
-        result.push(allList[key]);
-      }
+      });
     }
   }
-  displayTokenContracts(result, filter);
 };
 
 const setToken = async () => {
   const params = router.params;
   const tokenBoundAccount = await getTbaInfo();
+  const tbaOwner = await getTba.checkOwner(tokenBoundAccount);
   const divElement = document.createElement("div");
   divElement.classList.add("nftArea");
   mainContents.appendChild(divElement);
-  displayToken(divElement, params[2], params[3], tokenBoundAccount);
+  displayToken(divElement, params[2], params[3], tokenBoundAccount, tbaOwner);
+  if (tbaOwner) {
+    console.dir("TBAがセットされていればASSET取得");
+    setOwns(tokenBoundAccount);
+  }
 };
 
 const setTokens = async () => {
@@ -165,15 +213,14 @@ const setTokens = async () => {
 };
 
 const getTbaInfo = async () => {
-  const tokenBoundAccount = await getTba(
-    "0x63c8A3536E4A647D48fC0076D442e3243f7e773b", // contractAddress: string,
-    "0xa8a05744C04c7AD0D31Fcee368aC18040832F1c1", // implementation: string,
+  const tokenBoundAccount = await getTba.getAddress(
+    "0x63c8A3536E4A647D48fC0076D442e3243f7e773b", // contractAddress(registContract),
+    "0xa8a05744C04c7AD0D31Fcee368aC18040832F1c1", // implementation(accountContract),
     "137", //chainId: string,
     router.params[2], //tokenContract: string,
     router.params[3], // tokenId: string,
     "1" // salt: string
   );
-  console.log("TODO: active get params|tba address:" + tokenBoundAccount);
   return tokenBoundAccount;
 };
 
@@ -216,6 +263,8 @@ const checkRoute = () => {
     setCreators();
   } else if (param1 === "admins") {
     setAdmins();
+  } else if (param1 === "assets" && param2) {
+    setOwner(param2);
   } else if (param1 === "assets") {
     setAssets((filter) => {
       return filter[3] == true;

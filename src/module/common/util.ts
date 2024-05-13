@@ -1,6 +1,7 @@
 export const getLocalTime = () => {
-  return new Date().toLocaleTimeString();
+  return new Date().toLocaleTimeString() + "." + new Date().getMilliseconds();
 };
+
 export const sleep = (waitTime) => {
   if (waitTime < 1) {
     return;
@@ -23,3 +24,17 @@ export const fetchData = async (Url) => {
     console.error("There was a problem with the fetch operation:", error);
   }
 };
+
+// アドレスが同値かどうかを判定する関数
+export const isAddressesEqual = (address1: string, address2: string) => {
+  return address1.toLowerCase() === address2.toLowerCase();
+};
+
+const utils = {
+  getLocalTime,
+  sleep,
+  fetchData,
+  isAddressesEqual,
+};
+
+export default utils;
