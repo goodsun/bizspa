@@ -1,9 +1,10 @@
 import { ethers } from "ethers";
+import { CONST } from "./module/common/const";
 import { router } from "./module/common/router";
 import { getManager } from "./module/connect/getManager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
-import { setManager } from "./module/connect/setManager";
+import managerSnipet from "./module/snipet/manager";
 import {
   displayAssets,
   displayManagedData,
@@ -13,6 +14,7 @@ import {
   displayOwns,
 } from "./module/snipet/display";
 
+document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 const connectButton = document.getElementById("connectButton");
 const disconnectButton = document.getElementById("disconnectButton");
 const mintButton = document.getElementById("mintButton");
@@ -93,8 +95,6 @@ const setCreator = async () => {
 };
 
 const setAdmins = async () => {
-  const result = await setManager("contracts");
-  console.dir(result);
   await displayManagedData("admins", "Admins", false);
 };
 
@@ -217,12 +217,12 @@ const setTokens = async () => {
 
 const getTbaInfo = async () => {
   const tokenBoundAccount = await getTba.getAddress(
-    "0x63c8A3536E4A647D48fC0076D442e3243f7e773b", // contractAddress(registContract),
-    "0xa8a05744C04c7AD0D31Fcee368aC18040832F1c1", // implementation(accountContract),
-    "137", //chainId: string,
+    CONST.TBA_REGIST_CA,
+    CONST.TBA_ACCOUNT_CA,
+    CONST.BC_NETWORK_ID,
     router.params[2], //tokenContract: string,
     router.params[3], // tokenId: string,
-    "1" // salt: string
+    CONST.TBA_SALT
   );
   return tokenBoundAccount;
 };
@@ -257,6 +257,8 @@ const checkRoute = () => {
   const param1 = params[1];
   const param2 = params[2];
   const param3 = params[3];
+  const param4 = params[4];
+  const param5 = params[5];
 
   if (param1 === "contract") {
     setContracts();
@@ -264,6 +266,14 @@ const checkRoute = () => {
     setCreator();
   } else if (param1 === "creators") {
     setCreators();
+  } else if (param1 === "admins" && param2 && param3 && param4 && param5) {
+    managerSnipet.control4Set(param2, param3, param4, param5);
+  } else if (param1 === "admins" && param2 && param3 && param4) {
+    managerSnipet.control3Set(param2, param3, param4);
+  } else if (param1 === "admins" && param2 && param3) {
+    managerSnipet.control2Set(param2, param3);
+  } else if (param1 === "admins" && param2) {
+    managerSnipet.control1Set(param2);
   } else if (param1 === "admins") {
     setAdmins();
   } else if (param1 === "assets" && param2) {

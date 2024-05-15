@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 
-export const setManager = async (mode: string, input: Array<T>) => {
+export const setManager = async (mode: string, input?: any) => {
   const abi = ABIS.manager;
   const provider = new ethers.BrowserProvider(window.ethereum);
   const contract = await provider.getSigner().then((signer) => {
@@ -10,73 +10,73 @@ export const setManager = async (mode: string, input: Array<T>) => {
   });
 
   try {
-    if (mode == "getAllContracts") {
+    if (mode == "contracts") {
       const result = await contract.getAllContracts().then((response) => {
         return response;
       });
       return arrayPivot(result);
-    } else if (mode == "getAllCreators") {
+    } else if (mode == "creators") {
       const result = await contract.getAllCreators().then((response) => {
         return response;
       });
       return arrayPivot(result);
-    } else if (mode == "getAdmins") {
+    } else if (mode == "getadmins") {
       const result = await contract.getAdmins().then((response) => {
         return response;
       });
       return arrayCheck(result);
-    } else if (mode == "setAdmin") {
+    } else if (mode == "setadmin") {
       const result = await contract.setAdmin(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "delAdmin") {
+    } else if (mode == "deladmin") {
       const result = await contract.delAdmin(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "checkUser") {
+    } else if (mode == "checkuser") {
       const result = await contract.checkUser().then((response) => {
         return response;
       });
       return result;
-    } else if (mode == "hiddenCreator") {
+    } else if (mode == "hiddencreator") {
       const result = await contract.hiddenCreator(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "publicCreator") {
+    } else if (mode == "publiccreator") {
       const result = await contract.publicCreator(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "setCreator") {
+    } else if (mode == "setcreator") {
       const result = await contract
         .setCreator(input[0], input[1], input[2])
         .then((response) => {
           return response;
         });
-    } else if (mode == "setCreatorInfo") {
+    } else if (mode == "setcreatorinfo") {
       const result = await contract
         .setCreatorInfo(input[0], input[1], input[2])
         .then((response) => {
           return response;
         });
-    } else if (mode == "hiddenContract") {
+    } else if (mode == "hiddencontract") {
       const result = await contract
         .hiddenContract(input[0])
         .then((response) => {
           return response;
         });
-    } else if (mode == "publicContract") {
+    } else if (mode == "publiccontract") {
       const result = await contract
         .publicContract(input[0])
         .then((response) => {
           return response;
         });
-    } else if (mode == "setContract") {
+    } else if (mode == "setcontract") {
       const result = await contract
         .setContract(input[0], input[1], input[2])
         .then((response) => {
           return response;
         });
-    } else if (mode == "setContractInfo") {
+    } else if (mode == "setcontractinfo") {
       const result = await contract
         .setContractInfo(input[0], input[1], input[2])
         .then((response) => {

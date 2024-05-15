@@ -1,0 +1,9 @@
+export const CONST = {
+  HEADER_TITLE: "BONSOLEIL SPA FOR DAO",
+  RPC_URL: "https://polygon-rpc.com",
+  BC_NETWORK_ID: "137",
+  MANAGER_CA: "0xB8e8Cf4BaE04845CaB21277F6bCA7AdB15622460",
+  TBA_REGIST_CA: "0x63c8A3536E4A647D48fC0076D442e3243f7e773b", // contractAddress(registContract),
+  TBA_ACCOUNT_CA: "0xa8a05744C04c7AD0D31Fcee368aC18040832F1c1", // implementation(accountContract),
+  TBA_SALT: "1",
+};

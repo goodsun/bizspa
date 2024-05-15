@@ -1,0 +1,9 @@
+export const CONST = {
+  HEADER_TITLE: "DEVELOP SPA FOR DAO",
+  RPC_URL: "https://dao.bon-soleil.com:8080",
+  BC_NETWORK_ID: "21201",
+  MANAGER_CA: "0x7283DE15BE6Ac39cf0286760Fb6892d65F6eB6d9",
+  TBA_REGIST_CA: "", // contractAddress(registContract),
+  TBA_ACCOUNT_CA: "", // implementation(accountContract),
+  TBA_SALT: "1",
+};

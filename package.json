@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "npx webpack; node server.js",
-    "deploy": "npx webpack; aws s3 sync ./public s3://bizendao"
+    "local": "cp src/settings/const.dev src/module/common/const.ts;npx webpack; node server.js",
+    "dev": "cp src/settings/const.dev src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/goodsun.tokyo/dao/; scp ./public/.htaccess bonsoleil:web/goodsun.tokyo/dao/",
+    "deploy": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; aws s3 sync ./public s3://bizendao"
   },
   "keywords": [],
   "author": "",
