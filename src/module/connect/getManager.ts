@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 
-export const manager = async (method: string) => {
+export const getManager = async (method: string) => {
   const abi = ABIS.manager;
   const rpc_url = CONST.RPC_URL;
   const provider = new ethers.JsonRpcProvider(rpc_url);
@@ -23,10 +23,7 @@ export const manager = async (method: string) => {
       const result = await contract.getAdmins().then((response) => {
         return response;
       });
-      console.log("admin gets");
-      console.dir(result[0]);
       return arrayCheck(result);
-      //return [result[0], Number(result[1])];
     }
   } catch (error) {
     console.dir(error);

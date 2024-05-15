@@ -1,4 +1,4 @@
-import { manager } from "../connect/manager";
+import { getManager } from "../connect/getManager";
 import { getToken } from "../connect/getToken";
 import { getOwn } from "../connect/getOwn";
 import utils from "../common/util";
@@ -183,7 +183,7 @@ export const displayTokens = async (tokensElement, ca, filter) => {
 };
 
 export const displayManagedData = async (type, title, filter) => {
-  const result = await manager(type);
+  const result = await getManager(type);
   const header = document.createElement("h2");
   header.textContent = title;
   mainContents.appendChild(header);

@@ -1,8 +1,9 @@
 import { ethers } from "ethers";
 import { router } from "./module/common/router";
-import { manager } from "./module/connect/manager";
+import { getManager } from "./module/connect/getManager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
+import { setManager } from "./module/connect/setManager";
 import {
   displayAssets,
   displayManagedData,
@@ -92,6 +93,8 @@ const setCreator = async () => {
 };
 
 const setAdmins = async () => {
+  const result = await setManager("contracts");
+  console.dir(result);
   await displayManagedData("admins", "Admins", false);
 };
 
@@ -138,22 +141,22 @@ const setOwns = async (eoa) => {
   divAssetElement.classList.add("assetArea");
   mainContents.appendChild(divAssetElement);
 
-  const result = await manager("contracts");
+  const result = await getManager("contracts");
   displayOwns(divAssetElement, result, eoa);
 };
 
 const setAssets = async (filter) => {
-  const result = await manager("contracts");
+  const result = await getManager("contracts");
   displayAssets(result, filter);
 };
 
 const setTokenContracts = async (filter) => {
-  const result = await manager("contracts");
+  const result = await getManager("contracts");
   displayTokenContracts(result, filter);
 };
 
 const setOwnTokenContracts = async (filter) => {
-  const allList = await manager("contracts");
+  const allList = await getManager("contracts");
   //displayTokenContracts(allList, filter);
   console.log("ここですべて判定する");
   for (const key in allList) {
