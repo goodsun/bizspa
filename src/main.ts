@@ -4,7 +4,9 @@ import { router } from "./module/common/router";
 import { getManager } from "./module/connect/getManager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
+import { donate } from "./module/connect/donate";
 import managerSnipet from "./module/snipet/manager";
+import util from "./module/common/util";
 import {
   displayAssets,
   displayManagedData,
@@ -16,64 +18,87 @@ import {
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 const connectButton = document.getElementById("connectButton");
-const disconnectButton = document.getElementById("disconnectButton");
-const mintButton = document.getElementById("mintButton");
-const makeTbaButton = document.getElementById("makeTbaButton");
 const mainContents = document.getElementById("mainContents");
-const status = document.getElementById("status");
+const connectWallet = document.getElementById("connectWallet");
 const modalbase = document.getElementById("modalbase");
 const modalcontent = document.getElementById("modalcontent");
 let dispmodal = false;
 let connected = null;
 
-connectButton.addEventListener("click", async () => {
-  if (typeof window.ethereum !== "undefined") {
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
-      connected = await signer.getAddress();
-      status.innerHTML = `connected: ${connected}`;
-    } catch (error) {
-      status.innerHTML = `error: ${error.message}`;
-    }
-  } else {
-    status.innerHTML = "get MetaMask";
-  }
-});
+async function setDonate(params) {
+  const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
+  const result = await donate(params[2], ca, params);
+  console.log("result");
+  console.dir(result);
 
-async function disconnectFromMetaMask() {
-  if (window.ethereum && window.ethereum.isMetaMask) {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    try {
-      await provider.send("wallet_requestPermissions", [{ eth_accounts: {} }]);
-      console.log("Disconnected from MetaMask");
-    } catch (error) {
-      console.error("Failed to disconnect from MetaMask:", error);
-    }
-  } else {
-    console.error("MetaMask is not installed");
+  const divDonateElement = document.createElement("div");
+  divDonateElement.classList.add("ownerArea");
+  mainContents.appendChild(divDonateElement);
+
+  if (result) {
+    const donateTitle = document.createElement("h2");
+    donateTitle.innerHTML =
+      "<h1>Donation</h1>" +
+      "<p>Donation CA:" +
+      ca +
+      "</p>" +
+      "<p>" +
+      params[2] +
+      " : " +
+      result +
+      " donatePoint" +
+      "</p>";
+
+    divDonateElement.appendChild(donateTitle);
   }
 }
 
-disconnectButton.addEventListener("click", async () => {
-  if (connected) {
-    status.innerHTML = "connect wallet";
-    disconnectFromMetaMask();
-    connected = null;
-    updateDisplay();
+connectButton.addEventListener("click", async () => {
+  if (typeof window.ethereum !== "undefined") {
+    checkMetaMask();
+  } else {
+    alert("メタマスクをインストールしてください");
   }
 });
 
-const updateDisplay = () => {
-  if (connected) {
-    modalcontent.innerHTML = `Connected: ${connected}`;
-    toggleModal();
-  } else {
-    modalcontent.innerHTML = `notConnected`;
-    toggleModal();
+async function checkMetaMask() {
+  if (window.ethereum) {
+    if (window.ethereum.isMetaMask) {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      try {
+        const signer = await provider.getSigner();
+        const eoa = await signer.getAddress();
+        const balance = await provider.getBalance(eoa);
+        const network = await provider.getNetwork();
+        let symbol = network.name;
+        if (symbol == "unknown") {
+          symbol = CONST.DEFAULT_SYMBOL;
+        }
+
+        const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
+        const dpoint = await donate("balance", ca, []);
+
+        connectWallet.innerHTML =
+          "EOA : " +
+          eoa +
+          "<br /> balance : " +
+          util.waiToEth(balance) +
+          " " +
+          symbol;
+        if (dpoint > 0) {
+          connectWallet.innerHTML += " / donatePoint : " + dpoint + " pt";
+        }
+
+        window.ethereum.on("accountsChanged", async (accounts) => {
+          console.dir(accounts);
+          checkMetaMask();
+        });
+      } catch (error) {
+        console.error("Error retrieving network currency symbol:", error);
+      }
+    }
   }
-};
+}
 
 const setContracts = async () => {
   await displayManagedData("contracts", "CONTRACTS", (filter) => {
@@ -216,29 +241,40 @@ const setTokens = async () => {
 };
 
 const getTbaInfo = async () => {
-  const tokenBoundAccount = await getTba.getAddress(
-    CONST.TBA_REGIST_CA,
-    CONST.TBA_ACCOUNT_CA,
-    CONST.BC_NETWORK_ID,
-    router.params[2], //tokenContract: string,
-    router.params[3], // tokenId: string,
-    CONST.TBA_SALT
-  );
-  return tokenBoundAccount;
+  const result = await getManager("contracts");
+  var tbaContracts = result.filter(function (contract) {
+    return contract[2] == "tba";
+  });
+
+  const tba = [];
+  for (const key in tbaContracts) {
+    console.dir(tbaContracts[key]);
+    const tokenBoundAccount = await getTba.getAddress(
+      tbaContracts[key][1],
+      tbaContracts[key][0],
+      CONST.BC_NETWORK_ID,
+      router.params[2], //tokenContract: string,
+      router.params[3], // tokenId: string,
+      CONST.TBA_SALT
+    );
+    tba.push(tokenBoundAccount);
+  }
+  if (tba.length > 1) {
+    alert("このトークンには2つ以上のTBAが結びついています。");
+    console.dir(tba);
+  }
+  if (tba.length > 0) {
+    return tba[0];
+  } else {
+    return null;
+  }
 };
 
-mintButton.addEventListener("click", async () => {
-  modalcontent.innerHTML = `mint: ${router.params}`;
-  toggleModal();
-});
-
-makeTbaButton.addEventListener("click", async () => {
-  modalcontent.innerHTML = `makeTba: ${router.params}`;
-  toggleModal();
-});
-
-modalbase.addEventListener("click", async () => {
-  toggleModal();
+document.addEventListener("keydown", function (event) {
+  console.log(event.key);
+  if (event.key === "Escape") {
+    toggleModal();
+  }
 });
 
 const toggleModal = () => {
@@ -266,6 +302,8 @@ const checkRoute = () => {
     setCreator();
   } else if (param1 === "creators") {
     setCreators();
+  } else if (param1 === "donate") {
+    setDonate(params);
   } else if (param1 === "admins" && param2 && param3 && param4 && param5) {
     managerSnipet.control4Set(param2, param3, param4, param5);
   } else if (param1 === "admins" && param2 && param3 && param4) {
@@ -295,3 +333,4 @@ const checkRoute = () => {
 };
 
 checkRoute();
+checkMetaMask();

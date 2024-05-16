@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
+  <head id="pageHeader">
     <meta charset="UTF-8" />
     <title>SPA FRONT END</title>
     <link rel="stylesheet" href="/css/reset.css" media="all" />
@@ -14,12 +14,11 @@
         <a href="/creators">creators</a>
         <a href="/tokens">tokens</a>
         <a href="/assets">assets</a>
+        <a href="/donate">donate</a>
         <a href="/admins">admins</a>
       </p>
     </section>
     <section class="mainContainer">
-      <button id="mintButton">mint</button>
-      <button id="makeTbaButton">makeTba</button>
       <div id="mainContents"></div>
       <div class="dummyarea"></div>
     </section>
@@ -31,13 +30,16 @@
       </div>
     </div>
     <section id="footerArea">
-      <p>wallet connect</p>
       <div>
-        <button id="connectButton">connect</button>
-        <button id="disconnectButton">disconnect</button>
-        <span id="status"> not connectk</spanspan>
+        <span id="connectWallet">
+          <button id="connectButton">connect</button><br />
+          this site is use blockchain data.
+          please install <a href="https://metamask.io/" target="_blank">metamask</a>
+        </spanspan>
       </div>
     </section>
   </body>
-  <script src="/js/main.bundle.js"></script>
+  <footer id="pageFooter">
+    <script src="/js/main.bundle.js"></script>
+  </footer>
 </html>

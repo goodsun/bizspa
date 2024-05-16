@@ -2,6 +2,7 @@ import { getManager } from "../connect/getManager";
 import { getToken } from "../connect/getToken";
 import { getOwn } from "../connect/getOwn";
 import utils from "../common/util";
+import detailDisplay from "./detailDisplay";
 //import { fetchData, getLocalTime } from "../common/util";
 const mainContents = document.getElementById("mainContents");
 
@@ -62,28 +63,16 @@ export const displayToken = async (
 
   console.log(utils.getLocalTime() + " 遅延実行開始 " + tokenUri);
   utils.fetchData(tokenUri).then(async (result) => {
-    const tokenName = document.createElement("span");
-    tokenName.textContent = result["name"];
-    pElement.appendChild(tokenName);
-
-    const h2Element = document.createElement("h2");
-    h2Element.textContent = result["name"];
-    divElement.appendChild(h2Element);
-
-    const pDescriptionElement = document.createElement("p");
-    pDescriptionElement.textContent = result["description"];
-    divElement.appendChild(pDescriptionElement);
-
-    const pOwnerElement = document.createElement("p");
-    pOwnerElement.innerHTML =
-      "owner: <a href='/assets/" + owner + "'>" + owner + "</a>";
-    divElement.appendChild(pOwnerElement);
-
-    const imgElement = document.createElement("img");
-    imgElement.classList.add("nftImage");
-    imgElement.src = result["image"];
-    divElement.appendChild(imgElement);
+    detailDisplay.showToken(
+      "pc_normal",
+      result,
+      owner,
+      tokenUri,
+      divElement,
+      pElement
+    );
     console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
+    detailDisplay.sendForm(divElement);
   });
 };
 
@@ -128,6 +117,7 @@ export const displayOwnTokens = async (
           newImage.classList.add("nftThumb");
           squareImg.appendChild(newImage);
           newLink.appendChild(squareImg);
+
           document
             .getElementById("token_" + ca + "_" + tokenData.tokenId)
             .appendChild(newLink);

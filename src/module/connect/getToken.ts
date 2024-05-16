@@ -47,6 +47,11 @@ export const getToken = async (
         return response;
       });
       return result;
+    } else if (method == "supportInterface") {
+      const result = await contract.supportInterface().then((response) => {
+        return response;
+      });
+      return result;
     } else if (method == "_locked") {
       const result = await contract._locked(id).then((response) => {
         return response;

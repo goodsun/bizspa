@@ -1,3 +1,8 @@
+function roundToDecimalPlace(num, decimalPlaces) {
+  const factor = Math.pow(10, decimalPlaces);
+  return Math.round(num * factor) / factor;
+}
+
 export const getLocalTime = () => {
   return new Date().toLocaleTimeString() + "." + new Date().getMilliseconds();
 };
@@ -25,9 +30,16 @@ export const fetchData = async (Url) => {
   }
 };
 
-// アドレスが同値かどうかを判定する関数
 export const isAddressesEqual = (address1: string, address2: string) => {
   return address1.toLowerCase() === address2.toLowerCase();
+};
+
+export const waiToEth = (input) => {
+  return roundToDecimalPlace(Number(input) / 1000000000000000000, 4);
+};
+
+export const ethToWai = (input) => {
+  return BigInt(input * 1000000000000000000);
 };
 
 const utils = {
@@ -35,6 +47,8 @@ const utils = {
   sleep,
   fetchData,
   isAddressesEqual,
+  waiToEth,
+  ethToWai,
 };
 
 export default utils;

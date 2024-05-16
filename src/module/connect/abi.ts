@@ -323,52 +323,7 @@ export const ABIS = {
       type: "function",
     },
   ],
-  profile: [
-    { inputs: [], stateMutability: "nonpayable", type: "constructor" },
-    {
-      inputs: [],
-      name: "checkProfile",
-      outputs: [
-        { internalType: "string", name: "", type: "string" },
-        { internalType: "string", name: "", type: "string" },
-        { internalType: "bool", name: "", type: "bool" },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "getAll",
-      outputs: [
-        { internalType: "address[]", name: "", type: "address[]" },
-        { internalType: "uint256", name: "", type: "uint256" },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [{ internalType: "address", name: "account", type: "address" }],
-      name: "getProfile",
-      outputs: [
-        { internalType: "string", name: "", type: "string" },
-        { internalType: "string", name: "", type: "string" },
-        { internalType: "bool", name: "", type: "bool" },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        { internalType: "string", name: "profile", type: "string" },
-        { internalType: "string", name: "name", type: "string" },
-        { internalType: "bool", name: "open", type: "bool" },
-      ],
-      name: "setProfile",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-  ],
+  donate: [],
   nft: [
     {
       inputs: [
