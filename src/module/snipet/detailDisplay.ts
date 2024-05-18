@@ -99,6 +99,84 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   });
 };
 
+export const mintForm = (divElement: HTMLParagraphElement) => {
+  setElement.setChild(
+    divElement,
+    "h2",
+    "タイトルを作る命令はこちら",
+    "ID_midashi2",
+    "CLASS_addclasses"
+  );
+
+  const makeElement = setElement.makeElement(
+    "p",
+    "MakeElementで作る",
+    null,
+    "createdPelemBySetElement"
+  );
+  divElement.appendChild(makeElement);
+
+  const tokenUriForm = setElement.makeInput(
+    "input",
+    "TokenURI",
+    "BaseInput",
+    "TokenURI"
+  );
+  tokenUriForm.classList.add("wfull");
+  divElement.appendChild(tokenUriForm);
+  divElement.appendChild(setElement.br());
+
+  const eoaForm = setElement.makeInput(
+    "input",
+    "input4",
+    "BaseInput",
+    "送信先EOA"
+  );
+  eoaForm.classList.add("w7p");
+  divElement.appendChild(eoaForm);
+
+  const makeSubmit = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "MINT"
+  );
+  makeSubmit.classList.add("w3p");
+  divElement.appendChild(makeSubmit);
+
+  const previewElement = document.createElement("div");
+  previewElement.classList.add("previewArea");
+  divElement.appendChild(previewElement);
+
+  tokenUriForm.addEventListener("change", async (e) => {
+    utils
+      .fetchData(tokenUriForm.value)
+      .then(async (tokenInfos) => {
+        previewElement.innerHTML = "";
+        detailDisplay.showToken(
+          "pc_normal",
+          tokenInfos,
+          "",
+          tokenUriForm.value,
+          previewElement,
+          previewElement
+        );
+      })
+      .catch(() => {
+        alert(tokenUriForm.value + " は無効なtokenURIです。");
+      });
+  });
+
+  makeSubmit.addEventListener("click", async () => {
+    let message = tokenUriForm.value;
+    message += eoaForm.value;
+    if (confirm(message)) {
+      console.log("MINT作成しますよ");
+    }
+  });
+  console.log("meta Attrebute");
+};
+
 export const makeForm = (divElement: HTMLParagraphElement) => {
   setElement.setChild(
     divElement,
@@ -174,6 +252,7 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
 const detailDisplay = {
   showToken,
   sendForm,
+  mintForm,
   makeForm,
 };
 

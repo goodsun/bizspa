@@ -14,6 +14,7 @@ import {
   displayTokens,
   displayToken,
   displayOwns,
+  displayMintUI,
 } from "./module/snipet/display";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
@@ -209,6 +210,12 @@ const setToken = async () => {
     setOwns(tokenBoundAccount);
   }
 };
+const mintToken = async () => {
+  const params = router.params;
+  const divElement = document.createElement("div");
+  mainContents.appendChild(divElement);
+  displayMintUI(divElement, params);
+};
 
 const setTokens = async () => {
   const divTokensElement = document.createElement("div");
@@ -271,7 +278,7 @@ const getTbaInfo = async () => {
 };
 
 document.addEventListener("keydown", function (event) {
-  console.log(event.key);
+  //console.log(event.key);
   if (event.key === "Escape") {
     toggleModal();
   }
@@ -320,6 +327,8 @@ const checkRoute = () => {
     setAssets((filter) => {
       return filter[3] == true;
     });
+  } else if (param1 === "tokens" && param2 && param3 == "mint") {
+    mintToken();
   } else if (param1 === "tokens" && param2 && param3) {
     setToken();
   } else if (param1 === "tokens" && param2 && !param3) {

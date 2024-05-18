@@ -6,6 +6,12 @@ import detailDisplay from "./detailDisplay";
 //import { fetchData, getLocalTime } from "../common/util";
 const mainContents = document.getElementById("mainContents");
 
+export const displayMintUI = async (targetElem, params) => {
+  console.log("displayMintUI");
+  console.dir(params);
+  detailDisplay.mintForm(targetElem);
+};
+
 export const displayToken = async (
   displayTokenElement,
   ca,
