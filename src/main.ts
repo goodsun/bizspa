@@ -6,6 +6,7 @@ import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
 import { donate } from "./module/connect/donate";
 import managerSnipet from "./module/snipet/manager";
+import articleSnipet from "./module/snipet/article";
 import util from "./module/common/util";
 import {
   displayAssets,
@@ -26,6 +27,10 @@ const modalcontent = document.getElementById("modalcontent");
 let dispmodal = false;
 let connected = null;
 
+async function setArticle() {
+  console.log("article set");
+  articleSnipet.getMdPath();
+}
 async function setDonate(params) {
   const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
   const result = await donate(params[2], ca, params);
@@ -309,6 +314,8 @@ const checkRoute = () => {
     setCreator();
   } else if (param1 === "creators") {
     setCreators();
+  } else if (param1 === "article") {
+    setArticle();
   } else if (param1 === "donate") {
     setDonate(params);
   } else if (param1 === "admins" && param2 && param3 && param4 && param5) {

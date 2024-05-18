@@ -104,15 +104,19 @@ export const showToken = (
   divElement.appendChild(imgElement);
 
   const attributes = metadata["attributes"];
+  const attributeMediaArea = document.createElement("div");
+  divElement.appendChild(attributeMediaArea);
+  const attributeTextArea = document.createElement("div");
+  divElement.appendChild(attributeTextArea);
+
   for (const key in attributes) {
-    console.dir(attributes[key]);
     const titleElm = document.createElement("h4");
     titleElm.textContent = attributes[key]["trait_type"];
     const contentElm = document.createElement("p");
     contentElm.id = "attrebuteContent_" + key;
-    divElement.appendChild(titleElm);
-    divElement.appendChild(contentElm);
     if (attributes[key]["value"].slice(0, 4) == "http") {
+      attributeMediaArea.appendChild(titleElm);
+      attributeMediaArea.appendChild(contentElm);
       fetch(attributes[key]["value"])
         .then((response) => {
           const contentType = response.headers.get("content-type");
@@ -139,6 +143,8 @@ export const showToken = (
           console.error("Error:", error);
         });
     } else {
+      attributeTextArea.appendChild(titleElm);
+      attributeTextArea.appendChild(contentElm);
       contentElm.textContent = attributes[key]["value"];
     }
   }
