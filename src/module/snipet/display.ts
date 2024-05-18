@@ -194,6 +194,9 @@ export const displayManagedData = async (type, title, filter) => {
       link.href = "/" + type + "/" + result[key][0];
       if (type == "admins") {
         link.textContent = result[key][0];
+      } else if (type == "creators") {
+        link.textContent =
+          JSON.parse(result[key][1])["en"] + " [" + result[key][2] + "]";
       } else {
         link.textContent = result[key][1] + " [" + result[key][2] + "]";
       }

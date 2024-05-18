@@ -205,6 +205,13 @@ a {
   width: 600px;
   height: 600px;
 }
+.nftMedia {
+  width: 600px;
+}
+.nftObject {
+  width: 600px;
+  height: 600px;
+}
 .nftThumbSquare {
   width: 150px; /* 正方形のサイズを指定 */
   height: 150px;
