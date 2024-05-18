@@ -1,5 +1,7 @@
 import utils from "../common/util";
+import { router } from "../../module/common/router";
 import setElement from "./setElement";
+import setToken from "../connect/setToken";
 const headJsArea = document.getElementById("pageHeader");
 const footJsArea = document.getElementById("pageFooter");
 
@@ -75,14 +77,14 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   );
   divElement.appendChild(makeElement);
 
-  const makeInput = setElement.makeInput(
+  const sendToInput = setElement.makeInput(
     "input",
     "sendTo",
     "BaseInput",
     "送信先(EOA)"
   );
-  makeInput.classList.add("w7p");
-  divElement.appendChild(makeInput);
+  sendToInput.classList.add("w7p");
+  divElement.appendChild(sendToInput);
   const makeSubmit = setElement.makeInput(
     "submit",
     "submitID",
@@ -93,8 +95,15 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   divElement.appendChild(makeSubmit);
 
   makeSubmit.addEventListener("click", async () => {
-    if (confirm("TODO: NFT送信機能")) {
-      console.log("送信しますよ");
+    if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
+      const params = router.params;
+      console.dir(params);
+      const result = await setToken.send(
+        params[2],
+        sendToInput.value,
+        params[3]
+      );
+      alert("送信しました");
     }
   });
 };
@@ -103,14 +112,14 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   setElement.setChild(
     divElement,
     "h2",
-    "タイトルを作る命令はこちら",
+    "Token Mint Page",
     "ID_midashi2",
     "CLASS_addclasses"
   );
 
   const makeElement = setElement.makeElement(
     "p",
-    "MakeElementで作る",
+    "NFTをミントします。",
     null,
     "createdPelemBySetElement"
   );
@@ -168,27 +177,42 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   });
 
   makeSubmit.addEventListener("click", async () => {
-    let message = tokenUriForm.value;
-    message += eoaForm.value;
+    const params = router.params;
+    let message = tokenUriForm.value + " のメタデータでNFTを作成し\n";
+    message += eoaForm.value + " 宛に送信します。\n";
+    const donatePoint = await setToken.donatePoint(params[2]);
+    if (donatePoint > 0) {
+      message +=
+        "このNFTのmintはdonatePointを" +
+        utils.waiToEth(donatePoint) +
+        "pt消費します。";
+    }
     if (confirm(message)) {
-      console.log("MINT作成しますよ");
+      if (params[1] == "tokens") {
+        console.log("setTokens mint : " + params[2]);
+        const result = await setToken.mint(
+          params[2],
+          eoaForm.value,
+          tokenUriForm.value
+        );
+        console.log("setTokens" + result);
+      }
     }
   });
-  console.log("meta Attrebute");
 };
 
 export const makeForm = (divElement: HTMLParagraphElement) => {
   setElement.setChild(
     divElement,
     "h2",
-    "タイトルを作る命令はこちら",
+    "Make Form sample",
     "ID_midashi2",
     "CLASS_addclasses"
   );
 
   const makeElement = setElement.makeElement(
     "p",
-    "MakeElementで作る",
+    "Make Form sample",
     null,
     "createdPelemBySetElement"
   );

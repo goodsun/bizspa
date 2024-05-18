@@ -8,17 +8,13 @@ export const donate = async (
   contractAddress: string,
   input?: Array<string>
 ) => {
-  console.log("MODE:" + mode);
-  const abi = [
-    "function balanceOf(address account) view returns (uint256)",
-    "function totalSupply() external view returns (uint256)",
-    "function donate(address donor) public payable",
-  ];
   const donateAbi = ABIS.donate;
   const provider = new ethers.BrowserProvider(window.ethereum);
   const contract = await provider.getSigner().then((signer) => {
-    return new ethers.Contract(contractAddress, abi, signer);
+    return new ethers.Contract(contractAddress, donateAbi, signer);
   });
+  const signer = await provider.getSigner();
+  const eoa = await signer.getAddress();
 
   try {
     if (mode == "donate") {
@@ -29,14 +25,32 @@ export const donate = async (
         });
       return result;
     } else if (mode == "balance") {
-      const signer = await provider.getSigner();
-      const eoa = await signer.getAddress();
       const result = await contract.balanceOf(eoa).then((response) => {
         return response;
       });
       return util.waiToEth(Number(result));
     } else if (mode == "total") {
       const result = await contract.totalSupply().then((response) => {
+        return response;
+      });
+      return util.waiToEth(Number(result));
+    } else if (mode == "usedpoints") {
+      const result = await contract._usedPoints(eoa).then((response) => {
+        return response;
+      });
+      return util.waiToEth(Number(result));
+    } else if (mode == "totaldonations") {
+      const result = await contract._totalDonations(eoa).then((response) => {
+        return response;
+      });
+      return util.waiToEth(Number(result));
+    } else if (mode == "allTotalUsed") {
+      const result = await contract._allUsedPoints().then((response) => {
+        return response;
+      });
+      return util.waiToEth(Number(result));
+    } else if (mode == "allTotalDonation") {
+      const result = await contract._allTotalDonations().then((response) => {
         return response;
       });
       return util.waiToEth(Number(result));
