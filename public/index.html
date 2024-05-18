@@ -2,20 +2,24 @@
 <html lang="ja">
   <head id="pageHeader">
     <meta charset="UTF-8" />
-    <title>SPA FRONT END</title>
+    <title id="pageTitle">SPA FRONT END</title>
     <link rel="stylesheet" href="/css/reset.css" media="all" />
     <link rel="stylesheet" href="/css/main.css" media="all" />
     <link rel="stylesheet" href="/css/modal.css" media="all" />
+    <link rel="stylesheet" href="/css/carousel.css" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </head>
   <body>
     <section class="headerArea">
-      <h1 id="headerTitle">SPA FRONT END</h1>
-      <p>
+      <h2 id="headerTitle">SPA FRONT END </h2>
+      <p class="headerMenu">
+        <a href="/" class="home">home</a>
         <a href="/creators">creators</a>
         <a href="/tokens">tokens</a>
-        <a href="/assets">assets</a>
+        <a href="/contents">contents</a>
+        <a id='accountLink' href="/account">account</a>
         <a href="/donate">donate</a>
-        <a href="/admins">admins</a>
+        <a href="/meta">meta</a>
       </p>
     </section>
     <section class="mainContainer">
@@ -25,18 +29,27 @@
     <div id="modalbase" class="modal-container">
       <div class="modal-body">
         <div class="modal-content">
+          <div id="closemodal" class="modal-header">
+            <p><i class="fa-solid fa-rectangle-xmark"></i> close</p>
+          </div>
           <p id="modalcontent">SPA FRONT END</p>
+          <div id="powerdby" class="modal-footer">
+            <p>
+              <a class="pwu" href="/parmaweb" target="_blank">ParmaWebUploader</a>
+              powed by <a href="https://bon-soleil.com" target="_blank">bonsoleil</a></p>
+          </div>
         </div>
       </div>
     </div>
     <section id="footerArea">
       <div>
         <span id="connectWallet">
-          <button id="connectButton">connect</button><br />
-          this site is use blockchain data.
-          please install <a href="https://metamask.io/" target="_blank">metamask</a>
+          this site is use blockchain data. please install <a href="https://metamask.io/" target="_blank">metamask</a>
         </spanspan>
       </div>
+      <span id="langSelecter">
+        <a href="?lang=en">en</a>
+         | <a href="?lang=ja">ja</a>
     </section>
   </body>
   <footer id="pageFooter">

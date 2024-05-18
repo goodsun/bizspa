@@ -6,8 +6,10 @@
   "type": "module",
   "scripts": {
     "local": "cp src/settings/const.dev src/module/common/const.ts;npx webpack; node server.js",
-    "dev": "cp src/settings/const.dev src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/goodsun.tokyo/dao/; scp ./public/.htaccess bonsoleil:web/goodsun.tokyo/dao/",
-    "deploy": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; aws s3 sync ./public s3://bizendao"
+    "dev": "cp src/settings/const.dev src/module/common/const.ts;npx webpack; node server.js",
+    "stg": "cp src/settings/const.stg src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/stgdao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/stgdao/",
+    "prd": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/dao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/dao/; cp src/settings/const.stg src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/stgdao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/stgdao/",
+    "s3": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; aws s3 sync ./public s3://bizendao"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "ethers": "^6.12.1",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "marked": "^12.0.2"
   }
 }

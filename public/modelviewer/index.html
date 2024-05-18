@@ -1,0 +1,59 @@
+<html>
+  <header>
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        color: #ffffff;
+        background-color: #000000;
+      }
+      #viewer {
+        position: relative;
+        height: 100%;
+      }
+      #viewer p {
+        font-size: 30px;
+        position: absolute;
+        top: 50%;
+        margin: 20px;
+      }
+      #model-view {
+        min-height: inherit;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </header>
+  <body>
+    <div id="viewer">
+      <h1>Model Viewer</h1>
+      <model-viewer
+        auto-rotate="true"
+        autoplay="true"
+        camera-controls="true"
+        id="model-view"
+        ar-status="not-presenting"
+      >
+      </model-viewer>
+    </div>
+    <script>
+      const viewerElm = document.getElementById("viewer");
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const MODEL_SRC = urlParams.get("model-view-src");
+      const inputURL = new URL(MODEL_SRC);
+      var userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.includes("metamask")) {
+        viewerElm.innerHTML =
+          "<p>Please open Default browser<br />右下の … より「ブラウザで開く」をクリックしてください。</p>";
+      }
+      inputURL.protocol = "https:";
+      if (inputURL.host !== "opensea.io") {
+        document.getElementById("model-view").src = inputURL.toString();
+      }
+    </script>
+  </body>
+</html>

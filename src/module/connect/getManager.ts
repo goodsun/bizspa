@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 
-export const getManager = async (method: string) => {
+const getManager = async (method: string) => {
   const abi = ABIS.manager;
   const rpc_url = CONST.RPC_URL;
   const provider = new ethers.JsonRpcProvider(rpc_url);
@@ -45,3 +45,18 @@ const arrayPivot = (input) => {
   }
   return result;
 };
+
+const getCA = async (contractType: string) => {
+  const contracts = await getManager("contracts");
+  var result = contracts.filter(function (contract) {
+    return contract[2] == contractType;
+  });
+  return result[0][0];
+};
+
+const getManagerConnect = {
+  getManager,
+  getCA,
+};
+
+export default getManagerConnect;

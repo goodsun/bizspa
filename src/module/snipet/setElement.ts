@@ -44,6 +44,55 @@ export const makeInput = (
   }
   return child;
 };
+
+export const makeSelect = (inputId: string, setClass: string) => {
+  const child = document.createElement("select");
+  child.id = inputId;
+  child.classList.add(setClass);
+  const option = document.createElement("option");
+  option.value = null;
+  option.innerHTML = "選択してください";
+  child.appendChild(option);
+  return child;
+};
+
+export const makeFileSelect = (
+  inputId: string,
+  setClass: string,
+  placeholder: string,
+  divClass: string
+) => {
+  const child = document.createElement("div");
+  const labelElm = document.createElement("label");
+  const inputElm = document.createElement("input");
+  child.classList.add("custom-file-div");
+  child.classList.add(divClass);
+  labelElm.setAttribute("for", inputId);
+  labelElm.classList.add(setClass);
+  labelElm.classList.add(divClass);
+  labelElm.textContent = placeholder;
+  inputElm.type = "file";
+  inputElm.id = inputId;
+  inputElm.className = "custom-file-input";
+  child.appendChild(labelElm);
+  child.appendChild(inputElm);
+  return child;
+};
+
+export const makeTextarea = (
+  id: string,
+  setClass: string,
+  placeholder: string,
+  value?: string
+) => {
+  const child = document.createElement("textarea");
+  child.id = id;
+  child.classList.add(setClass);
+  child.innerText = value;
+  child.placeholder = placeholder;
+  return child;
+};
+
 export const br = () => {
   const child = document.createElement("br");
   return child;
@@ -52,6 +101,9 @@ export const br = () => {
 const setElement = {
   makeElement,
   makeInput,
+  makeTextarea,
+  makeSelect,
+  makeFileSelect,
   setChild,
   br,
 };

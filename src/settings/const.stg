@@ -1,5 +1,5 @@
 export const CONST = {
-  HEADER_TITLE: "DEV BIZEN DAO",
+  HEADER_TITLE: "STG BIZEN DAO",
   RPC_URL: "https://v1.bon-soleil.com:8080/",
   BC_NETWORK_NAME: "PRIVATE",
   BC_NETWORK_ID: "21201",

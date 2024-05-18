@@ -9,51 +9,89 @@
   overflow: auto;
   opacity: 0;
   visibility: hidden;
-  transition: .3s ease-out;
-  z-index: 9;
+  transition: 0.3s ease-out;
+  z-index: 1000;
 }
- 
+
 .modal-container::before {
   content: "";
   display: inline-block;
   vertical-align: middle;
   height: 100%;
 }
- 
+
 .modal-container.active {
   opacity: 1;
   visibility: visible;
 }
- 
+
 .modal-body {
   position: relative;
   display: inline-block;
   vertical-align: middle;
   width: 90%;
 }
- 
+
 .modal-close {
   position: absolute;
   top: -30px;
   right: 0;
-  font-size: 20px;
+  font-size: 1.5rem;
   color: #fff;
-  background: rgba(0,0,0,60%);
+  background: rgba(0, 0, 0, 60%);
   padding: 4px 15px;
   cursor: pointer;
   border-radius: 5px 5px 0 0;
 }
- 
+
 .modal-content {
   background: #fff;
   border: none;
   text-align: left;
-  padding: 30px;
+  padding: 20px 30px;
   font-weight: bold;
-	border-radius: 15px;
-	p{
-		color: #333;
-		font-size: 45px;
-		line-height: 1.5em;
-	}
+  border-radius: 15px;
+  p {
+    font-size: 1rem;
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+  }
+  #closemodal {
+    margin: 0;
+    text-align: right;
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+.modal-footer {
+  margin-top: 15px;
+  p {
+    font-size: 1rem;
+  }
+  .pwu {
+    color: #00bcd4;
+    font-weight: bolder;
+  }
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 5px solid #ccc;
+  border-top-color: #00bcd4;
+  margin-right: 10px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle; /* テキストと中央揃えするため */
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

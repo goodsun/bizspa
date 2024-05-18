@@ -1,0 +1,70 @@
+.caroucelArea {
+  margin: 0 30px;
+}
+.caroucelArea > h2 {
+  padding: 0 10px;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  h2 {
+    margin: 0 30px;
+  }
+}
+
+.carousel-container {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+}
+
+.carousel-item-bg {
+  background-color: #333333;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.carousel-item-content {
+  padding: 15px;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 10px 0 20px 0;
+  }
+}
+
+.carousel-control {
+  display: block;
+  width: 100%;
+  padding: 0px;
+  text-align: center;
+
+  button {
+    font-size: 1.5rem;
+    width: 48%;
+    padding: 15px;
+    margin: 0 5px;
+    background: #ffffff;
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+    border-radius: 6px;
+  }
+}
+i.opensea {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url("https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.svg");
+  background-size: cover;
+  vertical-align: middle;
+}

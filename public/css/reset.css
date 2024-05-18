@@ -1,6 +1,7 @@
 @namespace "http://www.w3.org/1999/xhtml";
 html {
   display: block;
+  font-size: 14px;
 }
 /* children of the <head> element all have display:none */
 head {
@@ -24,7 +25,7 @@ script {
 /* generic block-level elements */
 body {
   display: block;
-  margin: 8px;
+  margin: 0px;
 }
 body:-webkit-full-page-media {
   background-color: rgb(0, 0, 0);
@@ -61,7 +62,7 @@ address {
 blockquote {
   display: block;
   -webkit-margin-before: 1__qem;
-  -webkit-margin-after: 1em;
+  -webkit-margin-after: 1rem;
   -webkit-margin-start: 40px;
   -webkit-margin-end: 40px;
 }
@@ -70,8 +71,8 @@ figcaption {
 }
 figure {
   display: block;
-  -webkit-margin-before: 1em;
-  -webkit-margin-after: 1em;
+  -webkit-margin-before: 1rem;
+  -webkit-margin-after: 1rem;
   -webkit-margin-start: 40px;
   -webkit-margin-end: 40px;
 }
@@ -91,8 +92,8 @@ center {
 }
 hr {
   display: block;
-  -webkit-margin-before: 0.5em;
-  -webkit-margin-after: 0.5em;
+  -webkit-margin-before: 0.5rem;
+  -webkit-margin-after: 0.5rem;
   -webkit-margin-start: auto;
   -webkit-margin-end: auto;
   border-style: inset;
@@ -105,68 +106,20 @@ video {
   object-fit: contain;
 }
 /* heading elements */
-h1 {
-  display: block;
-  font-size: 2em;
-  -webkit-margin-before: 0.67__qem;
-  -webkit-margin-after: 0.67em;
-  -webkit-margin-start: 0;
-  -webkit-margin-end: 0;
-  font-weight: bold;
-}
-:-webkit-any(article, aside, nav, section) h1 {
-  font-size: 1.5em;
-  -webkit-margin-before: 0.83__qem;
-  -webkit-margin-after: 0.83em;
-}
-:-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  h1 {
-  font-size: 1.17em;
-  -webkit-margin-before: 1__qem;
-  -webkit-margin-after: 1em;
-}
-:-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  h1 {
-  font-size: 1em;
-  -webkit-margin-before: 1.33__qem;
-  -webkit-margin-after: 1.33em;
-}
-:-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  h1 {
-  font-size: 0.83em;
-  -webkit-margin-before: 1.67__qem;
-  -webkit-margin-after: 1.67em;
-}
-:-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  :-webkit-any(article, aside, nav, section)
-  h1 {
-  font-size: 0.67em;
-  -webkit-margin-before: 2.33__qem;
-  -webkit-margin-after: 2.33em;
-}
 h2 {
   display: block;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   -webkit-margin-before: 0.83__qem;
-  -webkit-margin-after: 0.83em;
+  -webkit-margin-after: 0.83rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   font-weight: bold;
 }
 h3 {
   display: block;
-  font-size: 1.17em;
+  font-size: 1.17rem;
   -webkit-margin-before: 1__qem;
-  -webkit-margin-after: 1em;
+  -webkit-margin-after: 1rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   font-weight: bold;
@@ -174,25 +127,25 @@ h3 {
 h4 {
   display: block;
   -webkit-margin-before: 1.33__qem;
-  -webkit-margin-after: 1.33em;
+  -webkit-margin-after: 1.33rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   font-weight: bold;
 }
 h5 {
   display: block;
-  font-size: 0.83em;
+  font-size: 0.83rem;
   -webkit-margin-before: 1.67__qem;
-  -webkit-margin-after: 1.67em;
+  -webkit-margin-after: 1.67rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   font-weight: bold;
 }
 h6 {
   display: block;
-  font-size: 0.67em;
+  font-size: 0.67rem;
   -webkit-margin-before: 2.33__qem;
-  -webkit-margin-after: 2.33em;
+  -webkit-margin-after: 2.33rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   font-weight: bold;
@@ -253,7 +206,7 @@ dir {
   display: block;
   list-style-type: disc;
   -webkit-margin-before: 1__qem;
-  -webkit-margin-after: 1em;
+  -webkit-margin-after: 1rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   -webkit-padding-start: 40px;
@@ -262,7 +215,7 @@ ol {
   display: block;
   list-style-type: decimal;
   -webkit-margin-before: 1__qem;
-  -webkit-margin-after: 1em;
+  -webkit-margin-after: 1rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   -webkit-padding-start: 40px;
@@ -288,7 +241,7 @@ dd {
 dl {
   display: block;
   -webkit-margin-before: 1__qem;
-  -webkit-margin-after: 1em;
+  -webkit-margin-after: 1rem;
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
 }
@@ -320,10 +273,10 @@ fieldset {
   display: block;
   -webkit-margin-start: 2px;
   -webkit-margin-end: 2px;
-  -webkit-padding-before: 0.35em;
-  -webkit-padding-start: 0.75em;
-  -webkit-padding-end: 0.75em;
-  -webkit-padding-after: 0.625em;
+  -webkit-padding-before: 0.35rem;
+  -webkit-padding-start: 0.75rem;
+  -webkit-padding-end: 0.75rem;
+  -webkit-padding-after: 0.625rem;
   border: 2px groove ThreeDFace;
   min-width: -webkit-min-content;
 }
@@ -643,9 +596,9 @@ input[type="color" i][list]::-webkit-color-swatch {
 }
 input::-webkit-calendar-picker-indicator {
   display: inline-block;
-  width: 0.66em;
-  height: 0.66em;
-  padding: 0.17em 0.34em;
+  width: 0.66rem;
+  height: 0.66rem;
+  padding: 0.17rem 0.34rem;
   -webkit-user-modify: read-only !important;
   opacity: 0;
   pointer-events: none;
@@ -715,7 +668,7 @@ option {
   display: block;
   padding: 0 2px 1px 2px;
   white-space: pre;
-  min-height: 1.2em;
+  min-height: 1.2rem;
 }
 select:-internal-list-box optgroup option:before {
   content: "\00a0\00a0\00a0\00a0";
@@ -747,9 +700,9 @@ meter {
   -webkit-appearance: meter;
   box-sizing: border-box;
   display: inline-block;
-  height: 1em;
-  width: 5em;
-  vertical-align: -0.2em;
+  height: 1rem;
+  width: 5rem;
+  vertical-align: -0.2rem;
 }
 meter::-webkit-meter-inner-element {
   -webkit-appearance: inherit;
@@ -816,9 +769,9 @@ progress {
   -webkit-appearance: progress-bar;
   box-sizing: border-box;
   display: inline-block;
-  height: 1em;
-  width: 10em;
-  vertical-align: -0.2em;
+  height: 1rem;
+  width: 10rem;
+  vertical-align: -0.2rem;
 }
 progress::-webkit-progress-inner-element {
   -webkit-appearance: inherit;
@@ -968,9 +921,9 @@ summary {
 }
 summary::-webkit-details-marker {
   display: inline-block;
-  width: 0.66em;
-  height: 0.66em;
-  -webkit-margin-end: 0.4em;
+  width: 0.66rem;
+  height: 0.66rem;
+  -webkit-margin-end: 0.4rem;
 }
 template {
   display: none;
@@ -996,7 +949,7 @@ dialog {
   height: -webkit-fit-content;
   margin: auto;
   border: solid;
-  padding: 1em;
+  padding: 1rem;
   background: white;
   color: black;
 }
