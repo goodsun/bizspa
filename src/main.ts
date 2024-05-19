@@ -5,6 +5,7 @@ import { getManager } from "./module/connect/getManager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
 import { donate } from "./module/connect/donate";
+import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
 import util from "./module/common/util";
@@ -61,12 +62,13 @@ async function setDonate(params) {
 
 connectButton.addEventListener("click", async () => {
   if (typeof window.ethereum !== "undefined") {
-    checkMetaMask();
+    util.checkMetaMask();
   } else {
     alert("メタマスクをインストールしてください");
   }
 });
 
+/*
 async function checkMetaMask() {
   if (window.ethereum) {
     if (window.ethereum.isMetaMask) {
@@ -105,7 +107,11 @@ async function checkMetaMask() {
     }
   }
 }
+*/
 
+const setHome = async () => {
+  homeSnipet.getHome();
+};
 const setContracts = async () => {
   await displayManagedData("contracts", "CONTRACTS", (filter) => {
     return filter[3] == true;
@@ -313,7 +319,9 @@ const checkRoute = () => {
   const param4 = params[4];
   const param5 = params[5];
 
-  if (param1 === "contract") {
+  if (param1 == "") {
+    setHome();
+  } else if (param1 === "contract1") {
     setContracts();
   } else if (param1 === "creators" && param2) {
     setCreator();
@@ -354,4 +362,4 @@ const checkRoute = () => {
 };
 
 checkRoute();
-checkMetaMask();
+util.checkMetaMask();

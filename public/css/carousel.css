@@ -1,0 +1,43 @@
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 600px; /* 任意の幅 */
+  height: 600px; /* 任意の高さ */
+}
+
+.carousel-container {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+}
+
+.carousel-item-bg {
+  background-color: #333333;
+  margin: 10px;
+  padding: 10px;
+}
+
+.carousel-item-content {
+  padding: 15px;
+}
+
+button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
