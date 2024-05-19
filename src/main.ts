@@ -28,8 +28,8 @@ let dispmodal = false;
 let connected = null;
 
 async function setArticle() {
-  console.log("article set");
   articleSnipet.getMdPath();
+  articleSnipet.getMdDir();
 }
 async function setDonate(params) {
   const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
@@ -117,9 +117,14 @@ const setCreators = async () => {
 };
 
 const setCreator = async () => {
+  /*
   await displayManagedData("creators", "CREATOR", (filter) => {
     return filter[0] == router.params[2] && filter[3] == true;
   });
+  */
+  const mdPath =
+    CONST.ARTICLE_REPO_URL + "md/ja/creator/" + router.params[2] + ".md";
+  articleSnipet.parseMdPage(mdPath);
   setOwnTokenContracts((filter) => {
     return filter[3] == true;
   });
@@ -325,7 +330,7 @@ const checkRoute = () => {
   } else if (param1 === "admins" && param2 && param3) {
     managerSnipet.control2Set(param2, param3);
   } else if (param1 === "admins" && param2) {
-    managerSnipet.control1Set(param2);
+    setCreator();
   } else if (param1 === "admins") {
     setAdmins();
   } else if (param1 === "assets" && param2) {

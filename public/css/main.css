@@ -279,3 +279,14 @@ a {
 .w2p {
   width: 19%;
 }
+.articleSection {
+  width: 100%;
+}
+.articleArea {
+  width: 100%;
+  padding: 10px;
+}
+.articleArea img {
+  margin: 10px;
+  width: 90%;
+}
