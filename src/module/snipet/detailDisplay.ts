@@ -203,15 +203,15 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
 export const mintForm = (divElement: HTMLParagraphElement) => {
   setElement.setChild(
     divElement,
-    "h2",
-    "Token Mint Page",
+    "h4",
+    "Mint Token",
     "ID_midashi2",
-    "CLASS_addclasses"
+    "mintToolTitle"
   );
 
   const makeElement = setElement.makeElement(
     "p",
-    "NFTをミントします。",
+    "TokenURIに有効なメタデータの格納先URLを入力してください",
     null,
     "createdPelemBySetElement"
   );

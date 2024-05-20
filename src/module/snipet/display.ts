@@ -1,15 +1,42 @@
 import { getManager } from "../connect/getManager";
-import { getToken } from "../connect/getToken";
+import getTokenConnect from "../connect/getToken";
 import { getOwn } from "../connect/getOwn";
 import utils from "../common/util";
 import detailDisplay from "./detailDisplay";
-//import { fetchData, getLocalTime } from "../common/util";
 const mainContents = document.getElementById("mainContents");
 
 export const displayMintUI = async (targetElem, params) => {
   console.log("displayMintUI");
   console.dir(params);
-  detailDisplay.mintForm(targetElem);
+
+  const balance = await utils.checkBalance();
+  console.dir(balance);
+
+  const mintableInfo = await getTokenConnect.getTokenInfo(params[2]);
+  console.log("mintableInfo:");
+  console.dir(mintableInfo);
+  const balanceElement = document.createElement("p");
+  balanceElement.innerHTML =
+    "<h2>" + mintableInfo.name + " MINT PAGE" + "</h2>";
+  targetElem.appendChild(balanceElement);
+
+  let mintable = true;
+
+  if (balance.dpoint < mintableInfo.needPoint) {
+    balanceElement.innerHTML +=
+      "このNFTのMINTには donationPointが " +
+      mintableInfo.needPoint +
+      " pt 必要です";
+    mintable = false;
+  }
+
+  if (mintable) {
+    if (mintableInfo.needPoint > 0) {
+      balanceElement.innerHTML +=
+        "<p> USE POINT:" + mintableInfo.needPoint + " pt</p>";
+    }
+    detailDisplay.mintForm(targetElem);
+  }
 };
 
 export const displayToken = async (
@@ -21,9 +48,9 @@ export const displayToken = async (
 ) => {
   console.log("displayToken:" + ca + "/" + id);
   const divElement = document.createElement("div");
-  const tokenUri = await getToken("tokenURI", ca, id);
-  const caName = await getToken("name", ca, id);
-  const owner = await getToken("ownerOf", ca, id);
+  const tokenUri = await getTokenConnect.getToken("tokenURI", ca, id);
+  const caName = await getTokenConnect.getToken("name", ca, id);
+  const owner = await getTokenConnect.getToken("ownerOf", ca, id);
   divElement.classList.add("tokenUri_" + tokenUri);
   displayTokenElement.appendChild(divElement);
 
@@ -153,7 +180,7 @@ export const displayTokens = async (tokensElement, ca, filter) => {
   floatClear.classList.add("floatClear");
   tokensElement.appendChild(floatClear);
 
-  const tokenAmount = await getToken("tokenAmount", ca, "");
+  const tokenAmount = await getTokenConnect.getToken("tokenAmount", ca, "");
   for (let i = tokenAmount; i > 0; i--) {
     var childNftDiv = document.createElement("div");
     childNftDiv.classList.add("childNft");
@@ -161,7 +188,7 @@ export const displayTokens = async (tokensElement, ca, filter) => {
     //newArea.appendChild(childNftDiv);
     document.getElementById("child_nft_area_" + ca).appendChild(childNftDiv);
 
-    getToken("tokenURI", ca, i).then(async (tokenUri) => {
+    getTokenConnect.getToken("tokenURI", ca, i).then(async (tokenUri) => {
       const newLink = await utils.fetchData(tokenUri).then((nftinfo) => {
         var newLink = document.createElement("a");
         newLink.href = "/tokens/" + ca + "/" + i;
@@ -315,20 +342,40 @@ export const displayTokenContracts = async (result, filter) => {
       } else if (result[key][2] === "nft") {
         console.log("NFT add:" + result[key][1]);
         nftArea.style.display = "block";
-        const link = document.createElement("a");
-        link.href = "/tokens/" + result[key][0];
-        link.textContent = result[key][1];
-        nftList.appendChild(link);
+        const contractTitle = document.createElement("h3");
+        nftList.appendChild(contractTitle);
+        const contractLink = document.createElement("a");
+        contractLink.href = "/tokens/" + result[key][0];
+        contractLink.innerHTML = result[key][1];
+        const mintLink = document.createElement("a");
+        mintLink.classList.add("mintlink");
+        mintLink.href = "/tokens/" + result[key][0] + "/mint";
+        mintLink.innerHTML = "mint";
+        contractTitle.appendChild(contractLink);
+        contractTitle.appendChild(mintLink);
         displayTokens(nftList, result[key][0], false);
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
       } else if (result[key][2] === "sbt") {
         console.log("SBT add:" + result[key][1]);
         sbtArea.style.display = "block";
+        const contractTitle = document.createElement("h3");
+        sbtList.appendChild(contractTitle);
+        const contractLink = document.createElement("a");
+        contractLink.href = "/tokens/" + result[key][0];
+        contractLink.innerHTML = result[key][1];
+        const mintLink = document.createElement("a");
+        mintLink.classList.add("mintlink");
+        mintLink.href = "/tokens/" + result[key][0] + "/mint";
+        mintLink.innerHTML = "mint";
+        contractTitle.appendChild(contractLink);
+        contractTitle.appendChild(mintLink);
+        /*
         const link = document.createElement("a");
         link.href = "/tokens/" + result[key][0];
-        link.textContent = result[key][1];
+        link.innerHTML = "<h3>" + result[key][1] + " mint</h3>";
         sbtList.appendChild(link);
+        */
         displayTokens(sbtList, result[key][0], false);
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");

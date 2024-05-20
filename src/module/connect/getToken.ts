@@ -2,14 +2,15 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 
+const abi = ABIS.nft;
+const rpc_url = CONST.RPC_URL;
+const provider = new ethers.JsonRpcProvider(rpc_url);
+
 export const getToken = async (
   method: string,
   contractAddress: string,
-  id: string | null
+  id?: string | null
 ) => {
-  const abi = ABIS.nft;
-  const rpc_url = CONST.RPC_URL;
-  const provider = new ethers.JsonRpcProvider(rpc_url);
   const contract = new ethers.Contract(contractAddress, abi, provider);
   try {
     if (method == "getInfo") {
@@ -62,3 +63,33 @@ export const getToken = async (
     console.dir(error);
   }
 };
+
+export const getDonatePoint = async (contractAddress: string) => {
+  const contract = new ethers.Contract(contractAddress, abi, provider);
+  try {
+    const result = await contract._usePoint().then((response) => {
+      return parseInt(response) / 1000000000000000000;
+    });
+    return result;
+  } catch (error) {
+    console.dir(error);
+  }
+};
+
+export const getTokenInfo = async (ca: string) => {
+  console.log(ca + "の各種TOKEN情報を取得");
+  const result = {
+    ca: ca,
+    name: await getToken("name", ca),
+    mintableUser: [], // mint許可EOA
+    needPoint: await getDonatePoint(ca), // 必要なdpoint
+  };
+  return result;
+};
+
+const getTokenConnect = {
+  getToken,
+  getTokenInfo,
+};
+
+export default getTokenConnect;

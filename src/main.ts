@@ -19,6 +19,7 @@ import {
 } from "./module/snipet/display";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
+document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
 const connectButton = document.getElementById("connectButton");
 const mainContents = document.getElementById("mainContents");
 const modalbase = document.getElementById("modalbase");
@@ -200,7 +201,7 @@ const setTokens = async () => {
   divTokensElement.appendChild(divElement);
 
   // ----------------------------------------
-  const pElement = document.createElement("p");
+  const pElement = document.createElement("h3");
   divElement.appendChild(pElement);
 
   var tokenLink = document.createElement("a");
@@ -215,6 +216,13 @@ const setTokens = async () => {
   const tokenName = document.createElement("span");
   tokenName.textContent = await getToken("name", router.params[2], "");
   pElement.appendChild(tokenName);
+
+  var mintLink = document.createElement("a");
+  mintLink.classList.add("mintlink");
+  mintLink.href = "/tokens/" + router.params[2] + "/mint/";
+  mintLink.textContent = "mint";
+  pElement.appendChild(mintLink);
+
   // ----------------------------------------
 
   displayTokens(divTokensElement, router.params[2], false);

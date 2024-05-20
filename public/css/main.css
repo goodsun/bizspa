@@ -3,6 +3,22 @@ body {
   padding: 30px;
   color: #888;
 }
+.headerMenu a {
+  font-size: 1.5em;
+  font-weight: lighter;
+  margin-left: 0.5em;
+}
+.headerMenu a.home::before {
+  color: #aaaaaa;
+  content: "";
+  margin-right: 0.5em;
+}
+.headerMenu a::before {
+  color: #aaaaaa;
+  content: "|";
+  margin-right: 0.5em;
+}
+
 .linknum {
   color: #666;
   font-size: 15px;
@@ -257,6 +273,22 @@ a {
   line-height: 1;
   text-align: center;
   transition: opacity 0.2s ease-in-out;
+}
+.mintlink {
+  margin-left: 10px;
+  font-size: 0.8em;
+  font-weight: lighter;
+  color: #8888bb;
+}
+.mintlink::before {
+  color: #aaaaaa;
+  content: "[";
+  margin-right: 0.2em;
+}
+.mintlink::after {
+  color: #aaaaaa;
+  content: "]";
+  margin-left: 0.2em;
 }
 .wfull {
   width: 99%;
