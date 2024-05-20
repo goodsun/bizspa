@@ -6,7 +6,7 @@ const setCaroucel = async (slides) => {
   mainContents.appendChild(sectionElement);
   const titleElement = document.createElement("h2");
   sectionElement.appendChild(titleElement);
-  titleElement.innerHTML = "BizenDAO";
+  titleElement.innerHTML = "New Arrivals";
   const carousel = document.createElement("div");
   carousel.id = "carousel";
   sectionElement.appendChild(carousel);

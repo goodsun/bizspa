@@ -48,33 +48,40 @@ export const ethToWai = (input) => {
   return BigInt(input * 1000000000000000000);
 };
 
-export async function checkMetaMask() {
+export const checkMetaMask = async () => {
+  const balanceData = await checkBalance();
+  connectWallet.innerHTML =
+    "EOA : " +
+    balanceData.eoa +
+    "<br /> balance : " +
+    waiToEth(balanceData.balance) +
+    " " +
+    balanceData.symbol;
+  if (balanceData.dpoint > 0) {
+    connectWallet.innerHTML += " / donatePoint : " + balanceData.dpoint + " pt";
+  }
+};
+
+export async function checkBalance() {
+  let eoa: string;
+  let balance: bigint;
+  let symbol: string;
+  let dpoint: number;
   if (window.ethereum) {
     if (window.ethereum.isMetaMask) {
       const provider = new ethers.BrowserProvider(window.ethereum);
       try {
         const signer = await provider.getSigner();
-        const eoa = await signer.getAddress();
-        const balance = await provider.getBalance(eoa);
+        eoa = await signer.getAddress();
+        balance = await provider.getBalance(eoa);
         const network = await provider.getNetwork();
-        let symbol = network.name;
+        symbol = network.name;
         if (symbol == "unknown") {
           symbol = CONST.DEFAULT_SYMBOL;
         }
 
         const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
-        const dpoint = await donate("balance", ca, []);
-
-        connectWallet.innerHTML =
-          "EOA : " +
-          eoa +
-          "<br /> balance : " +
-          waiToEth(balance) +
-          " " +
-          symbol;
-        if (dpoint > 0) {
-          connectWallet.innerHTML += " / donatePoint : " + dpoint + " pt";
-        }
+        dpoint = await donate("balance", ca, []);
 
         window.ethereum.on("accountsChanged", async (accounts) => {
           console.dir(accounts);
@@ -85,6 +92,12 @@ export async function checkMetaMask() {
       }
     }
   }
+  return {
+    eoa: eoa,
+    balance: balance,
+    symbol: symbol,
+    dpoint: dpoint,
+  };
 }
 
 const utils = {
@@ -95,6 +108,7 @@ const utils = {
   isAddressesEqual,
   waiToEth,
   ethToWai,
+  checkBalance,
 };
 
 export default utils;

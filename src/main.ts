@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { CONST } from "./module/common/const";
 import { router } from "./module/common/router";
 import { getManager } from "./module/connect/getManager";
@@ -22,7 +21,6 @@ import {
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 const connectButton = document.getElementById("connectButton");
 const mainContents = document.getElementById("mainContents");
-const connectWallet = document.getElementById("connectWallet");
 const modalbase = document.getElementById("modalbase");
 const modalcontent = document.getElementById("modalcontent");
 let dispmodal = false;
@@ -67,47 +65,6 @@ connectButton.addEventListener("click", async () => {
     alert("メタマスクをインストールしてください");
   }
 });
-
-/*
-async function checkMetaMask() {
-  if (window.ethereum) {
-    if (window.ethereum.isMetaMask) {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      try {
-        const signer = await provider.getSigner();
-        const eoa = await signer.getAddress();
-        const balance = await provider.getBalance(eoa);
-        const network = await provider.getNetwork();
-        let symbol = network.name;
-        if (symbol == "unknown") {
-          symbol = CONST.DEFAULT_SYMBOL;
-        }
-
-        const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
-        const dpoint = await donate("balance", ca, []);
-
-        connectWallet.innerHTML =
-          "EOA : " +
-          eoa +
-          "<br /> balance : " +
-          util.waiToEth(balance) +
-          " " +
-          symbol;
-        if (dpoint > 0) {
-          connectWallet.innerHTML += " / donatePoint : " + dpoint + " pt";
-        }
-
-        window.ethereum.on("accountsChanged", async (accounts) => {
-          console.dir(accounts);
-          checkMetaMask();
-        });
-      } catch (error) {
-        console.error("Error retrieving network currency symbol:", error);
-      }
-    }
-  }
-}
-*/
 
 const setHome = async () => {
   homeSnipet.getHome();

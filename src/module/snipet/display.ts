@@ -78,7 +78,14 @@ export const displayToken = async (
       pElement
     );
     console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
-    detailDisplay.sendForm(divElement);
+
+    const balance = await utils.checkBalance();
+    console.log("owner:" + owner);
+    console.dir(balance);
+
+    if (utils.isAddressesEqual(owner, balance.eoa)) {
+      detailDisplay.sendForm(divElement);
+    }
   });
 };
 
