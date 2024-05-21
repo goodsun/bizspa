@@ -11,27 +11,34 @@ export const showToken = (
   owner,
   tokenUri,
   divElement: HTMLParagraphElement,
-  pElement: HTMLParagraphElement
+  pElement?: HTMLParagraphElement
 ) => {
   console.log("select type: " + type);
   console.dir(metadata);
 
   const tokenName = document.createElement("span");
   tokenName.textContent = metadata["name"];
-  pElement.appendChild(tokenName);
+  if (pElement) {
+    pElement.appendChild(tokenName);
+  }
 
   const h2Element = document.createElement("h2");
   h2Element.textContent = metadata["name"];
   divElement.appendChild(h2Element);
 
   const pDescriptionElement = document.createElement("p");
-  pDescriptionElement.textContent = metadata["description"];
+  pDescriptionElement.innerHTML = metadata["description"].replace(
+    /\n/g,
+    "<br />"
+  );
   divElement.appendChild(pDescriptionElement);
 
   const pOwnerElement = document.createElement("p");
   pOwnerElement.innerHTML =
     "owner: <a href='/assets/" + owner + "'>" + owner + "</a>";
-  divElement.appendChild(pOwnerElement);
+  if (owner != "") {
+    divElement.appendChild(pOwnerElement);
+  }
 
   if (metadata["animation_url"]) {
     const movieArea = document.createElement("div");
@@ -104,19 +111,37 @@ export const showToken = (
   divElement.appendChild(imgElement);
 
   const attributes = metadata["attributes"];
-  const attributeMediaArea = document.createElement("div");
-  divElement.appendChild(attributeMediaArea);
-  const attributeTextArea = document.createElement("div");
-  divElement.appendChild(attributeTextArea);
+  const attributeDivArea = document.createElement("div");
+  divElement.appendChild(attributeDivArea);
 
   for (const key in attributes) {
     const titleElm = document.createElement("h4");
     titleElm.textContent = attributes[key]["trait_type"];
+    if (type == "metabuilder") {
+      const upLink = document.createElement("span");
+      upLink.id = "attr_up_" + key;
+      upLink.classList.add("litelink");
+      upLink.classList.add("attrControlLink");
+      upLink.textContent = "UP";
+      titleElm.appendChild(upLink);
+      const downLink = document.createElement("span");
+      downLink.id = "attr_dw_" + key;
+      downLink.classList.add("litelink");
+      downLink.classList.add("attrControlLink");
+      downLink.textContent = "DOUN";
+      titleElm.appendChild(downLink);
+      const delLink = document.createElement("span");
+      delLink.id = "attr_rm_" + key;
+      delLink.classList.add("litelink");
+      delLink.classList.add("attrControlLink");
+      delLink.textContent = "delete";
+      titleElm.appendChild(delLink);
+    }
     const contentElm = document.createElement("p");
     contentElm.id = "attrebuteContent_" + key;
     if (attributes[key]["value"].slice(0, 4) == "http") {
-      attributeMediaArea.appendChild(titleElm);
-      attributeMediaArea.appendChild(contentElm);
+      attributeDivArea.appendChild(titleElm);
+      attributeDivArea.appendChild(contentElm);
       fetch(attributes[key]["value"])
         .then((response) => {
           const contentType = response.headers.get("content-type");
@@ -143,9 +168,9 @@ export const showToken = (
           console.error("Error:", error);
         });
     } else {
-      attributeTextArea.appendChild(titleElm);
-      attributeTextArea.appendChild(contentElm);
-      contentElm.textContent = attributes[key]["value"];
+      attributeDivArea.appendChild(titleElm);
+      attributeDivArea.appendChild(contentElm);
+      contentElm.innerHTML = attributes[key]["value"].replace(/\n/g, "<br />");
     }
   }
   console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);

@@ -261,6 +261,18 @@ a {
   transition: all 0.2s ease-in-out;
 }
 
+.BaseTextarea {
+  border: 1px solid #d1d1d1;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  padding: 12px 16px;
+  margin: 5px 5px 0 0;
+  height: 8em;
+  resize: horizontal;
+  transition: all 0.2s ease-in-out;
+}
+
 .BaseSubmit {
   background: #3e3e3e;
   border: 0px solid #d1d1d1;
@@ -274,22 +286,40 @@ a {
   text-align: center;
   transition: opacity 0.2s ease-in-out;
 }
-.mintlink {
+.litelink {
   margin-left: 10px;
   font-size: 0.8em;
   font-weight: lighter;
-  color: #8888bb;
 }
-.mintlink::before {
+.litelink::before {
   color: #aaaaaa;
   content: "[";
   margin-right: 0.2em;
 }
-.mintlink::after {
+.litelink::after {
   color: #aaaaaa;
   content: "]";
   margin-left: 0.2em;
 }
+
+.mintLink {
+  color: #8888bb;
+}
+
+.attrControlLink {
+  color: #cd196a;
+}
+
+.reloadLink {
+  color: #88bb9f;
+}
+
+.copyLink {
+  margin-left: 10px;
+  font-size: 15px;
+  color: #1c559f;
+}
+
 .wfull {
   width: 99%;
 }
@@ -302,11 +332,18 @@ a {
 .w5p {
   width: 49%;
 }
+.w35p {
+  width: 34%;
+}
 .w3p {
   width: 29%;
 }
 .w2p {
   width: 19%;
+}
+.controlLavel {
+  margin-top: 15px;
+  margin-bottom: 5px;
 }
 .articleSection {
   width: 100%;
@@ -318,4 +355,22 @@ a {
 .articleArea img {
   margin: 10px;
   width: 90%;
+}
+
+.custom-file-div {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+.custom-file-input {
+  display: none;
+}
+.custom-file-label {
+  display: inline-block;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
 }

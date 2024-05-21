@@ -4,6 +4,7 @@ import { getManager } from "./module/connect/getManager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
 import { donate } from "./module/connect/donate";
+import setMeta from "./module/connect/metabuilder";
 import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
@@ -22,41 +23,67 @@ document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
 const connectButton = document.getElementById("connectButton");
 const mainContents = document.getElementById("mainContents");
+/*
 const modalbase = document.getElementById("modalbase");
 const modalcontent = document.getElementById("modalcontent");
 let dispmodal = false;
 let connected = null;
+*/
 
+async function metabuilder() {
+  const signer = await setMeta.getUI();
+  console.log("metabuilder" + signer);
+}
 async function setArticle() {
   articleSnipet.getMdPath();
   articleSnipet.getMdDir();
 }
 async function setDonate(params) {
   const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
-  const result = await donate(params[2], ca, params);
-  console.log("result");
-  console.dir(result);
+  const total = await donate("total", ca, params);
+  const balance = await donate("balance", ca, params);
+  const usedpoints = await donate("usedpoints", ca, params);
+  const totaldonations = await donate("totaldonations", ca, params);
+  const allTotalUsed = await donate("allTotalUsed", ca, params);
+  const allTotalDonation = await donate("allTotalDonation", ca, params);
 
   const divDonateElement = document.createElement("div");
   divDonateElement.classList.add("ownerArea");
   mainContents.appendChild(divDonateElement);
 
-  if (result) {
-    const donateTitle = document.createElement("h2");
-    donateTitle.innerHTML =
-      "<h1>Donation</h1>" +
-      "<p>Donation CA:" +
-      ca +
-      "</p>" +
-      "<p>" +
-      params[2] +
-      " : " +
-      result +
+  const donateTitle = document.createElement("h2");
+  donateTitle.innerHTML =
+    "<h1>Donation</h1>" + "<p>Donation CA : " + ca + "</p>";
+
+  if (balance > 0) {
+    donateTitle.innerHTML +=
+      "<p>Balance : " + balance + " donatePoint" + "</p>";
+  }
+  if (totaldonations > 0) {
+    donateTitle.innerHTML +=
+      "<p>Total donations : " + allTotalDonation + " donatePoint" + "</p>";
+  }
+  if (usedpoints > 0) {
+    donateTitle.innerHTML +=
+      "<p>Used points : " + usedpoints + " donatePoint" + "</p>";
+  }
+
+  if (allTotalDonation > 0) {
+    donateTitle.innerHTML +=
+      "<p>Total donation (All dao) : " +
+      allTotalDonation +
       " donatePoint" +
       "</p>";
-
-    divDonateElement.appendChild(donateTitle);
   }
+  if (allTotalUsed > 0) {
+    donateTitle.innerHTML +=
+      "<p>Total used point (All dao) : " +
+      allTotalUsed +
+      " donatePoint" +
+      "</p>";
+  }
+
+  divDonateElement.appendChild(donateTitle);
 }
 
 connectButton.addEventListener("click", async () => {
@@ -218,6 +245,7 @@ const setTokens = async () => {
   pElement.appendChild(tokenName);
 
   var mintLink = document.createElement("a");
+  mintLink.classList.add("litelink");
   mintLink.classList.add("mintlink");
   mintLink.href = "/tokens/" + router.params[2] + "/mint/";
   mintLink.textContent = "mint";
@@ -258,6 +286,7 @@ const getTbaInfo = async () => {
   }
 };
 
+/*
 document.addEventListener("keydown", function (event) {
   //console.log(event.key);
   if (event.key === "Escape") {
@@ -274,6 +303,7 @@ const toggleModal = () => {
     dispmodal = true;
   }
 };
+*/
 
 const checkRoute = () => {
   console.log("checkRoute" + router.params);
@@ -323,6 +353,8 @@ const checkRoute = () => {
     setTokenContracts((filter) => {
       return filter[3] == true;
     });
+  } else if (param1 === "meta") {
+    metabuilder();
   }
 };
 

@@ -348,6 +348,7 @@ export const displayTokenContracts = async (result, filter) => {
         contractLink.href = "/tokens/" + result[key][0];
         contractLink.innerHTML = result[key][1];
         const mintLink = document.createElement("a");
+        mintLink.classList.add("litelink");
         mintLink.classList.add("mintlink");
         mintLink.href = "/tokens/" + result[key][0] + "/mint";
         mintLink.innerHTML = "mint";
@@ -365,6 +366,7 @@ export const displayTokenContracts = async (result, filter) => {
         contractLink.href = "/tokens/" + result[key][0];
         contractLink.innerHTML = result[key][1];
         const mintLink = document.createElement("a");
+        mintLink.classList.add("litelink");
         mintLink.classList.add("mintlink");
         mintLink.href = "/tokens/" + result[key][0] + "/mint";
         mintLink.innerHTML = "mint";
