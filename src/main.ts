@@ -31,8 +31,10 @@ let connected = null;
 */
 
 async function metabuilder() {
-  const signer = await setMeta.getUI();
-  console.log("metabuilder" + signer);
+  await setMeta.getUI();
+}
+async function parmaweb() {
+  console.log("parmaweb");
 }
 async function setArticle() {
   articleSnipet.getMdPath();
@@ -355,6 +357,8 @@ const checkRoute = () => {
     });
   } else if (param1 === "meta") {
     metabuilder();
+  } else if (param1 === "parmaweb") {
+    parmaweb();
   }
 };
 

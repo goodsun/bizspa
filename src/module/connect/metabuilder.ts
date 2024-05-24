@@ -43,10 +43,12 @@ const getStackList = async () => {
     reload.id = "vaultReload";
     reload.innerHTML = "reload";
     modalcontent.appendChild(reload);
+    const vaultListDiv = document.createElement("div");
+    modalcontent.appendChild(vaultListDiv);
 
     for (const key in vaultList) {
       console.dir(vaultList[key]);
-      modalcontent.innerHTML +=
+      vaultListDiv.innerHTML +=
         "<br />" +
         '<a href="' +
         vaultList[key].arweaveUrl +
@@ -54,7 +56,7 @@ const getStackList = async () => {
         vaultList[key].name.substr(43) +
         "</a>";
       addCopyButton(
-        modalcontent,
+        vaultListDiv,
         "COPYBUTTON_" + key,
         "COPYBTN",
         vaultList[key].arweaveUrl
@@ -68,7 +70,7 @@ const getStackList = async () => {
         navigator.clipboard
           .writeText(copytext)
           .then(function () {
-            alert("テキストがクリップボードにコピーされました");
+            alert("URLがクリップボードにコピーされました");
           })
           .catch(function (error) {
             alert("コピーに失敗しました: " + error);
@@ -123,7 +125,6 @@ const toggleModal = () => {
 };
 
 export const getUI = async () => {
-  console.log("GETUI RUNNNING");
   const makeMetaDiv = document.createElement("div");
   makeMetaDiv.classList.add("metadatabuilder");
   mainContents.appendChild(makeMetaDiv);
@@ -306,11 +307,6 @@ export const getUI = async () => {
   attrSet.addEventListener("click", () => {
     setAttr("test");
   });
-
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const signer = await provider.getSigner();
-  const signerAddr = await signer.getAddress();
-  return signerAddr;
 };
 
 export const setTokenData = async () => {
