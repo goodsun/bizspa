@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import setElement from "../snipet/setElement";
-import getAkord from "./getAkord";
+import { donate } from "../../module/connect/donate";
+import utils from "../common/util";
 
 const mainContents = document.getElementById("mainContents");
 
@@ -28,21 +29,18 @@ const setUI = (parent, eoa) => {
   titleElm.innerHTML = "ParmaWeb Uploader";
   parent.appendChild(titleElm);
   const uploadingInfoArea = document.createElement("div");
-  uploadingInfoArea.classList.add("uplpadInfoArea");
+  uploadingInfoArea.classList.add("uploadInfoArea");
   uploadingInfoArea.innerHTML = " ";
   parent.appendChild(uploadingInfoArea);
 
-  const fileSelect = setElement.makeInput(
-    "file",
+  const fileSelect = setElement.makeFileSelect(
     "updateFile",
     "BaseSubmit",
-    "ファイル選択",
-    "ファイル選択"
+    "FILE SELECT",
+    "w3p"
   );
   parent.appendChild(fileSelect);
-
-  const br = document.createElement("h2");
-  parent.appendChild(br);
+  fileSelect.classList.add("w3p");
 
   const fileUpload = setElement.makeInput(
     "submit",
@@ -51,7 +49,7 @@ const setUI = (parent, eoa) => {
     "FILE UPLOAD",
     "FILE UPLOAD"
   );
-  fileUpload.classList.add("wfull");
+  fileUpload.classList.add("w7p");
   parent.appendChild(fileUpload);
 
   fileSelect.addEventListener("change", async (event) => {
@@ -60,11 +58,14 @@ const setUI = (parent, eoa) => {
     const price = priceCarc(file.size);
     console.log(price);
     uploadingInfoArea.innerHTML =
-      "estimate : " +
+      "filename : " +
+      file.name +
+      "<br />estimate : " +
       price.toFixed(8).substring(0, 10) +
       " " +
       CONST.DEFAULT_SYMBOL +
-      "( + GasFee)";
+      " + GasFee";
+    uploadingInfoArea.classList.add("upload-confirm");
   });
 
   fileUpload.addEventListener("click", async (event) => {
@@ -96,7 +97,11 @@ const setUI = (parent, eoa) => {
           " / KB \n"
       )
     ) {
-      uploadingInfoArea.innerHTML = "<div class='spinner'></div>loading...";
+      uploadingInfoArea.innerHTML = "<div class='spinner'></div>uploading...";
+      uploadingInfoArea.classList.remove("upload-confirm");
+      uploadingInfoArea.classList.remove("upload-success");
+      uploadingInfoArea.classList.remove("upload-failed");
+
       if (file) {
         //直近で取り直す
         const provider = new ethers.BrowserProvider(window.ethereum);
@@ -119,31 +124,62 @@ const setUI = (parent, eoa) => {
             const result = await checkresult.json();
             console.log("File check successfully:", result);
             formData.append("checkfile", result.file);
-            const response = await fetch(URL, {
-              method: "POST",
-              body: formData,
-            });
 
-            if (response.ok) {
-              const result = await response.json();
-              console.log("File upload successfully:", result);
-              uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
-              return result;
+            //==============================================
+            // 課金する
+            // 一旦Donateへ入れておく
+            const ca = CONST.DONATION_CA;
+            const value: string = String(utils.ethToWai(price));
+            const donateResult = await donate("donate", ca, [eoa, value])
+              .then((response) => {
+                console.dir(response);
+                return response;
+              })
+              .catch((error) => {
+                console.dir(error);
+              });
+
+            //==============================================
+            //課金成功でアップロード
+            if (donateResult) {
+              console.log("donateResult");
+              console.dir(donateResult);
+              const response = await fetch(URL, {
+                method: "POST",
+                body: formData,
+              });
+
+              if (response.ok) {
+                const result = await response.json();
+                console.log("File upload successfully:", result);
+                uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
+                uploadingInfoArea.classList.add("upload-success");
+                return result;
+              } else {
+                console.error("Failed to upload file:", response.statusText);
+                uploadingInfoArea.innerHTML = "Failed to Upload file";
+                uploadingInfoArea.classList.add("upload-failed");
+              }
             } else {
-              console.error("Failed to upload file:", response.statusText);
-              uploadingInfoArea.innerHTML = "Failed to Upload file";
+              console.error("Failed to check file:", checkresult.statusText);
+              uploadingInfoArea.innerHTML = "cansel to upload";
+              uploadingInfoArea.classList.add("upload-success");
             }
           } else {
             console.error("Failed to check file:", checkresult.statusText);
             uploadingInfoArea.innerHTML = "Failed to check file";
+            uploadingInfoArea.classList.add("upload-failed");
           }
         } catch (error) {
           console.error("Error:", error);
           uploadingInfoArea.innerHTML = "UPLOAD ERROR";
+          uploadingInfoArea.classList.add("upload-failed");
         }
       } else {
         console.log("No file selected");
         uploadingInfoArea.innerHTML = "";
+        uploadingInfoArea.classList.remove("upload-success");
+        uploadingInfoArea.classList.remove("upload-failed");
       }
     }
   });

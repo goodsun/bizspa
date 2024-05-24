@@ -1,8 +1,8 @@
 .carousel {
   position: relative;
   overflow: hidden;
-  width: 600px; /* 任意の幅 */
-  height: 600px; /* 任意の高さ */
+  width: 860px; /* 任意の幅 */
+  height: 860px; /* 任意の高さ */
 }
 
 .carousel-container {

@@ -3,6 +3,7 @@ import getTokenConnect from "../connect/getToken";
 import { getOwn } from "../connect/getOwn";
 import utils from "../common/util";
 import detailDisplay from "./detailDisplay";
+import commonSnipet from "../snipet/common";
 const mainContents = document.getElementById("mainContents");
 
 export const displayMintUI = async (targetElem, params) => {
@@ -59,18 +60,21 @@ export const displayToken = async (
   displayTokenElement.appendChild(divTbaElement);
 
   const balance = await utils.checkBalance();
-
   const tbaInfoElement = document.createElement("p");
 
   if (tbaOwner) {
-    tbaInfoElement.innerHTML =
-      "tokenBoundAccount: <a href='/assets/" +
-      tokenBoundAccount +
-      "'>" +
-      tokenBoundAccount +
-      "</a>";
+    tbaInfoElement.appendChild(commonSnipet.span("This NFT has TBA: "));
+    tbaInfoElement.appendChild(
+      commonSnipet.eoa(tokenBoundAccount, {
+        link: "/assets/" + tokenBoundAccount,
+        target: "",
+      })
+    );
   } else {
-    if (utils.isAddressesEqual(owner, balance.eoa)) {
+    if (
+      balance.balance != undefined &&
+      utils.isAddressesEqual(owner, balance.eoa)
+    ) {
       detailDisplay.tbaRegist(tbaInfoElement, ca, id, balance.eoa);
     }
   }
@@ -109,7 +113,10 @@ export const displayToken = async (
     );
     console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
 
-    if (utils.isAddressesEqual(owner, balance.eoa)) {
+    if (
+      balance.balance != undefined &&
+      utils.isAddressesEqual(owner, balance.eoa)
+    ) {
       detailDisplay.sendForm(divElement);
     }
   });
@@ -228,10 +235,17 @@ export const displayManagedData = async (type, title, filter) => {
       if (type == "admins") {
         link.textContent = result[key][0];
       } else if (type == "creators") {
-        link.textContent =
-          JSON.parse(result[key][1])["en"] + " [" + result[key][2] + "]";
+        link.innerHTML =
+          JSON.parse(result[key][1])["en"] +
+          "<span class='litelink'>" +
+          result[key][2] +
+          "<span>";
       } else {
-        link.textContent = result[key][1] + " [" + result[key][2] + "]";
+        link.innerHTML =
+          result[key][1] +
+          "<span class='litelink'>" +
+          result[key][2] +
+          "</span>";
       }
       dataList.appendChild(link);
       const lineBreak = document.createElement("br");

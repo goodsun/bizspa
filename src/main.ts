@@ -3,12 +3,13 @@ import { router } from "./module/common/router";
 import { getManager } from "./module/connect/getManager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
-import { donate } from "./module/connect/donate";
+import { donate, getDonate } from "./module/connect/donate";
 import parmawebcon from "./module/connect/parmaweb";
 import setMeta from "./module/connect/metabuilder";
 import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
+import commonSnipet from "./module/snipet/common";
 import util from "./module/common/util";
 import {
   displayAssets,
@@ -22,14 +23,7 @@ import {
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
-const connectButton = document.getElementById("connectButton");
 const mainContents = document.getElementById("mainContents");
-/*
-const modalbase = document.getElementById("modalbase");
-const modalcontent = document.getElementById("modalcontent");
-let dispmodal = false;
-let connected = null;
-*/
 
 async function metabuilder() {
   await setMeta.getUI();
@@ -42,33 +36,37 @@ async function setArticle() {
   articleSnipet.getMdDir();
 }
 async function setDonate(params) {
-  const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
-  const total = await donate("total", ca, params);
-  const balance = await donate("balance", ca, params);
-  const usedpoints = await donate("usedpoints", ca, params);
-  const totaldonations = await donate("totaldonations", ca, params);
-  const allTotalUsed = await donate("allTotalUsed", ca, params);
-  const allTotalDonation = await donate("allTotalDonation", ca, params);
+  const ca = CONST.DONATION_CA;
+  const total = await getDonate("total", ca, params);
+  const allTotalUsed = await getDonate("allTotalUsed", ca, params);
+  const allTotalDonation = await getDonate("allTotalDonation", ca, params);
+
+  const donateTitle = document.createElement("h2");
+  donateTitle.innerHTML =
+    "<h2>Donation</h2>" + "<p>Donation CA : " + ca + "</p>";
 
   const divDonateElement = document.createElement("div");
   divDonateElement.classList.add("ownerArea");
   mainContents.appendChild(divDonateElement);
 
-  const donateTitle = document.createElement("h2");
-  donateTitle.innerHTML =
-    "<h1>Donation</h1>" + "<p>Donation CA : " + ca + "</p>";
+  const checkBalance = await util.checkBalance();
+  if (checkBalance.eoa != undefined) {
+    const donateBalance = await donate("balance", ca, params);
+    const usedpoints = await donate("usedpoints", ca, params);
+    const totaldonations = await donate("totaldonations", ca, params);
 
-  if (balance > 0) {
-    donateTitle.innerHTML +=
-      "<p>Balance : " + balance + " donatePoint" + "</p>";
-  }
-  if (totaldonations > 0) {
-    donateTitle.innerHTML +=
-      "<p>Total donations : " + allTotalDonation + " donatePoint" + "</p>";
-  }
-  if (usedpoints > 0) {
-    donateTitle.innerHTML +=
-      "<p>Used points : " + usedpoints + " donatePoint" + "</p>";
+    if (donateBalance > 0) {
+      donateTitle.innerHTML +=
+        "<p>Balance : " + donateBalance + " donatePoint" + "</p>";
+    }
+    if (totaldonations > 0) {
+      donateTitle.innerHTML +=
+        "<p>Total donations : " + allTotalDonation + " donatePoint" + "</p>";
+    }
+    if (usedpoints > 0) {
+      donateTitle.innerHTML +=
+        "<p>Used points : " + usedpoints + " donatePoint" + "</p>";
+    }
   }
 
   if (allTotalDonation > 0) {
@@ -85,17 +83,8 @@ async function setDonate(params) {
       " donatePoint" +
       "</p>";
   }
-
   divDonateElement.appendChild(donateTitle);
 }
-
-connectButton.addEventListener("click", async () => {
-  if (typeof window.ethereum !== "undefined") {
-    util.checkMetaMask();
-  } else {
-    alert("メタマスクをインストールしてください");
-  }
-});
 
 const setHome = async () => {
   homeSnipet.getHome();
@@ -138,7 +127,10 @@ const setOwner = async (eoa) => {
   divOwnerElement.appendChild(ownerTitle);
 
   const pElement = document.createElement("p");
-  pElement.textContent = "EOA : " + eoa;
+  pElement.appendChild(commonSnipet.span("EOA: "));
+  pElement.appendChild(
+    commonSnipet.eoa(eoa, { link: "/assets/" + eoa, target: "" })
+  );
   divOwnerElement.appendChild(pElement);
 
   const tbaOwner = await getTba.checkOwner(eoa);
@@ -161,7 +153,6 @@ const setOwner = async (eoa) => {
       tbaToken[2] +
       "</a>";
     divOwnerElement.appendChild(tbaTokenElement);
-    console.dir(tbaToken);
   }
   setOwns(eoa);
 };
@@ -187,13 +178,10 @@ const setTokenContracts = async (filter) => {
 
 const setOwnTokenContracts = async (filter) => {
   const allList = await getManager("contracts");
-  //displayTokenContracts(allList, filter);
-  console.log("ここですべて判定する");
   for (const key in allList) {
     if (allList[key][2] == "nft") {
       getToken("getInfo", allList[key][0], "").then((response) => {
         if (response[0] == router.params[2]) {
-          console.dir("owner :" + router.params[2]);
           displayTokenContracts([allList[key]], filter);
         }
       });
@@ -210,7 +198,6 @@ const setToken = async () => {
   mainContents.appendChild(divElement);
   displayToken(divElement, params[2], params[3], tokenBoundAccount, tbaOwner);
   if (tbaOwner) {
-    console.dir("TBAがセットされていればASSET取得");
     setOwns(tokenBoundAccount);
   }
 };
@@ -259,59 +246,7 @@ const setTokens = async () => {
   displayTokens(divTokensElement, router.params[2], false);
 };
 
-/*
-const getTbaInfo = async () => {
-  const result = await getManager("contracts");
-  var tbaContracts = result.filter(function (contract) {
-    return contract[2] == "tba";
-  });
-
-  const tba = [];
-  for (const key in tbaContracts) {
-    console.dir(tbaContracts[key]);
-    const tokenBoundAccount = await getTba.getAddress(
-      tbaContracts[key][1],
-      tbaContracts[key][0],
-      CONST.BC_NETWORK_ID,
-      router.params[2], //tokenContract: string,
-      router.params[3], // tokenId: string,
-      CONST.TBA_SALT
-    );
-    tba.push(tokenBoundAccount);
-  }
-  if (tba.length > 1) {
-    alert("このトークンには2つ以上のTBAが結びついています。");
-    console.dir(tba);
-  }
-  if (tba.length > 0) {
-    return tba[0];
-  } else {
-    return null;
-  }
-};
-*/
-
-/*
-document.addEventListener("keydown", function (event) {
-  //console.log(event.key);
-  if (event.key === "Escape") {
-    toggleModal();
-  }
-});
-
-const toggleModal = () => {
-  if (dispmodal) {
-    modalbase.classList.remove("active");
-    dispmodal = false;
-  } else {
-    modalbase.classList.add("active");
-    dispmodal = true;
-  }
-};
-*/
-
 const checkRoute = () => {
-  console.log("checkRoute" + router.params);
   const params = router.params;
   const param1 = params[1];
   const param2 = params[2];
@@ -353,7 +288,6 @@ const checkRoute = () => {
     setToken();
   } else if (param1 === "tokens" && param2 && !param3) {
     setTokens();
-    console.log("caOnly" + params);
   } else if (param1 === "tokens") {
     setTokenContracts((filter) => {
       return filter[3] == true;
@@ -366,4 +300,4 @@ const checkRoute = () => {
 };
 
 checkRoute();
-util.checkMetaMask();
+util.checkMetamask();

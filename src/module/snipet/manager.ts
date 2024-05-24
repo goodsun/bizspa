@@ -1,14 +1,10 @@
 import { setManager } from "../../module/connect/setManager";
 
 export const control1Set = async (set1) => {
-  console.log(set1);
   const result = await setManager("checkUser");
-  console.log(result);
 };
 
 export const control2Set = async (set1, set2) => {
-  console.log(set1);
-  console.log(set2);
   if (
     set1 == "setadmin" ||
     set1 == "deladmin" ||
@@ -17,14 +13,11 @@ export const control2Set = async (set1, set2) => {
   ) {
     if (confirm(set1 + "はセットできるのか？：" + set2)) {
       const result = await setManager(set1, [set2]);
-      console.log(result);
     }
   }
 };
 
 export const control3Set = async (set1, set2, set3) => {
-  console.log(set1);
-  console.log(set2);
   if (
     set1 == "setcreator" ||
     set1 == "setcreatorinfo" ||
@@ -33,14 +26,11 @@ export const control3Set = async (set1, set2, set3) => {
   ) {
     if (confirm(set1 + "はセットできるのか？：" + set2 + set3)) {
       const result = await setManager(set1, [set2, set3]);
-      console.log(result);
     }
   }
 };
 
 export const control4Set = async (set1, set2, set3, set4) => {
-  console.log(set1);
-  console.log(set2);
   if (
     set1 == "setcreator" ||
     set1 == "setcreatorinfo" ||
@@ -49,7 +39,6 @@ export const control4Set = async (set1, set2, set3, set4) => {
   ) {
     if (confirm(set1 + "はセットできるのか？：" + set2 + set3 + set4)) {
       const result = await setManager(set1, [set2, set3, set4]);
-      console.log(result);
     }
   }
 };

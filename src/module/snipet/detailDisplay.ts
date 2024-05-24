@@ -4,6 +4,7 @@ import { getTba } from "../../module/connect/getTba";
 import setElement from "./setElement";
 import setToken from "../connect/setToken";
 import getToken from "../connect/getToken";
+import commonSnipet from "../snipet/common";
 const headJsArea = document.getElementById("pageHeader");
 const footJsArea = document.getElementById("pageFooter");
 
@@ -17,7 +18,7 @@ export const showToken = async (
   console.log("select type: " + type);
   console.dir(metadata);
 
-  const h2Element = document.createElement("h2");
+  const h2Element = document.createElement("h1");
   h2Element.textContent = metadata["name"];
   divElement.appendChild(h2Element);
 
@@ -32,22 +33,29 @@ export const showToken = async (
   const tbaToken = await getTba.checkToken(owner);
   const pOwnerElement = document.createElement("p");
   if (tbaOwner) {
-    pOwnerElement.innerHTML =
-      "TBA: <a href='/assets/" + owner + "'>" + owner + "</a>";
-    pOwnerElement.innerHTML +=
-      " <a class='parentTag' href='/assets/" + tbaOwner + "'> parent </a>";
-    console.log("tbaOwnerInfo:", tbaOwner);
-    console.log("tbaTokenInfo:", tbaToken);
+    pOwnerElement.appendChild(commonSnipet.span("ca: "));
+    pOwnerElement.appendChild(
+      commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
+    );
 
-    pOwnerElement.innerHTML +=
+    const parentTag = document.createElement("span");
+    parentTag.innerHTML +=
+      " <a class='parentTag' href='/assets/" + tbaOwner + "'> parent </a>";
+    pOwnerElement.appendChild(parentTag);
+
+    const tbaTag = document.createElement("span");
+    tbaTag.innerHTML +=
       "<a class='tbaTag' href='/tokens/" +
       tbaToken[1] +
       "/" +
       tbaToken[2] +
       "'> token </a>";
+    pOwnerElement.appendChild(tbaTag);
   } else {
-    pOwnerElement.innerHTML =
-      "owner: <a href='/assets/" + owner + "'>" + owner + "</a>";
+    pOwnerElement.appendChild(commonSnipet.span("owner: "));
+    pOwnerElement.appendChild(
+      commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
+    );
   }
 
   if (owner != "") {
@@ -209,12 +217,30 @@ export const tbaSendForm = (
   const id = params[3];
 
   const h2Element = document.createElement("p");
-  h2Element.innerHTML = "TBA CONTROL";
-  h2Element.innerHTML += "<br />ca:" + ca;
-  h2Element.innerHTML += "<br />id:" + id;
-  h2Element.innerHTML += "<br />parent:" + parent;
-  h2Element.innerHTML += "<br />owner:" + owner;
   divElement.appendChild(h2Element);
+
+  h2Element.innerHTML = "TBA CONTROL";
+  h2Element.appendChild(commonSnipet.br());
+  h2Element.appendChild(commonSnipet.span("Account-Bound NFT: "));
+  h2Element.appendChild(
+    commonSnipet.eoa(ca, { link: "/tokens/" + ca, target: "" })
+  );
+
+  h2Element.appendChild(
+    commonSnipet.link(" #" + id, "/tokens/" + ca + "/" + id)
+  );
+
+  h2Element.appendChild(commonSnipet.br());
+  h2Element.appendChild(commonSnipet.span("parent: "));
+  h2Element.appendChild(
+    commonSnipet.eoa(parent, { link: "/assets/" + parent, target: "" })
+  );
+
+  h2Element.appendChild(commonSnipet.br());
+  h2Element.appendChild(commonSnipet.span("owner: "));
+  h2Element.appendChild(
+    commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
+  );
 
   const makeElement = setElement.makeElement(
     "p",
@@ -245,9 +271,10 @@ export const tbaSendForm = (
   makeSubmit.addEventListener("click", async () => {
     if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
       const args = [owner, sendToInput.value, id];
+      const value = 0;
       const calldata = await getToken.getCallData(ca, "transferFrom", args);
       console.log("CALLDATA:" + calldata);
-      const result = await getTba.executeCall(owner, ca, calldata);
+      const result = await getTba.executeCall(owner, ca, value, calldata);
       console.log(result);
       alert("送信しました");
     }
@@ -369,7 +396,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   );
   tokenUriForm.classList.add("wfull");
   divElement.appendChild(tokenUriForm);
-  divElement.appendChild(setElement.br());
+  divElement.appendChild(commonSnipet.br());
 
   const eoaForm = setElement.makeInput(
     "input",
@@ -462,7 +489,7 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
   );
   makeInput.classList.add("wfull");
   divElement.appendChild(makeInput);
-  divElement.appendChild(setElement.br());
+  divElement.appendChild(commonSnipet.br());
 
   const makeInput2 = setElement.makeInput(
     "input",
@@ -480,7 +507,7 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
   );
   makeInput3.classList.add("w5p");
   divElement.appendChild(makeInput3);
-  divElement.appendChild(setElement.br());
+  divElement.appendChild(commonSnipet.br());
 
   const makeInput4 = setElement.makeInput(
     "input",

@@ -1,3 +1,4 @@
+import utils from "../common/util";
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
@@ -223,7 +224,10 @@ export const getUI = async () => {
 
   vaultSelect.addEventListener("click", async () => {
     toggleModal();
-    getStackList();
+    const chk = await utils.checkBalance();
+    if (chk.balance != undefined) {
+      getStackList();
+    }
   });
 
   metaLoad.addEventListener("change", (event) => {

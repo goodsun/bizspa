@@ -93,7 +93,7 @@ export const checkToken = async (contractAddress: string) => {
 export const executeCall = async (
   tokenBoundAccount: string, // TBAのCA
   contractAddress: string, //操作対象CA
-  value: string, // 送信金額
+  value: number, // 送信金額
   byteCode: string // 操作対象に流すcalldata
 ) => {
   const abi = ABIS.tbaAccount;

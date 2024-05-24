@@ -10,11 +10,8 @@ var queryString = window.location.search;
 const query = new URLSearchParams(queryString);
 const params: RouterParams = path.split("/");
 
-console.log("host: " + host);
-console.log("path: " + path);
 const mode = query.get("mode");
 const lang = query.get("lang");
-console.log(mode, lang);
 
 export const getParams = () => {
   const rawpath = window.location.pathname.split("/");

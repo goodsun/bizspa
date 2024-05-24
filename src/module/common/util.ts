@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donate";
+import commonSnipet from "../snipet/common";
 
 const connectWallet = document.getElementById("connectWallet");
 const assetLink = document.getElementById("assetLink");
@@ -39,7 +40,11 @@ export const fetchData = async (Url) => {
 };
 
 export const isAddressesEqual = (address1: string, address2: string) => {
-  return address1.toLowerCase() === address2.toLowerCase();
+  return (
+    address1 != undefined &&
+    address2 != undefined &&
+    address1.toLowerCase() === address2.toLowerCase()
+  );
 };
 
 export const waiToEth = (input) => {
@@ -47,22 +52,36 @@ export const waiToEth = (input) => {
 };
 
 export const ethToWai = (input) => {
-  return BigInt(input * 1000000000000000000);
+  return BigInt(Math.round(input * 1000000000000000000));
 };
 
-export const checkMetaMask = async () => {
+export const checkMetamask = async () => {
+  connectWallet.innerHTML = "";
   const balanceData = await checkBalance();
-  connectWallet.innerHTML =
-    "EOA : " +
-    balanceData.eoa +
-    "<br /> balance : " +
-    waiToEth(balanceData.balance) +
-    " " +
-    balanceData.symbol;
-  (document.getElementById("assetLink") as HTMLLinkElement).href =
-    "/assets/" + balanceData.eoa;
-  if (balanceData.dpoint > 0) {
-    connectWallet.innerHTML += " / donatePoint : " + balanceData.dpoint + " pt";
+  if (balanceData.eoa != undefined) {
+    connectWallet.appendChild(commonSnipet.span("EOA: "));
+    connectWallet.appendChild(
+      commonSnipet.eoa(balanceData.eoa, {
+        link: "/assets/" + balanceData.eoa,
+        target: "",
+      })
+    );
+    connectWallet.appendChild(commonSnipet.span(" balance: "));
+    connectWallet.appendChild(
+      commonSnipet.span(String(waiToEth(balanceData.balance)))
+    );
+    connectWallet.appendChild(commonSnipet.span(" " + balanceData.symbol));
+
+    (document.getElementById("assetLink") as HTMLLinkElement).href =
+      "/assets/" + balanceData.eoa;
+    if (balanceData.dpoint > 0) {
+      connectWallet.appendChild(
+        commonSnipet.span(" / " + balanceData.dpoint + " donationPoint")
+      );
+    }
+  } else {
+    connectWallet.innerHTML =
+      "wallet not connected. please connect <a href='https://metamask.io/' target='_blank'>metamask</a>";
   }
 };
 
@@ -71,31 +90,33 @@ export async function checkBalance() {
   let balance: bigint;
   let symbol: string;
   let dpoint: number;
-  if (window.ethereum) {
-    if (window.ethereum.isMetaMask) {
+  console.log("begin checkBalance");
+  if (window.ethereum && window.ethereum.isMetaMask) {
+    try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      try {
-        const signer = await provider.getSigner();
-        eoa = await signer.getAddress();
-        balance = await provider.getBalance(eoa);
-        const network = await provider.getNetwork();
-        symbol = network.name;
-        if (symbol == "unknown") {
-          symbol = CONST.DEFAULT_SYMBOL;
-        }
-
-        const ca = "0xD66bC4a4cfA6ef752a35822867E80aca5a4B0C9B";
-        dpoint = await donate("balance", ca, []);
-
-        window.ethereum.on("accountsChanged", async (accounts) => {
-          console.dir(accounts);
-          checkMetaMask();
-        });
-      } catch (error) {
-        console.error("Error retrieving network currency symbol:", error);
+      const signer = await provider.getSigner();
+      eoa = await signer.getAddress();
+      balance = await provider.getBalance(eoa);
+      const network = await provider.getNetwork();
+      symbol = network.name;
+      if (symbol == "unknown") {
+        symbol = CONST.DEFAULT_SYMBOL;
       }
+      const ca = CONST.DONATION_CA;
+      dpoint = await donate("balance", ca, []);
+      window.ethereum.on("accountsChanged", async (accounts) => {
+        try {
+          await checkMetamask();
+        } catch (error) {
+          console.error("Error handling accountsChanged event:", error);
+        }
+      });
+    } catch (error) {
+      console.info("wallet not connected");
+      console.error("Error details:", error);
     }
   }
+  console.log("end checkBalance");
   return {
     eoa: eoa,
     balance: balance,
@@ -105,7 +126,7 @@ export async function checkBalance() {
 }
 
 const utils = {
-  checkMetaMask,
+  checkMetamask,
   getLocalTime,
   sleep,
   fetchData,

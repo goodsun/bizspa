@@ -77,7 +77,6 @@ export const getDonatePoint = async (contractAddress: string) => {
 };
 
 export const getTokenInfo = async (ca: string) => {
-  console.log(ca + "の各種TOKEN情報を取得");
   const result = {
     ca: ca,
     name: await getToken("name", ca),
