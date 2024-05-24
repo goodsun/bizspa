@@ -4,6 +4,7 @@ import { getManager } from "./module/connect/getManager";
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
 import { donate } from "./module/connect/donate";
+import parmawebcon from "./module/connect/parmaweb";
 import setMeta from "./module/connect/metabuilder";
 import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
@@ -34,7 +35,7 @@ async function metabuilder() {
   await setMeta.getUI();
 }
 async function parmaweb() {
-  console.log("parmaweb");
+  await parmawebcon.getUI();
 }
 async function setArticle() {
   articleSnipet.getMdPath();
@@ -202,7 +203,7 @@ const setOwnTokenContracts = async (filter) => {
 
 const setToken = async () => {
   const params = router.params;
-  const tokenBoundAccount = await getTbaInfo();
+  const tokenBoundAccount = await getTba.getTbaInfo(params[2], params[3]);
   const tbaOwner = await getTba.checkOwner(tokenBoundAccount);
   const divElement = document.createElement("div");
   divElement.classList.add("nftArea");
@@ -258,6 +259,7 @@ const setTokens = async () => {
   displayTokens(divTokensElement, router.params[2], false);
 };
 
+/*
 const getTbaInfo = async () => {
   const result = await getManager("contracts");
   var tbaContracts = result.filter(function (contract) {
@@ -287,6 +289,7 @@ const getTbaInfo = async () => {
     return null;
   }
 };
+*/
 
 /*
 document.addEventListener("keydown", function (event) {

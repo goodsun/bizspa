@@ -374,3 +374,29 @@ a {
   color: white;
   border-radius: 4px;
 }
+.uplpadInfoArea {
+  display: block;
+  padding: 50px 0;
+  width: 100%;
+  height: 100px;
+  text-align: center;
+}
+
+.parentTag {
+  display: inline-block;
+  color: #ffffff;
+  background: #7d043f;
+  margin-right: 5px;
+  padding: 3px 6px;
+  height: 25px;
+  border-radius: 4px;
+}
+.tbaTag {
+  display: inline-block;
+  color: #ffffff;
+  margin-right: 5px;
+  padding: 3px 6px;
+  background: #280d7a;
+  height: 25px;
+  border-radius: 4px;
+}

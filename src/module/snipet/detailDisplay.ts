@@ -1,26 +1,21 @@
 import utils from "../common/util";
 import { router } from "../../module/common/router";
+import { getTba } from "../../module/connect/getTba";
 import setElement from "./setElement";
 import setToken from "../connect/setToken";
+import getToken from "../connect/getToken";
 const headJsArea = document.getElementById("pageHeader");
 const footJsArea = document.getElementById("pageFooter");
 
-export const showToken = (
+export const showToken = async (
   type: string,
   metadata: any,
   owner,
   tokenUri,
-  divElement: HTMLParagraphElement,
-  pElement?: HTMLParagraphElement
+  divElement: HTMLParagraphElement
 ) => {
   console.log("select type: " + type);
   console.dir(metadata);
-
-  const tokenName = document.createElement("span");
-  tokenName.textContent = metadata["name"];
-  if (pElement) {
-    pElement.appendChild(tokenName);
-  }
 
   const h2Element = document.createElement("h2");
   h2Element.textContent = metadata["name"];
@@ -33,9 +28,28 @@ export const showToken = (
   );
   divElement.appendChild(pDescriptionElement);
 
+  const tbaOwner = await getTba.checkOwner(owner);
+  const tbaToken = await getTba.checkToken(owner);
   const pOwnerElement = document.createElement("p");
-  pOwnerElement.innerHTML =
-    "owner: <a href='/assets/" + owner + "'>" + owner + "</a>";
+  if (tbaOwner) {
+    pOwnerElement.innerHTML =
+      "TBA: <a href='/assets/" + owner + "'>" + owner + "</a>";
+    pOwnerElement.innerHTML +=
+      " <a class='parentTag' href='/assets/" + tbaOwner + "'> parent </a>";
+    console.log("tbaOwnerInfo:", tbaOwner);
+    console.log("tbaTokenInfo:", tbaToken);
+
+    pOwnerElement.innerHTML +=
+      "<a class='tbaTag' href='/tokens/" +
+      tbaToken[1] +
+      "/" +
+      tbaToken[2] +
+      "'> token </a>";
+  } else {
+    pOwnerElement.innerHTML =
+      "owner: <a href='/assets/" + owner + "'>" + owner + "</a>";
+  }
+
   if (owner != "") {
     divElement.appendChild(pOwnerElement);
   }
@@ -174,8 +188,71 @@ export const showToken = (
     }
   }
   console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
+
+  if (tbaOwner) {
+    const balance = await utils.checkBalance();
+    if (utils.isAddressesEqual(tbaOwner, balance.eoa)) {
+      detailDisplay.tbaSendForm(tbaOwner, owner, divElement);
+    }
+  }
 };
 // ======================================
+
+export const tbaSendForm = (
+  parent,
+  owner,
+  divElement: HTMLParagraphElement
+) => {
+  const params = router.params;
+
+  const ca = params[2];
+  const id = params[3];
+
+  const h2Element = document.createElement("p");
+  h2Element.innerHTML = "TBA CONTROL";
+  h2Element.innerHTML += "<br />ca:" + ca;
+  h2Element.innerHTML += "<br />id:" + id;
+  h2Element.innerHTML += "<br />parent:" + parent;
+  h2Element.innerHTML += "<br />owner:" + owner;
+  divElement.appendChild(h2Element);
+
+  const makeElement = setElement.makeElement(
+    "p",
+    "このNFTをEOA宛に送信します",
+    null,
+    "createdPelemBySetElement"
+  );
+  divElement.appendChild(makeElement);
+
+  const sendToInput = setElement.makeInput(
+    "input",
+    "sendTo",
+    "BaseInput",
+    "送信先(EOA)"
+  );
+  sendToInput.classList.add("w7p");
+  divElement.appendChild(sendToInput);
+  const makeSubmit = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "SEND TOKEN",
+    "SEND TOKEN"
+  );
+  makeSubmit.classList.add("w3p");
+  divElement.appendChild(makeSubmit);
+
+  makeSubmit.addEventListener("click", async () => {
+    if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
+      const args = [owner, sendToInput.value, id];
+      const calldata = await getToken.getCallData(ca, "transferFrom", args);
+      console.log("CALLDATA:" + calldata);
+      const result = await getTba.executeCall(owner, ca, calldata);
+      console.log(result);
+      alert("送信しました");
+    }
+  });
+};
 
 export const sendForm = (divElement: HTMLParagraphElement) => {
   setElement.setChild(
@@ -206,7 +283,8 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
     "submit",
     "submitID",
     "BaseSubmit",
-    "設定"
+    "SEND TOKEN",
+    "SEND TOKEN"
   );
   makeSubmit.classList.add("w3p");
   divElement.appendChild(makeSubmit);
@@ -221,6 +299,47 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
         params[3]
       );
       alert("送信しました");
+    }
+  });
+  return divElement;
+};
+
+export const tbaRegist = (
+  divElement: HTMLParagraphElement,
+  ca: string,
+  id: string,
+  eoa: string
+) => {
+  setElement.setChild(
+    divElement,
+    "h2",
+    "RegistTBA",
+    "ID_midashi2",
+    "CLASS_addclasses"
+  );
+
+  const makeElement = setElement.makeElement(
+    "p",
+    "このNFTにTBAを発行します",
+    null,
+    "createdPelemBySetElement"
+  );
+  divElement.appendChild(makeElement);
+
+  const makeSubmit = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "TBA REGIST",
+    "TBA REGIST"
+  );
+  makeSubmit.classList.add("wfull");
+  divElement.appendChild(makeSubmit);
+
+  makeSubmit.addEventListener("click", async () => {
+    if (confirm("本当にTBAを発行しますか\nToken info\n" + ca + " #" + id)) {
+      const tbaOwner = await getTba.createAccount(ca, id);
+      alert("registerd ： " + ca + " #" + id);
     }
   });
 };
@@ -265,6 +384,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     "submit",
     "submitID",
     "BaseSubmit",
+    "MINT",
     "MINT"
   );
   makeSubmit.classList.add("w3p");
@@ -284,7 +404,6 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
           tokenInfos,
           "",
           tokenUriForm.value,
-          previewElement,
           previewElement
         );
       })
@@ -376,6 +495,7 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
     "submit",
     "submitID",
     "BaseSubmit",
+    "SETTING",
     "設定"
   );
   makeSubmit.classList.add("w3p");
@@ -393,7 +513,9 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
 const detailDisplay = {
   showToken,
   sendForm,
+  tbaSendForm,
   mintForm,
+  tbaRegist,
   makeForm,
 };
 

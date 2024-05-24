@@ -58,6 +58,8 @@ export const displayToken = async (
   divTbaElement.classList.add("TbaInfo");
   displayTokenElement.appendChild(divTbaElement);
 
+  const balance = await utils.checkBalance();
+
   const tbaInfoElement = document.createElement("p");
 
   if (tbaOwner) {
@@ -68,7 +70,9 @@ export const displayToken = async (
       tokenBoundAccount +
       "</a>";
   } else {
-    console.log("TBA未発行 : TBAオーナーならここでTBA発行できる");
+    if (utils.isAddressesEqual(owner, balance.eoa)) {
+      detailDisplay.tbaRegist(tbaInfoElement, ca, id, balance.eoa);
+    }
   }
 
   divTbaElement.appendChild(tbaInfoElement);
@@ -96,19 +100,14 @@ export const displayToken = async (
 
   console.log(utils.getLocalTime() + " 遅延実行開始 " + tokenUri);
   utils.fetchData(tokenUri).then(async (result) => {
-    detailDisplay.showToken(
+    await detailDisplay.showToken(
       "pc_normal",
       result,
       owner,
       tokenUri,
-      divElement,
-      pElement
+      divElement
     );
     console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
-
-    const balance = await utils.checkBalance();
-    console.log("owner:" + owner);
-    console.dir(balance);
 
     if (utils.isAddressesEqual(owner, balance.eoa)) {
       detailDisplay.sendForm(divElement);

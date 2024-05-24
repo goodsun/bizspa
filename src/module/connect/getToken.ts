@@ -87,9 +87,16 @@ export const getTokenInfo = async (ca: string) => {
   return result;
 };
 
+export const getCallData = async (ca: string, mode, args) => {
+  const contract = new ethers.Contract(ca, abi, provider);
+  const result = contract.interface.encodeFunctionData(mode, args);
+  return result;
+};
+
 const getTokenConnect = {
   getToken,
   getTokenInfo,
+  getCallData,
 };
 
 export default getTokenConnect;

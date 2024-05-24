@@ -15,7 +15,7 @@ const upload = async () => {
 
 const getStack = async () => {
   const signer = await getSigner();
-  const Url = CONST.AKORD_API_URL + signer;
+  const Url = CONST.AKORD_API_URL + "/list/" + signer;
   console.log("getStack:" + Url);
   try {
     const response = await fetch(Url);

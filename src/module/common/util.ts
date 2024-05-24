@@ -3,6 +3,8 @@ import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donate";
 
 const connectWallet = document.getElementById("connectWallet");
+const assetLink = document.getElementById("assetLink");
+const adminLink = document.getElementById("adminLink");
 
 function roundToDecimalPlace(num, decimalPlaces) {
   const factor = Math.pow(10, decimalPlaces);
@@ -57,6 +59,8 @@ export const checkMetaMask = async () => {
     waiToEth(balanceData.balance) +
     " " +
     balanceData.symbol;
+  (document.getElementById("assetLink") as HTMLLinkElement).href =
+    "/assets/" + balanceData.eoa;
   if (balanceData.dpoint > 0) {
     connectWallet.innerHTML += " / donatePoint : " + balanceData.dpoint + " pt";
   }

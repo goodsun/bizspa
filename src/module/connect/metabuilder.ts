@@ -33,7 +33,7 @@ document.addEventListener("keydown", function (event) {
 const getStackList = async () => {
   console.log(vaultList);
   if (vaultList.length == 0) {
-    modalcontent.innerHTML = "<div class='spinner'></div>loading..";
+    modalcontent.innerHTML = "<div class='spinner'></div>loading...";
     const akord = await getAkord.getStack();
     vaultList = akord.stackList;
     modalcontent.innerHTML = "VAULT LIST";
@@ -65,7 +65,6 @@ const getStackList = async () => {
     const COPYBTNS = document.querySelectorAll(".COPYBTN");
     COPYBTNS.forEach((element) => {
       element.addEventListener("click", () => {
-        console.dir(element.getAttribute("data-clipboard-text"));
         const copytext = element.getAttribute("data-clipboard-text");
         navigator.clipboard
           .writeText(copytext)
@@ -100,13 +99,13 @@ const addCopyButton = (
   copybtn.innerHTML = "copy";
   copybtn.classList.add("liteLink");
   copybtn.classList.add("copyLink");
+  copybtn.setAttribute("data-clipboard-text", url);
 
   const copyicon = document.createElement("i");
+  copybtn.appendChild(copyicon);
   copyicon.classList.add("far");
   copyicon.classList.add("fa-copy");
   copyicon.classList.add("fa-fw");
-  copyicon.setAttribute("data-clipboard-text", url);
-  copybtn.appendChild(copyicon);
 
   elm.appendChild(copybtn);
   document.getElementById(id).addEventListener("click", function (event) {
