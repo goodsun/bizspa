@@ -41,13 +41,17 @@ async function setDonate(params) {
   const allTotalUsed = await getDonate("allTotalUsed", ca, params);
   const allTotalDonation = await getDonate("allTotalDonation", ca, params);
 
-  const donateTitle = document.createElement("h2");
-  donateTitle.innerHTML =
-    "<h2>Donation</h2>" + "<p>Donation CA : " + ca + "</p>";
-
   const divDonateElement = document.createElement("div");
   divDonateElement.classList.add("ownerArea");
   mainContents.appendChild(divDonateElement);
+
+  const donateTitle = document.createElement("h2");
+  donateTitle.innerHTML = "Donation";
+  donateTitle.appendChild(commonSnipet.span("Donation CA: "));
+  donateTitle.appendChild(commonSnipet.eoa(ca));
+  divDonateElement.appendChild(donateTitle);
+  const donateContents = document.createElement("div");
+  divDonateElement.appendChild(donateContents);
 
   const checkBalance = await util.checkBalance();
   if (checkBalance.eoa != undefined) {
@@ -56,34 +60,34 @@ async function setDonate(params) {
     const totaldonations = await donate("totaldonations", ca, params);
 
     if (donateBalance > 0) {
-      donateTitle.innerHTML +=
+      donateContents.innerHTML +=
         "<p>Balance : " + donateBalance + " donatePoint" + "</p>";
     }
     if (totaldonations > 0) {
-      donateTitle.innerHTML +=
+      donateContents.innerHTML +=
         "<p>Total donations : " + allTotalDonation + " donatePoint" + "</p>";
     }
     if (usedpoints > 0) {
-      donateTitle.innerHTML +=
+      donateContents.innerHTML +=
         "<p>Used points : " + usedpoints + " donatePoint" + "</p>";
     }
   }
 
   if (allTotalDonation > 0) {
-    donateTitle.innerHTML +=
+    donateContents.innerHTML +=
       "<p>Total donation (All dao) : " +
       allTotalDonation +
       " donatePoint" +
       "</p>";
   }
   if (allTotalUsed > 0) {
-    donateTitle.innerHTML +=
+    donateContents.innerHTML +=
       "<p>Total used point (All dao) : " +
       allTotalUsed +
       " donatePoint" +
       "</p>";
   }
-  divDonateElement.appendChild(donateTitle);
+  divDonateElement.appendChild(donateContents);
 }
 
 const setHome = async () => {

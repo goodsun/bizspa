@@ -25,7 +25,7 @@ const eoa = (eoa, option = { link: "", target: "_self" }) => {
   // コピー用のボタン要素を作成
   const copybtn = document.createElement("span");
   copybtn.id = eoa;
-  copybtn.classList.add("eoa_copy");
+  copybtn.classList.add("eoaCopy");
   copybtn.setAttribute("data-clipboard-text", eoa);
 
   // アイコン要素を作成してボタンに追加

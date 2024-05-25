@@ -82,6 +82,7 @@ export const displayToken = async (
   divTbaElement.appendChild(tbaInfoElement);
 
   const pElement = document.createElement("p");
+  pElement.classList.add("tokenBreadCrumb");
   divElement.appendChild(pElement);
 
   var tokenLink = document.createElement("a");
@@ -152,7 +153,7 @@ export const displayOwnTokens = async (
         utils.fetchData(tokenData.tokenURI).then((nftinfo) => {
           var newLink = document.createElement("a");
           newLink.href = "/tokens/" + ca + "/" + tokenData.tokenId;
-          var newTitle = document.createElement("h3");
+          var newTitle = document.createElement("h4");
           newTitle.classList.add("titleThumb");
           newTitle.textContent = nftinfo["name"];
           newLink.appendChild(newTitle);

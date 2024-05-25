@@ -354,6 +354,24 @@ export const ABIS = {
       inputs: [
         {
           internalType: "address",
+          name: "donor",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "gasCashback",
+          type: "uint256",
+        },
+      ],
+      name: "donate",
+      outputs: [],
+      stateMutability: "payable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
           name: "account",
           type: "address",
         },
@@ -372,6 +390,19 @@ export const ABIS = {
         },
       ],
       name: "setCashBackRate",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "price",
+          type: "uint256",
+        },
+      ],
+      name: "setCashBackStatic",
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
@@ -475,6 +506,19 @@ export const ABIS = {
       type: "function",
     },
     {
+      inputs: [],
+      name: "_cashBackStatic",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
       inputs: [
         {
           internalType: "uint256",
@@ -552,6 +596,19 @@ export const ABIS = {
           internalType: "uint256",
           name: "",
           type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "_owner",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
         },
       ],
       stateMutability: "view",
@@ -728,6 +785,25 @@ export const ABIS = {
         },
       ],
       name: "balanceOf",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "donation",
+          type: "uint256",
+        },
+      ],
+      name: "checkCacheBack",
       outputs: [
         {
           internalType: "uint256",

@@ -2,9 +2,10 @@ body {
   background-color: #000000;
   padding: 30px;
   color: #888;
+  font-size: 14px;
 }
 .headerMenu {
-  font-size: 1.8em;
+  font-size: 2em;
   font-weight: lighter;
   background-color: #111111;
   text-align: center;
@@ -29,32 +30,32 @@ body {
   overflow: hidden;
 }
 h1 {
-  font-size: 3em;
+  font-size: 2em;
   color: #cccccc;
   span {
     color: #990000;
   }
 }
 h2 {
-  font-size: 3em;
+  font-size: 2em;
   color: #dddddd;
 }
 h3 {
-  font-size: 2em;
+  font-size: 1.7em;
   color: #cccccc;
 }
 h4 {
-  font-size: 2.5em;
+  font-size: 1.5em;
   color: #99bb99;
 }
 h4 {
-  font-size: 2em;
+  font-size: 1.3em;
   color: #99bb99;
 }
 p {
   color: #cccccc;
   text-decoration: none;
-  font-size: 1em;
+  font-size: 1.3em;
   font-weight: normal;
 }
 span {
@@ -200,7 +201,7 @@ a {
   border-radius: 8px;
   box-shadow: 0 2px 4px #274d7b3d;
   box-sizing: border-box;
-  height: 250px;
+  height: 265px;
   margin-bottom: 10px;
   padding: 5px 10px;
   position: relative;
@@ -210,11 +211,12 @@ a {
   width: 170;
 }
 .titleThumb {
-  font-size: 0.8em;
+  font-size: 0.7em;
   font-weight: bold;
-  height: 2em;
-  line-height: 1em;
+  height: 2.8em;
+  line-height: 1.3em;
   overflow: scroll;
+  margin: 10px 0;
 }
 .nftImage {
   width: 860px;
@@ -249,7 +251,11 @@ a {
 }
 
 .contractLinkList {
+  font-size: 1.8em;
   margin: 10px 30px;
+}
+.tokenBreadCrumb {
+  font-size: 1.8em;
 }
 
 .floatClear {
@@ -257,20 +263,20 @@ a {
 }
 
 .BaseInput {
+  font-size: 2.2em;
   border: 1px solid #d1d1d1;
   border-radius: 6px;
   box-sizing: border-box;
-  font-size: 1rem;
   padding: 12px 16px;
   margin: 5px 5px 0 0;
   transition: all 0.2s ease-in-out;
 }
 
 .BaseTextarea {
+  font-size: 2.2em;
   border: 1px solid #d1d1d1;
   border-radius: 6px;
   box-sizing: border-box;
-  font-size: 1rem;
   padding: 12px 16px;
   margin: 5px 5px 0 0;
   height: 8em;
@@ -279,6 +285,7 @@ a {
 }
 
 .BaseSubmit {
+  font-size: 2.2em;
   background: #3e3e3e;
   border: 0px solid #d1d1d1;
   border-radius: 8px;

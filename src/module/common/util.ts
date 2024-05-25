@@ -56,9 +56,9 @@ export const ethToWai = (input) => {
 };
 
 export const checkMetamask = async () => {
-  connectWallet.innerHTML = "";
   const balanceData = await checkBalance();
   if (balanceData.eoa != undefined) {
+    connectWallet.innerHTML = "";
     connectWallet.appendChild(commonSnipet.span("EOA: "));
     connectWallet.appendChild(
       commonSnipet.eoa(balanceData.eoa, {
