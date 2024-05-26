@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import setElement from "../snipet/setElement";
 import { donate } from "../../module/connect/donate";
+import getManagerConnect from "../../module/connect/getManager";
 import utils from "../common/util";
 
 const mainContents = document.getElementById("mainContents");
@@ -128,7 +129,7 @@ const setUI = (parent, eoa) => {
             //==============================================
             // 課金する
             // 一旦Donateへ入れておく
-            const ca = CONST.DONATION_CA;
+            const ca = await getManagerConnect.getCA("donate");
             const value: string = String(utils.ethToWai(price));
             const donateResult = await donate("donate", ca, [eoa, value])
               .then((response) => {

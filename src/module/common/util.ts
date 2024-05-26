@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donate";
+import getManagerConnect from "../../module/connect/getManager";
 import commonSnipet from "../snipet/common";
 
 const connectWallet = document.getElementById("connectWallet");
@@ -102,7 +103,7 @@ export async function checkBalance() {
       if (symbol == "unknown") {
         symbol = CONST.DEFAULT_SYMBOL;
       }
-      const ca = CONST.DONATION_CA;
+      const ca = await getManagerConnect.getCA("donate");
       dpoint = await donate("balance", ca, []);
       window.ethereum.on("accountsChanged", async (accounts) => {
         try {

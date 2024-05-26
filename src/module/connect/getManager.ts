@@ -45,3 +45,18 @@ const arrayPivot = (input) => {
   }
   return result;
 };
+
+export const getCA = async (contractType: string) => {
+  const contracts = await getManager("contracts");
+  var result = contracts.filter(function (contract) {
+    return contract[2] == contractType;
+  });
+  return result[0][0];
+};
+
+const getManagerConnect = {
+  getManager,
+  getCA,
+};
+
+export default getManagerConnect;

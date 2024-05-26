@@ -1,6 +1,8 @@
 import { CONST } from "./module/common/const";
 import { router } from "./module/common/router";
 import { getManager } from "./module/connect/getManager";
+import getManagerConnect from "./module/connect/getManager";
+
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
 import { donate, getDonate } from "./module/connect/donate";
@@ -36,7 +38,7 @@ async function setArticle() {
   articleSnipet.getMdDir();
 }
 async function setDonate(params) {
-  const ca = CONST.DONATION_CA;
+  const ca = await getManagerConnect.getCA("donate");
   const total = await getDonate("total", ca, params);
   const allTotalUsed = await getDonate("allTotalUsed", ca, params);
   const allTotalDonation = await getDonate("allTotalDonation", ca, params);
