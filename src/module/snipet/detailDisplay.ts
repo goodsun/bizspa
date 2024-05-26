@@ -444,6 +444,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     let message = tokenUriForm.value + " のメタデータでNFTを作成し\n";
     message += eoaForm.value + " 宛に送信します。\n";
     const donatePoint = await setToken.donatePoint(params[2]);
+    console.log("donatePoint:" + donatePoint);
     if (donatePoint > 0) {
       message +=
         "このNFTのmintはdonatePointを" +
