@@ -8,6 +8,7 @@ import getManagerConnect from "./module/connect/getManager";
 import orderConnect from "./module/connect/order";
 import parmawebcon from "./module/connect/parmaweb";
 import setMeta from "./module/connect/metabuilder";
+import discordConnect from "./module/connect/discordConnect";
 import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
@@ -28,6 +29,9 @@ document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
 const mainContents = document.getElementById("mainContents");
 
+async function discordRegist() {
+  await discordConnect.getUI();
+}
 async function metabuilder() {
   await setMeta.getUI();
 }
@@ -134,6 +138,29 @@ const setOwner = async (eoa) => {
   divOwnerElement.appendChild(ownerTitle);
 
   const pElement = document.createElement("p");
+  const discordUser = await discordConnect.getUserByEoa(eoa);
+  console.dir(discordUser);
+  if (discordUser.DeleteFlag && !discordUser.DeleteFlag.BOOL) {
+    console.log(discordUser.DiscordId.N);
+    console.log(discordUser.Name.S);
+    console.log(discordUser.Icon.S);
+    console.dir(discordUser.Roles.SS);
+
+    const image = document.createElement("img");
+    image.classList.add("discordIcon");
+    image.src = discordUser.Icon.S;
+    pElement.appendChild(image);
+    pElement.appendChild(commonSnipet.br());
+    pElement.appendChild(
+      commonSnipet.span("DiscordId : " + discordUser.DiscordId.N)
+    );
+    pElement.appendChild(commonSnipet.br());
+    pElement.appendChild(
+      commonSnipet.span("DiscordName : " + discordUser.Name.S)
+    );
+    pElement.appendChild(commonSnipet.br());
+  }
+
   pElement.appendChild(commonSnipet.span("EOA: "));
   pElement.appendChild(
     commonSnipet.eoa(eoa, { link: "/assets/" + eoa, target: "" })
@@ -303,8 +330,8 @@ const checkRoute = () => {
     metabuilder();
   } else if (param1 === "parmaweb") {
     parmaweb();
-  } else if (param1 === "test") {
-    test();
+  } else if (param1 === "regist") {
+    discordRegist();
   }
 };
 

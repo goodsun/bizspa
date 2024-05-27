@@ -6,5 +6,6 @@ export const CONST = {
   TBA_SALT: "1",
   DEFAULT_SYMBOL: "matic",
   ARTICLE_REPO_URL: "https://raw.githubusercontent.com/goodsun/bizen-article/public/",
+  BOT_API_URL: "https://ehfm6q914a.execute-api.ap-northeast-1.amazonaws.com/",
   AKORD_API_URL: "https://w3.bon-soleil.com/api/akord/"
 };

@@ -7,12 +7,7 @@ import commonSnipet from "../snipet/common";
 const mainContents = document.getElementById("mainContents");
 
 export const displayMintUI = async (targetElem, params) => {
-  console.log("displayMintUI");
-  console.dir(params);
-
   const balance = await utils.checkBalance();
-  console.dir(balance);
-
   const mintableInfo = await getTokenConnect.getTokenInfo(params[2]);
   console.dir(mintableInfo);
   console.log("creatorOlny:" + mintableInfo.creatorOnly);
@@ -22,6 +17,15 @@ export const displayMintUI = async (targetElem, params) => {
   targetElem.appendChild(balanceElement);
 
   let mintable = true;
+
+  if (
+    !mintableInfo.creatorOnly ||
+    !utils.isAddressesEqual(mintableInfo.creator, balance.eoa) ||
+    !utils.isAddressesEqual(mintableInfo.creator, balance.eoa)
+  ) {
+    balanceElement.innerHTML += "このNFTのMINTは作家限定です";
+    mintable = false;
+  }
 
   if (balance.dpoint < mintableInfo.needPoint) {
     balanceElement.innerHTML +=
