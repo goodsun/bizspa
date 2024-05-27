@@ -14,8 +14,8 @@ export const displayMintUI = async (targetElem, params) => {
   console.dir(balance);
 
   const mintableInfo = await getTokenConnect.getTokenInfo(params[2]);
-  console.log("mintableInfo:");
   console.dir(mintableInfo);
+  console.log("creatorOlny:" + mintableInfo.creatorOnly);
   const balanceElement = document.createElement("p");
   balanceElement.innerHTML =
     "<h2>" + mintableInfo.name + " MINT PAGE" + "</h2>";

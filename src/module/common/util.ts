@@ -2,11 +2,133 @@ import { ethers } from "ethers";
 import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donate";
 import getManagerConnect from "../../module/connect/getManager";
+import orderConnect from "../../module/connect/order";
 import commonSnipet from "../snipet/common";
 
 const connectWallet = document.getElementById("connectWallet");
-const assetLink = document.getElementById("assetLink");
-const adminLink = document.getElementById("adminLink");
+const modalbase = document.getElementById("modalbase");
+const closeModal = document.getElementById("closemodal");
+const modalcontent = document.getElementById("modalcontent");
+let dispmodal = false;
+
+closeModal.addEventListener("click", async () => {
+  toggleModal();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    toggleModal();
+  }
+});
+
+const formatUnixTime = (unixTime) => {
+  const date = new Date(Number(unixTime) * 1000); // UNIXタイムスタンプは秒単位なのでミリ秒に変換
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+const getParmawebList = async () => {
+  modalcontent.innerHTML = "<div class='spinner'></div>loading...";
+
+  const orderCa = await getManagerConnect.getCA("order");
+  const assetListOrg = await orderConnect.getAsset(orderCa);
+
+  modalcontent.innerHTML = "parmaweb assets";
+  const reload = document.createElement("span");
+  reload.classList.add("litelink");
+  reload.classList.add("reloadLink");
+  reload.id = "vaultReload";
+  reload.innerHTML = "reload";
+  modalcontent.appendChild(reload);
+  const vaultListDiv = document.createElement("div");
+  modalcontent.appendChild(vaultListDiv);
+
+  const assetList = assetListOrg.reverse();
+  for (const key in assetList) {
+    console.dir(assetList[key]);
+    vaultListDiv.innerHTML +=
+      "<br />" +
+      "<span class='datetime'>" +
+      formatUnixTime(assetList[key].Date) +
+      "</span>" +
+      ' <a href="' +
+      assetList[key].Url +
+      '" target="_blank">' +
+      assetList[key].Filename +
+      "</a>";
+    addCopyButton(
+      vaultListDiv,
+      "COPYBUTTON_" + key,
+      "COPYBTN",
+      String(assetList[key].Url)
+    );
+  }
+  const COPYBTNS = document.querySelectorAll(".COPYBTN");
+  COPYBTNS.forEach((element) => {
+    element.addEventListener("click", () => {
+      const copytext = element.getAttribute("data-clipboard-text");
+      navigator.clipboard
+        .writeText(copytext)
+        .then(function () {
+          alert("URLがクリップボードにコピーされました");
+        })
+        .catch(function (error) {
+          alert("コピーに失敗しました: " + error);
+        });
+    });
+  });
+
+  document
+    .getElementById("vaultReload")
+    .addEventListener("click", function (event) {
+      getParmawebList();
+    });
+};
+
+const addCopyButton = (
+  elm: HTMLElement,
+  id: string,
+  classname: string,
+  url: string
+) => {
+  const copybtn = document.createElement("span");
+  copybtn.id = id;
+  copybtn.classList.add(classname);
+  copybtn.innerHTML = "copy";
+  copybtn.classList.add("liteLink");
+  copybtn.classList.add("copyLink");
+  copybtn.setAttribute("data-clipboard-text", url);
+
+  const copyicon = document.createElement("i");
+  copybtn.appendChild(copyicon);
+  copyicon.classList.add("far");
+  copyicon.classList.add("fa-copy");
+  copyicon.classList.add("fa-fw");
+
+  elm.appendChild(copybtn);
+  document.getElementById(id).addEventListener("click", function (event) {
+    console.log(id + ":" + url);
+  });
+};
+
+const toggleModal = async () => {
+  if (dispmodal) {
+    modalbase.classList.remove("active");
+    dispmodal = false;
+  } else {
+    modalbase.classList.add("active");
+    dispmodal = true;
+    const chk = await checkBalance();
+    if (chk.balance != undefined) {
+      utils.getParmawebList();
+    }
+  }
+};
 
 function roundToDecimalPlace(num, decimalPlaces) {
   const factor = Math.pow(10, decimalPlaces);
@@ -63,7 +185,7 @@ export const checkMetamask = async () => {
     connectWallet.appendChild(commonSnipet.span("EOA: "));
     connectWallet.appendChild(
       commonSnipet.eoa(balanceData.eoa, {
-        link: "/assets/" + balanceData.eoa,
+        link: "#",
         target: "",
       })
     );
@@ -135,6 +257,9 @@ const utils = {
   waiToEth,
   ethToWai,
   checkBalance,
+  toggleModal,
+  getParmawebList,
+  formatUnixTime,
 };
 
 export default utils;

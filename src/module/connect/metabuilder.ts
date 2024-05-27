@@ -3,10 +3,8 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 import setElement from "../snipet/setElement";
-import getAkord from "./getAkord";
 import { nftMetaData, iVault } from "../../types/metadata";
 import detailDisplay from "../snipet/detailDisplay";
-let vaultList: iVault[] = [];
 
 let metadata: nftMetaData = {
   name: "",
@@ -16,113 +14,6 @@ let metadata: nftMetaData = {
 };
 
 const mainContents = document.getElementById("mainContents");
-const modalbase = document.getElementById("modalbase");
-const closeModal = document.getElementById("closemodal");
-const modalcontent = document.getElementById("modalcontent");
-let dispmodal = false;
-
-closeModal.addEventListener("click", function (event) {
-  toggleModal();
-});
-
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Escape") {
-    toggleModal();
-  }
-});
-
-const getStackList = async () => {
-  console.log(vaultList);
-  if (vaultList.length == 0) {
-    modalcontent.innerHTML = "<div class='spinner'></div>loading...";
-    const akord = await getAkord.getStack();
-    vaultList = akord.stackList;
-    modalcontent.innerHTML = "VAULT LIST";
-    const reload = document.createElement("span");
-    reload.classList.add("litelink");
-    reload.classList.add("reloadLink");
-    reload.id = "vaultReload";
-    reload.innerHTML = "reload";
-    modalcontent.appendChild(reload);
-    const vaultListDiv = document.createElement("div");
-    modalcontent.appendChild(vaultListDiv);
-
-    for (const key in vaultList) {
-      console.dir(vaultList[key]);
-      vaultListDiv.innerHTML +=
-        "<br />" +
-        '<a href="' +
-        vaultList[key].arweaveUrl +
-        '" target="_blank">' +
-        vaultList[key].name.substr(43) +
-        "</a>";
-      addCopyButton(
-        vaultListDiv,
-        "COPYBUTTON_" + key,
-        "COPYBTN",
-        vaultList[key].arweaveUrl
-      );
-    }
-    const COPYBTNS = document.querySelectorAll(".COPYBTN");
-    COPYBTNS.forEach((element) => {
-      element.addEventListener("click", () => {
-        const copytext = element.getAttribute("data-clipboard-text");
-        navigator.clipboard
-          .writeText(copytext)
-          .then(function () {
-            alert("URLがクリップボードにコピーされました");
-          })
-          .catch(function (error) {
-            alert("コピーに失敗しました: " + error);
-          });
-      });
-    });
-
-    document
-      .getElementById("vaultReload")
-      .addEventListener("click", function (event) {
-        console.log("VAULT RELOAD");
-        vaultList = [];
-        getStackList();
-      });
-  }
-};
-
-const addCopyButton = (
-  elm: HTMLElement,
-  id: string,
-  classname: string,
-  url: string
-) => {
-  const copybtn = document.createElement("span");
-  copybtn.id = id;
-  copybtn.classList.add(classname);
-  copybtn.innerHTML = "copy";
-  copybtn.classList.add("liteLink");
-  copybtn.classList.add("copyLink");
-  copybtn.setAttribute("data-clipboard-text", url);
-
-  const copyicon = document.createElement("i");
-  copybtn.appendChild(copyicon);
-  copyicon.classList.add("far");
-  copyicon.classList.add("fa-copy");
-  copyicon.classList.add("fa-fw");
-
-  elm.appendChild(copybtn);
-  document.getElementById(id).addEventListener("click", function (event) {
-    console.log(id + ":" + url);
-  });
-};
-
-const toggleModal = () => {
-  if (dispmodal) {
-    modalbase.classList.remove("active");
-    dispmodal = false;
-  } else {
-    modalbase.classList.add("active");
-    dispmodal = true;
-  }
-};
 
 export const getUI = async () => {
   const makeMetaDiv = document.createElement("div");
@@ -223,11 +114,7 @@ export const getUI = async () => {
   makeMetaCont.appendChild(extraFileForm);
 
   vaultSelect.addEventListener("click", async () => {
-    toggleModal();
-    const chk = await utils.checkBalance();
-    if (chk.balance != undefined) {
-      getStackList();
-    }
+    utils.toggleModal();
   });
 
   metaLoad.addEventListener("change", (event) => {

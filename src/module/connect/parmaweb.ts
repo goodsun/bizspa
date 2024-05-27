@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import setElement from "../snipet/setElement";
-import { donate } from "../../module/connect/donate";
+import orderConnect from "../../module/connect/order";
 import getManagerConnect from "../../module/connect/getManager";
 import utils from "../common/util";
 
@@ -128,13 +128,13 @@ const setUI = (parent, eoa) => {
 
             //==============================================
             // 課金する
-            // 一旦Donateへ入れておく
-            const ca = await getManagerConnect.getCA("donate");
+            const orderCa = await getManagerConnect.getCA("order");
             const value: string = String(utils.ethToWai(price));
-            const donateResult = await donate("donate", ca, [eoa, value])
+            const orderResult = await orderConnect
+              .order(orderCa, value)
               .then((response) => {
                 console.dir(response);
-                return response;
+                return response as string;
               })
               .catch((error) => {
                 console.dir(error);
@@ -142,9 +142,9 @@ const setUI = (parent, eoa) => {
 
             //==============================================
             //課金成功でアップロード
-            if (donateResult) {
-              console.log("donateResult");
-              console.dir(donateResult);
+            if (orderResult) {
+              console.log("orderResult");
+              console.dir(orderResult);
               const response = await fetch(URL, {
                 method: "POST",
                 body: formData,
@@ -153,9 +153,25 @@ const setUI = (parent, eoa) => {
               if (response.ok) {
                 const result = await response.json();
                 console.log("File upload successfully:", result);
-                uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
-                uploadingInfoArea.classList.add("upload-success");
-                return result;
+
+                //==============================================
+                //アップロード成功でリスト追加
+                const setUrlResult = await orderConnect
+                  .setUrl(orderCa, orderResult, file.name, result.parmawebUrl)
+                  .then((response) => {
+                    console.dir(response);
+                    uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
+                    uploadingInfoArea.classList.add("upload-success");
+                    return response;
+                  })
+                  .catch((error) => {
+                    uploadingInfoArea.innerHTML =
+                      " Non Manage This File<br /> parmaweb url:" +
+                      result.parmawebUrl;
+                    uploadingInfoArea.classList.add("upload-success");
+                    console.dir(error);
+                  });
+                console.log(setUrlResult);
               } else {
                 console.error("Failed to upload file:", response.statusText);
                 uploadingInfoArea.innerHTML = "Failed to Upload file";

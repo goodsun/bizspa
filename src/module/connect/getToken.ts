@@ -23,6 +23,21 @@ export const getToken = async (
         return response;
       });
       return result;
+    } else if (method == "chkfree") {
+      const result = await contract._creatorOnly().then((response) => {
+        return response;
+      });
+      return result;
+    } else if (method == "owner") {
+      const result = await contract._owner().then((response) => {
+        return response;
+      });
+      return result;
+    } else if (method == "creator") {
+      const result = await contract._creator().then((response) => {
+        return response;
+      });
+      return result;
     } else if (method == "tokenAmount") {
       const result = await contract._lastTokenId().then((response) => {
         return response;
@@ -80,7 +95,9 @@ export const getTokenInfo = async (ca: string) => {
   const result = {
     ca: ca,
     name: await getToken("name", ca),
-    mintableUser: [], // mint許可EOA
+    creator: await getToken("creator", ca),
+    owner: await getToken("owner", ca),
+    creatorOnly: await getToken("chkfree", ca),
     needPoint: await getDonatePoint(ca), // 必要なdpoint
   };
   return result;

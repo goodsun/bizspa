@@ -427,3 +427,7 @@ a {
 .upload-failed {
   color: #ff0000;
 }
+.datetime {
+  color: #4d4a4a;
+  font-size: 0.6em;
+}

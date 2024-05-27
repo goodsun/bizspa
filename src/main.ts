@@ -1,11 +1,11 @@
 import { CONST } from "./module/common/const";
 import { router } from "./module/common/router";
 import { getManager } from "./module/connect/getManager";
-import getManagerConnect from "./module/connect/getManager";
-
 import { getToken } from "./module/connect/getToken";
 import { getTba } from "./module/connect/getTba";
 import { donate, getDonate } from "./module/connect/donate";
+import getManagerConnect from "./module/connect/getManager";
+import orderConnect from "./module/connect/order";
 import parmawebcon from "./module/connect/parmaweb";
 import setMeta from "./module/connect/metabuilder";
 import homeSnipet from "./module/snipet/home";
@@ -13,6 +13,7 @@ import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
 import commonSnipet from "./module/snipet/common";
 import util from "./module/common/util";
+// import getAkord from "./module/connect/getAkord";
 import {
   displayAssets,
   displayManagedData,
@@ -302,7 +303,19 @@ const checkRoute = () => {
     metabuilder();
   } else if (param1 === "parmaweb") {
     parmaweb();
+  } else if (param1 === "test") {
+    test();
   }
+};
+
+const test = async () => {
+  console.log("TEST PLAY");
+  //const result1 = await getAkord.getStack();
+  //console.dir(result1);
+
+  const orderCa = await getManagerConnect.getCA("order");
+  const result2 = await orderConnect.getAsset(orderCa);
+  console.dir(result2);
 };
 
 checkRoute();
