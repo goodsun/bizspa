@@ -18,10 +18,11 @@ export const displayMintUI = async (targetElem, params) => {
 
   let mintable = true;
 
+  console.dir(mintableInfo.creatorOnly);
   if (
-    !mintableInfo.creatorOnly ||
-    !utils.isAddressesEqual(mintableInfo.creator, balance.eoa) ||
-    !utils.isAddressesEqual(mintableInfo.creator, balance.eoa)
+    mintableInfo.creatorOnly &&
+    !utils.isAddressesEqual(mintableInfo.creator, balance.eoa) &&
+    !utils.isAddressesEqual(mintableInfo.owner, balance.eoa)
   ) {
     balanceElement.innerHTML += "このNFTのMINTは作家限定です";
     mintable = false;

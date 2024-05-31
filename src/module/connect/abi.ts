@@ -1198,6 +1198,11 @@ export const ABIS = {
     {
       inputs: [
         {
+          internalType: "address payable",
+          name: "donateManageAddress",
+          type: "address",
+        },
+        {
           internalType: "string",
           name: "name",
           type: "string",
@@ -1206,16 +1211,6 @@ export const ABIS = {
           internalType: "string",
           name: "symbol",
           type: "string",
-        },
-        {
-          internalType: "address",
-          name: "creator",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "feeRate",
-          type: "uint256",
         },
       ],
       stateMutability: "nonpayable",
@@ -1343,6 +1338,19 @@ export const ABIS = {
           internalType: "uint256",
           name: "",
           type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "_owner",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
         },
       ],
       stateMutability: "view",
@@ -1675,19 +1683,9 @@ export const ABIS = {
     {
       inputs: [
         {
-          internalType: "address",
-          name: "creator",
-          type: "address",
-        },
-        {
           internalType: "uint256",
-          name: "feeRate",
+          name: "usePoint",
           type: "uint256",
-        },
-        {
-          internalType: "bool",
-          name: "creatorOnly",
-          type: "bool",
         },
       ],
       name: "setConfig",
@@ -1731,6 +1729,49 @@ export const ABIS = {
       inputs: [
         {
           internalType: "uint256",
+          name: "index",
+          type: "uint256",
+        },
+      ],
+      name: "tokenByIndex",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "owner",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "index",
+          type: "uint256",
+        },
+      ],
+      name: "tokenOfOwnerByIndex",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
           name: "tokenId",
           type: "uint256",
         },
@@ -1741,6 +1782,19 @@ export const ABIS = {
           internalType: "string",
           name: "",
           type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "totalSupply",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
         },
       ],
       stateMutability: "view",
