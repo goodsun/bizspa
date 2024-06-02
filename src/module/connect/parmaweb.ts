@@ -9,6 +9,7 @@ const mainContents = document.getElementById("mainContents");
 
 const polygonPrice = 1.35; //$1=1.35matic $12=16.2matic / 1G
 const vaultPriceByKb = (12 * polygonPrice) / 1000 / 1000 / 1000 / 0.42; //$12=16.2matic / 1G
+const polygonYenPrice = 109.9;
 
 const priceCarc = (filesize: number) => {
   return filesize * vaultPriceByKb;
@@ -61,11 +62,15 @@ const setUI = (parent, eoa) => {
     uploadingInfoArea.innerHTML =
       "filename : " +
       file.name +
-      "<br />estimate : " +
+      "<br />filesize : " +
+      (file.size / 1024 / 1024).toFixed(2) +
+      " Mb<br />estimate : " +
       price.toFixed(8).substring(0, 10) +
       " " +
       CONST.DEFAULT_SYMBOL +
-      " + GasFee";
+      " + GasFee" +
+      "<br/>about JPY:" +
+      (price * polygonYenPrice).toFixed(2);
     uploadingInfoArea.classList.add("upload-confirm");
   });
 

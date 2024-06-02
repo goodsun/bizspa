@@ -1,0 +1,15 @@
+{
+  "name": "ここに作品名を入れてください",
+  "description": "ここに説明を入れてください",
+  "image": "https://arweave.net/O0MU9mPjhtvE5aTfEyVjsgIYT5vJsoWblruXneoEcwc",
+  "attributes": [
+    {
+      "trait_type": "作家名",
+      "value": "ここに作家名を入れてください"
+    },
+    {
+      "trait_type": "作成年",
+      "value": "ここに作成年を入れてください"
+    }
+  ]
+}

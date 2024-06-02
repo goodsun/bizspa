@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donate";
 import getManagerConnect from "../../module/connect/getManager";
+import discordConnect from "../../module/connect/discordConnect";
 import orderConnect from "../../module/connect/order";
 import commonSnipet from "../snipet/common";
 
@@ -182,6 +183,22 @@ export const checkMetamask = async () => {
   const balanceData = await checkBalance();
   if (balanceData.eoa != undefined) {
     connectWallet.innerHTML = "";
+
+    const discordUser = await discordConnect.getUserByEoa(balanceData.eoa);
+    if (discordUser.Eoa) {
+      var newImage = document.createElement("img");
+      newImage.src = discordUser.Icon;
+      newImage.classList.add("walletDiscordIcon");
+      connectWallet.appendChild(newImage);
+      connectWallet.appendChild(commonSnipet.span(discordUser.Name));
+      connectWallet.appendChild(
+        commonSnipet.eoa(discordUser.DiscordId, {
+          link: "#",
+          target: "",
+        })
+      );
+    }
+
     connectWallet.appendChild(commonSnipet.span("EOA: "));
     connectWallet.appendChild(
       commonSnipet.eoa(balanceData.eoa, {
@@ -208,6 +225,14 @@ export const checkMetamask = async () => {
   }
 };
 
+const callCheckMetamask = async () => {
+  try {
+    await checkMetamask();
+  } catch (error) {
+    console.error("Error handling accountsChanged event:", error);
+  }
+};
+
 export async function checkBalance() {
   let eoa: string;
   let balance: bigint;
@@ -227,13 +252,8 @@ export async function checkBalance() {
       }
       const ca = await getManagerConnect.getCA("donate");
       dpoint = await donate("balance", ca, []);
-      window.ethereum.on("accountsChanged", async (accounts) => {
-        try {
-          await checkMetamask();
-        } catch (error) {
-          console.error("Error handling accountsChanged event:", error);
-        }
-      });
+      window.ethereum.removeListener("accountsChanged", callCheckMetamask);
+      window.ethereum.on("accountsChanged", callCheckMetamask);
     } catch (error) {
       console.info("wallet not connected");
       console.error("Error details:", error);

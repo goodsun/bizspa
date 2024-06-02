@@ -219,14 +219,16 @@ a {
   margin: 10px 0;
 }
 .nftImage {
-  width: 860px;
+  width: 90%;
+  max-width: 860px;
 }
 .nft3DImage {
   width: 860px;
   height: 860px;
 }
 .nftMedia {
-  width: 860px;
+  width: 90%;
+  max-width: 860px;
 }
 .nftObject {
   width: 860px;
@@ -373,6 +375,7 @@ a {
 .articleArea img {
   margin: 10px;
   width: 90%;
+  max-width: 640px;
 }
 
 .custom-file-div {
@@ -430,4 +433,16 @@ a {
 .datetime {
   color: #4d4a4a;
   font-size: 0.6em;
+}
+.walletDiscordIcon {
+  margin-right: 10px;
+  width: 30px;
+  vertical-align: middle;
+}
+
+#meta-preview {
+  background-color: #222222;
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 20px;
 }

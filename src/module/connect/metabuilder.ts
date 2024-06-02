@@ -21,13 +21,16 @@ export const getUI = async () => {
   mainContents.appendChild(makeMetaDiv);
   const makeMetaDisp = document.createElement("div");
   const makeMetaCont = document.createElement("div");
+  const makeMetaPrevTitle = document.createElement("h2");
   const makeMetaPrev = document.createElement("div");
   makeMetaDiv.id = "meta-section";
   makeMetaDisp.id = "meta-disp";
   makeMetaCont.id = "meta-control";
+  makeMetaPrevTitle.innerHTML = "NFT PREVIEW";
   makeMetaPrev.id = "meta-preview";
   makeMetaDiv.appendChild(makeMetaDisp);
   makeMetaDiv.appendChild(makeMetaCont);
+  makeMetaDiv.appendChild(makeMetaPrevTitle);
   makeMetaDiv.appendChild(makeMetaPrev);
 
   //-- MAIN -------------------------------------
@@ -250,11 +253,11 @@ export const loadMetadata = (event) => {
         (document.getElementById("description") as HTMLInputElement).value =
           metadata.description;
         (document.getElementById("imageUrl") as HTMLInputElement).value =
-          metadata.image;
+          metadata.image ? metadata.image : "";
         (document.getElementById("animationUrl") as HTMLInputElement).value =
-          metadata.animation_url;
+          metadata.animation_url ? metadata.animation_url : "";
         (document.getElementById("externalUrl") as HTMLInputElement).value =
-          metadata.external_url;
+          metadata.external_url ? metadata.external_url : "";
       } catch (error) {
         console.dir(error);
       }
@@ -283,6 +286,15 @@ const download = () => {
 };
 
 export const delAttr = async (key: number, mode: string) => {
+  if (mode == "ed") {
+    const edit = prompt(
+      "EDIT: " + metadata.attributes[key].trait_type,
+      metadata.attributes[key].value
+    );
+    if (edit) {
+      metadata.attributes[key].value = edit;
+    }
+  }
   if (mode == "up" && key != 0) {
     let me = metadata.attributes[key];
     let you = metadata.attributes[key - 1];
@@ -296,7 +308,9 @@ export const delAttr = async (key: number, mode: string) => {
     metadata.attributes[key + 1] = me;
   }
   if (mode == "rm") {
-    metadata.attributes.splice(key, 1);
+    if (confirm("本当に削除してよろしいですか？")) {
+      metadata.attributes.splice(key, 1);
+    }
   }
   setTokenData();
 };

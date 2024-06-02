@@ -140,6 +140,12 @@ export const showToken = async (
     const titleElm = document.createElement("h4");
     titleElm.textContent = attributes[key]["trait_type"];
     if (type == "metabuilder") {
+      const edLink = document.createElement("span");
+      edLink.id = "attr_ed_" + key;
+      edLink.classList.add("litelink");
+      edLink.classList.add("attrControlLink");
+      edLink.textContent = "EDIT";
+      titleElm.appendChild(edLink);
       const upLink = document.createElement("span");
       upLink.id = "attr_up_" + key;
       upLink.classList.add("litelink");
@@ -150,17 +156,18 @@ export const showToken = async (
       downLink.id = "attr_dw_" + key;
       downLink.classList.add("litelink");
       downLink.classList.add("attrControlLink");
-      downLink.textContent = "DOUN";
+      downLink.textContent = "DOWN";
       titleElm.appendChild(downLink);
       const delLink = document.createElement("span");
       delLink.id = "attr_rm_" + key;
       delLink.classList.add("litelink");
       delLink.classList.add("attrControlLink");
-      delLink.textContent = "delete";
+      delLink.textContent = "DEL";
       titleElm.appendChild(delLink);
     }
     const contentElm = document.createElement("p");
     contentElm.id = "attrebuteContent_" + key;
+    console.log("ValueCheck:" + attributes[key]["value"]);
     if (attributes[key]["value"].slice(0, 4) == "http") {
       attributeDivArea.appendChild(titleElm);
       attributeDivArea.appendChild(contentElm);
