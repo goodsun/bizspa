@@ -30,8 +30,9 @@ export const getUI = async () => {
   makeMetaPrev.id = "meta-preview";
   makeMetaDiv.appendChild(makeMetaDisp);
   makeMetaDiv.appendChild(makeMetaCont);
-  makeMetaDiv.appendChild(makeMetaPrevTitle);
+  makeMetaPrev.appendChild(makeMetaPrevTitle);
   makeMetaDiv.appendChild(makeMetaPrev);
+  makeMetaPrev.style.display = "none";
 
   //-- MAIN -------------------------------------
   const conTitle = document.createElement("H2");
@@ -209,6 +210,9 @@ export const setTokenData = async () => {
   metaPreview.innerHTML = "";
   await detailDisplay.showToken("metabuilder", metadata, "", "", metaPreview);
   console.log("SetToken表示完了");
+  if (metadata.name != "") {
+    metaPreview.style.display = "block";
+  }
 
   const clickableElements = document.querySelectorAll(".attrControlLink");
   clickableElements.forEach((element) => {

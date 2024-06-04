@@ -4,6 +4,7 @@ import { getOwn } from "../connect/getOwn";
 import utils from "../common/util";
 import detailDisplay from "./detailDisplay";
 import commonSnipet from "../snipet/common";
+import { CONST } from "../common/const";
 const mainContents = document.getElementById("mainContents");
 
 export const displayMintUI = async (targetElem, params) => {
@@ -33,6 +34,14 @@ export const displayMintUI = async (targetElem, params) => {
       "このNFTのMINTには donationPointが " +
       mintableInfo.needPoint +
       " pt 必要です";
+    mintable = false;
+  }
+
+  if (balance.chainId != CONST.BC_NETWORK_ID) {
+    balanceElement.innerHTML +=
+      "NETWORK DIFFERENT | PLEASE CONNECT " +
+      CONST.BC_NETWORK_NAME +
+      " NETWORK ";
     mintable = false;
   }
 
@@ -170,9 +179,13 @@ export const displayOwnTokens = async (
           squareImg.appendChild(newImage);
           newLink.appendChild(squareImg);
 
+          var childNftBg = document.createElement("div");
+          childNftBg.classList.add("childNftBg");
+          childNftBg.appendChild(newLink);
+
           document
             .getElementById("token_" + ca + "_" + tokenData.tokenId)
-            .appendChild(newLink);
+            .appendChild(childNftBg);
           console.log(
             utils.getLocalTime() + " 遅延実行完了" + tokenData.tokenURI
           );
@@ -218,7 +231,11 @@ export const displayTokens = async (tokensElement, ca, filter) => {
         return newLink;
       });
 
-      document.getElementById("token_" + ca + "_" + i).appendChild(newLink);
+      var childNftBg = document.createElement("div");
+      childNftBg.classList.add("childNftBg");
+      childNftBg.appendChild(newLink);
+
+      document.getElementById("token_" + ca + "_" + i).appendChild(childNftBg);
       console.log(utils.getLocalTime() + " 遅延実行完了" + tokenUri);
     });
   }
@@ -231,7 +248,7 @@ export const displayManagedData = async (type, title, filter) => {
   mainContents.appendChild(header);
 
   const dataList = document.createElement("div");
-  dataList.classList.add("contractLinkList");
+  dataList.classList.add(type + "LinkList");
   mainContents.appendChild(dataList);
 
   for (const key in result) {

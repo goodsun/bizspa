@@ -12,6 +12,15 @@ const closeModal = document.getElementById("closemodal");
 const modalcontent = document.getElementById("modalcontent");
 let dispmodal = false;
 
+function containsBrowserName(browserName) {
+  var userAgent = navigator.userAgent.toLowerCase();
+  return userAgent.includes(browserName.toLowerCase());
+}
+
+function openInNativeBrowser(url) {
+  window.open(url, "_blank");
+}
+
 closeModal.addEventListener("click", async () => {
   toggleModal();
 });
@@ -181,25 +190,20 @@ export const ethToWai = (input) => {
 
 export const checkMetamask = async () => {
   const balanceData = await checkBalance();
-  if (balanceData.eoa != undefined) {
+  if (String(balanceData.chainId) != String(CONST.BC_NETWORK_ID)) {
+    connectWallet.innerHTML =
+      "NETWORK DIFFERENT | PLEASE CONNECT " +
+      CONST.BC_NETWORK_NAME +
+      " NETWORK ";
+  } else if (balanceData.eoa != undefined) {
     connectWallet.innerHTML = "";
     var discordArea = document.createElement("div");
-    discordArea.classList.add("wcDiscordArea");
+    discordArea.classList.add("walletDiscordArea");
     connectWallet.appendChild(discordArea);
 
     discordConnect.getUserByEoa(balanceData.eoa).then((discordUser) => {
       if (discordUser.Eoa) {
-        var newImage = document.createElement("img");
-        newImage.src = discordUser.Icon;
-        newImage.classList.add("walletDiscordIcon");
-        discordArea.appendChild(newImage);
-        discordArea.appendChild(commonSnipet.span(discordUser.Name));
-        discordArea.appendChild(
-          commonSnipet.eoa(discordUser.DiscordId, {
-            link: "#",
-            target: "",
-          })
-        );
+        discordArea.appendChild(commonSnipet.discordByEoa(discordUser));
       }
     });
 
@@ -238,24 +242,27 @@ const callCheckMetamask = async () => {
 };
 
 export async function checkBalance() {
+  let chainId: string;
   let eoa: string;
   let balance: bigint;
   let symbol: string;
   let dpoint: number;
-  console.log("begin checkBalance");
   if (window.ethereum && window.ethereum.isMetaMask) {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      eoa = await signer.getAddress();
-      balance = await provider.getBalance(eoa);
       const network = await provider.getNetwork();
-      symbol = network.name;
-      if (symbol == "unknown") {
-        symbol = CONST.DEFAULT_SYMBOL;
+      chainId = String(network.chainId);
+      if (chainId == CONST.BC_NETWORK_ID) {
+        eoa = await signer.getAddress();
+        balance = await provider.getBalance(eoa);
+        symbol = network.name;
+        if (symbol == "unknown") {
+          symbol = CONST.DEFAULT_SYMBOL;
+        }
+        const ca = await getManagerConnect.getCA("donate");
+        dpoint = await donate("balance", ca, []);
       }
-      const ca = await getManagerConnect.getCA("donate");
-      dpoint = await donate("balance", ca, []);
       window.ethereum.removeListener("accountsChanged", callCheckMetamask);
       window.ethereum.removeListener("chainChanged", callCheckMetamask);
       window.ethereum.on("accountsChanged", callCheckMetamask);
@@ -265,8 +272,8 @@ export async function checkBalance() {
       console.error("Error details:", error);
     }
   }
-  console.log("end checkBalance");
   return {
+    chainId: chainId,
     eoa: eoa,
     balance: balance,
     symbol: symbol,
@@ -275,6 +282,7 @@ export async function checkBalance() {
 }
 
 const utils = {
+  containsBrowserName,
   checkMetamask,
   getLocalTime,
   sleep,
@@ -286,6 +294,7 @@ const utils = {
   toggleModal,
   getParmawebList,
   formatUnixTime,
+  openInNativeBrowser,
 };
 
 export default utils;

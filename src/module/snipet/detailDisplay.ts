@@ -63,26 +63,46 @@ export const showToken = async (
   }
 
   if (metadata["animation_url"]) {
+    const linkurl =
+      "https://fs.bon-soleil.com/modelviewer/?model-view-src=" +
+      metadata["animation_url"];
     const movieArea = document.createElement("div");
+
     divElement.appendChild(movieArea);
     fetch(metadata["animation_url"])
       .then((response) => {
         const contentType = response.headers.get("content-type");
         if (contentType == "model/gltf-binary") {
-          const objectElement = document.createElement("model-viewer");
-          objectElement.id = "model-view";
-          objectElement.classList.add("nft3DImage");
-          objectElement.setAttribute("auto-rotate", "true");
-          objectElement.setAttribute("autoplay", "true");
-          objectElement.setAttribute("camera-controls", "true");
-          objectElement.setAttribute("at-status", "not-presenting");
-          objectElement.setAttribute("src", metadata["animation_url"]);
-          movieArea.appendChild(objectElement);
-          var script = document.createElement("script");
-          script.src =
-            "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
-          script.type = "module";
-          headJsArea.appendChild(script);
+          if (utils.containsBrowserName("MetaMaskMobile")) {
+            alert(
+              "このページには3D表示コンテンツが含まれています。\n3Dコンテンツの閲覧は ネイティブブラウザをご利用ください。"
+            );
+            const attention = document.createElement("p");
+            attention.innerHTML =
+              "<b>メタマスクでは３D表示ができません</b><br />左のリンクをクリックしネイティブブラウザで御覧ください。 ";
+            attention.appendChild(
+              commonSnipet.linkCopy(
+                linkurl,
+                "３D表示リンクがクリップボードにコピーされました。\nネイティブブラウザで御覧ください"
+              )
+            );
+            movieArea.appendChild(attention);
+          } else {
+            const objectElement = document.createElement("model-viewer");
+            objectElement.id = "model-view";
+            objectElement.classList.add("nft3DImage");
+            objectElement.setAttribute("auto-rotate", "true");
+            objectElement.setAttribute("autoplay", "true");
+            objectElement.setAttribute("camera-controls", "true");
+            objectElement.setAttribute("at-status", "not-presenting");
+            objectElement.setAttribute("src", metadata["animation_url"]);
+            movieArea.appendChild(objectElement);
+            var script = document.createElement("script");
+            script.src =
+              "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
+            script.type = "module";
+            headJsArea.appendChild(script);
+          }
         } else if (contentType.startsWith("video/")) {
           const video = document.createElement("video");
           video.classList.add("nftMedia");
@@ -401,9 +421,23 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     "BaseInput",
     "TokenURI"
   );
-  tokenUriForm.classList.add("wfull");
+  tokenUriForm.classList.add("w7p");
   divElement.appendChild(tokenUriForm);
+
+  const vaultSelect = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "OPEN VAULT",
+    "OPEN VAULT"
+  );
+  vaultSelect.classList.add("w3p");
+  divElement.appendChild(vaultSelect);
   divElement.appendChild(commonSnipet.br());
+
+  vaultSelect.addEventListener("click", async () => {
+    utils.toggleModal();
+  });
 
   const eoaForm = setElement.makeInput(
     "input",

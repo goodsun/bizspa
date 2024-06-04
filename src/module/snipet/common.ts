@@ -5,11 +5,48 @@ const link = (text, link) => {
   return aTag;
 };
 
+const linkCopy = (link, message?) => {
+  const linkCopyElm = document.createElement("div");
+  linkCopyElm.classList.add("linkCopyElm");
+
+  // コピー用のボタン要素を作成
+  const copybtn = document.createElement("span");
+  copybtn.id = link;
+  copybtn.classList.add("linkCopy");
+
+  // アイコン要素を作成してボタンに追加
+  const copyicon = document.createElement("i");
+  copyicon.classList.add("far", "fa-copy", "fa-fw");
+  copybtn.appendChild(copyicon);
+
+  // ボタン要素をスパン要素に追加
+  linkCopyElm.appendChild(copybtn);
+
+  // クリックイベントを属性として追加
+  copybtn.onclick = () => {
+    const textToCopy = link;
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        if (message) {
+          alert(message);
+        } else {
+          alert(`URLがクリップボードにコピーされました`);
+        }
+      })
+      .catch((err) => {
+        console.error("コピーに失敗しました: ", err);
+      });
+  };
+  linkCopyElm.appendChild(copybtn);
+  return linkCopyElm;
+};
+
 const eoa = (eoa, option = { link: "", target: "_self" }) => {
   const { link, target } = option;
   const eoaElm = document.createElement("span");
-  const front = eoa.substring(0, 8);
-  const end = eoa.substring(eoa.length - 6);
+  const front = eoa.substring(0, 6);
+  const end = eoa.substring(eoa.length - 4);
   const replace = front + "..." + end;
 
   if (link) {
@@ -52,6 +89,48 @@ const eoa = (eoa, option = { link: "", target: "_self" }) => {
   return eoaElm;
 };
 
+const discordByEoa = (discordUser) => {
+  const discordElem = document.createElement("div");
+  discordElem.classList.add("walletDiscordElement");
+  var newImage = document.createElement("img");
+  newImage.src = discordUser.Icon;
+  newImage.classList.add("walletDiscordIcon");
+  discordElem.appendChild(newImage);
+
+  const name = document.createElement("span");
+  name.innerHTML = discordUser.Name;
+  discordElem.appendChild(name);
+
+  // コピー用のボタン要素を作成
+  const copybtn = document.createElement("span");
+  copybtn.id = discordUser.DiscordId;
+  copybtn.classList.add("eoaCopy");
+  copybtn.setAttribute("data-clipboard-text", discordUser.DiscordId);
+
+  // アイコン要素を作成してボタンに追加
+  const copyicon = document.createElement("i");
+  copyicon.classList.add("far", "fa-copy", "fa-fw");
+  copybtn.appendChild(copyicon);
+
+  // ボタン要素をスパン要素に追加
+  discordElem.appendChild(copybtn);
+
+  // クリックイベントを属性として追加
+  copybtn.onclick = () => {
+    const textToCopy = discordUser.DiscordId;
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        alert(`DiscordId: ${textToCopy} がクリップボードにコピーされました`);
+      })
+      .catch((err) => {
+        console.error("コピーに失敗しました: ", err);
+      });
+  };
+  discordElem.appendChild(copybtn);
+  return discordElem;
+};
+
 export const span = (text: string) => {
   const child = document.createElement("span");
   child.innerText = text;
@@ -76,7 +155,9 @@ export const copyAction = (text) => {
 
 const commonSnipet = {
   link,
+  linkCopy,
   eoa,
+  discordByEoa,
   span,
   br,
   copyAction,

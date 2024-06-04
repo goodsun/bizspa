@@ -49,7 +49,7 @@ async function setDonate(params) {
   const allTotalDonation = await getDonate("allTotalDonation", ca, params);
 
   const divDonateElement = document.createElement("div");
-  divDonateElement.classList.add("ownerArea");
+  divDonateElement.classList.add("donateArea");
   mainContents.appendChild(divDonateElement);
 
   const donateTitle = document.createElement("h2");
@@ -98,8 +98,14 @@ async function setDonate(params) {
 }
 
 const setHome = async () => {
-  homeSnipet.getHome();
+  mainContents.appendChild(await homeSnipet.getHome());
+  mainContents.appendChild(await homeSnipet.getItems());
+  mainContents.appendChild(await homeSnipet.getGallarys());
 };
+const setContents = async () => {
+  console.log("setContents");
+};
+
 const setContracts = async () => {
   await displayManagedData("contracts", "CONTRACTS", (filter) => {
     return filter[3] == true;
@@ -117,7 +123,11 @@ const setCreator = async () => {
   });
   */
   const mdPath =
-    CONST.ARTICLE_REPO_URL + "md/ja/creator/" + router.params[2] + ".md";
+    CONST.BOT_API_URL +
+    "contents/get/" +
+    router.lang +
+    "/creator/" +
+    router.params[2];
   articleSnipet.parseMdPage(mdPath);
   setOwnTokenContracts((filter) => {
     return filter[3] == true;
@@ -137,30 +147,28 @@ const setOwner = async (eoa) => {
   ownerTitle.textContent = "Owner Info";
   divOwnerElement.appendChild(ownerTitle);
 
+  const discordElm = document.createElement("p");
+  divOwnerElement.appendChild(discordElm);
+
+  discordConnect.getUserByEoa(eoa).then((discordUser) => {
+    if (discordUser.DiscordId && !discordUser.DeleteFlag) {
+      const image = document.createElement("img");
+      image.classList.add("discordIcon");
+      image.src = discordUser.Icon;
+      discordElm.appendChild(image);
+      discordElm.appendChild(commonSnipet.br());
+      discordElm.appendChild(
+        commonSnipet.span("DiscordId : " + discordUser.DiscordId)
+      );
+      discordElm.appendChild(commonSnipet.br());
+      discordElm.appendChild(
+        commonSnipet.span("DiscordName : " + discordUser.Name)
+      );
+      discordElm.appendChild(commonSnipet.br());
+    }
+  });
+
   const pElement = document.createElement("p");
-  const discordUser = await discordConnect.getUserByEoa(eoa);
-  console.dir(discordUser);
-  if (discordUser.DeleteFlag && !discordUser.DeleteFlag.BOOL) {
-    console.log(discordUser.DiscordId.N);
-    console.log(discordUser.Name.S);
-    console.log(discordUser.Icon.S);
-    console.dir(discordUser.Roles.SS);
-
-    const image = document.createElement("img");
-    image.classList.add("discordIcon");
-    image.src = discordUser.Icon.S;
-    pElement.appendChild(image);
-    pElement.appendChild(commonSnipet.br());
-    pElement.appendChild(
-      commonSnipet.span("DiscordId : " + discordUser.DiscordId.N)
-    );
-    pElement.appendChild(commonSnipet.br());
-    pElement.appendChild(
-      commonSnipet.span("DiscordName : " + discordUser.Name.S)
-    );
-    pElement.appendChild(commonSnipet.br());
-  }
-
   pElement.appendChild(commonSnipet.span("EOA: "));
   pElement.appendChild(
     commonSnipet.eoa(eoa, { link: "/assets/" + eoa, target: "" })
@@ -290,6 +298,8 @@ const checkRoute = () => {
 
   if (param1 == "") {
     setHome();
+  } else if (param1 === "contents") {
+    setContents();
   } else if (param1 === "contract1") {
     setContracts();
   } else if (param1 === "creators" && param2) {

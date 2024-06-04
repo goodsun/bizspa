@@ -8,8 +8,7 @@ const options = {
 marked.setOptions(options);
 
 const getMdDir = async () => {
-  const repoUrl =
-    "https://api.github.com/repos/goodsun/bizen-article/contents/public/md/ja/";
+  const repoUrl = CONST.BOT_API_URL + "/contents/get/" + router.lang;
   fetch(repoUrl)
     .then((response) => {
       if (!response.ok) {
@@ -18,6 +17,8 @@ const getMdDir = async () => {
       return response.json();
     })
     .then((data) => {
+      console.log("getMdData");
+      console.dir(data);
       // レスポンスからファイルやディレクトリのリストを取得
       const contents = data.map((item) => item.name);
       console.log("Contents:", contents);
@@ -28,9 +29,10 @@ const getMdDir = async () => {
 };
 
 const getMdPath = async () => {
-  const baseUrl = CONST.ARTICLE_REPO_URL;
+  const baseUrl = CONST.BOT_API_URL;
   const path = router.getParams();
-  const mdpath = `${baseUrl}md/${path}.md`;
+  const lang = router.lang;
+  const mdpath = `${baseUrl}contents/get/${lang}/${path}`;
   parseMdPage(mdpath);
 };
 
@@ -40,8 +42,8 @@ const getMdContents = async (mdpath) => {
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    const mdBody = await response.text();
-    let htmlContent = await marked(mdBody);
+    const mdBody = await response.json();
+    let htmlContent = await marked(mdBody.Contents);
     const baseMdUrl = new URL(mdpath, window.location.origin);
 
     getEssenssial(mdBody, baseMdUrl);
@@ -69,8 +71,10 @@ const parseMdPage = async (mdpath) => {
   const sectionElement = document.createElement("section");
   sectionElement.classList.add("articleSection");
   mainContents.appendChild(sectionElement);
+  /*
   const titleElement = document.createElement("h2");
   sectionElement.appendChild(titleElement);
+  */
   const articleElement = document.createElement("div");
   articleElement.classList.add("articleArea");
   sectionElement.appendChild(articleElement);

@@ -1,17 +1,16 @@
 const mainContents = document.getElementById("mainContents");
 
-const setCaroucel = async (slides) => {
-  const sectionElement = document.createElement("section");
-  sectionElement.classList.add("homeSection");
-  mainContents.appendChild(sectionElement);
+const setCaroucel = async (title, slides) => {
+  const divElem = document.createElement("div");
+  divElem.classList.add("caroucelArea");
   const titleElement = document.createElement("h2");
-  sectionElement.appendChild(titleElement);
-  titleElement.innerHTML = "New Arrivals";
+  divElem.appendChild(titleElement);
+  titleElement.innerHTML = title;
+
   const carousel = document.createElement("div");
   carousel.id = "carousel";
-  sectionElement.appendChild(carousel);
-
   carousel.classList.add("carousel");
+  divElem.appendChild(carousel);
 
   const carouselContainer = document.createElement("div");
   carouselContainer.classList.add("carousel-container");
@@ -24,15 +23,18 @@ const setCaroucel = async (slides) => {
     carouselContainer.appendChild(slide);
   });
 
+  const control = document.createElement("div");
+  control.classList.add("carousel-control");
+  divElem.appendChild(control);
   const prevButton = document.createElement("button");
   prevButton.classList.add("prev");
   prevButton.textContent = "Prev";
-  carousel.appendChild(prevButton);
+  control.appendChild(prevButton);
 
   const nextButton = document.createElement("button");
   nextButton.classList.add("next");
   nextButton.textContent = "Next";
-  carousel.appendChild(nextButton);
+  control.appendChild(nextButton);
 
   // カルーセルの機能
   let currentIndex = 0;
@@ -76,6 +78,7 @@ const setCaroucel = async (slides) => {
 
   // 最初のスライドを表示
   showSlide(currentIndex);
+  return divElem;
 };
 
 const caroucel = {

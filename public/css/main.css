@@ -1,6 +1,6 @@
 body {
   background-color: #000000;
-  padding: 30px;
+  padding: 0px;
   color: #888;
   font-size: 14px;
 }
@@ -23,6 +23,15 @@ body {
   content: "|";
   margin-right: 0.5em;
 }
+
+#headerTitle {
+  padding: 0 30px;
+}
+#langSelecter {
+  position: fixed;
+  right: 30px;
+  bottom: 20px;
+}
 .noview {
   color: #000;
   width: 1px;
@@ -30,32 +39,34 @@ body {
   overflow: hidden;
 }
 h1 {
-  font-size: 2em;
+  font-size: 2.2em;
+  padding-left: 30px;
   color: #cccccc;
   span {
     color: #990000;
   }
 }
 h2 {
-  font-size: 2em;
+  font-size: 2.2em;
   color: #dddddd;
 }
 h3 {
-  font-size: 1.7em;
+  font-size: 2em;
   color: #cccccc;
 }
 h4 {
-  font-size: 1.5em;
+  font-size: 1.8em;
   color: #99bb99;
 }
 h4 {
-  font-size: 1.3em;
+  font-size: 1.6em;
   color: #99bb99;
 }
 p {
   color: #cccccc;
   text-decoration: none;
-  font-size: 1.3em;
+  font-size: 1.6em;
+  line-height: 1.8;
   font-weight: normal;
 }
 span {
@@ -122,6 +133,11 @@ a {
   width: 100%;
   margin: 100px 20px 0px 20px;
 }
+
+#mainContents > h2 {
+  padding-left: 30px;
+}
+
 .controller-adv {
   position: fixed;
   bottom: 120px;
@@ -195,20 +211,22 @@ a {
 }
 .childNft {
   float: left;
-  margin-right: 10px;
-  width: 200px;
-  background: #222;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px #274d7b3d;
+  width: 33.33%;
   box-sizing: border-box;
-  height: 265px;
-  margin-bottom: 10px;
-  padding: 5px 10px;
+  margin: 0 0 3px 0;
+  padding: 0 1px;
   position: relative;
   text-align: left;
   text-overflow: hidden;
   transition: all 0.2s ease-in-out;
-  width: 170;
+}
+.childNftBg {
+  padding: 5px 0;
+  width: 100%;
+  height: 395px;
+  background: #222;
+  box-shadow: 0 5px 4px #274d7b3d;
+  border-radius: 8px;
 }
 .titleThumb {
   font-size: 0.7em;
@@ -217,6 +235,7 @@ a {
   line-height: 1.3em;
   overflow: scroll;
   margin: 10px 0;
+  padding: 0 10px;
 }
 .nftImage {
   width: 90%;
@@ -235,15 +254,16 @@ a {
   height: 860px;
 }
 .nftThumbSquare {
-  width: 180px; /* 正方形のサイズを指定 */
-  height: 180px;
+  width: 100%;
+  height: 300px;
+  background-color: #111;
   overflow: hidden; /* 不要な部分を切り捨てる */
   position: relative; /* 子要素を相対的に配置するために親要素にpositionを指定 */
 }
 
 .nftThumb {
-  width: auto; /* 親要素に合わせて画像の幅を100%にする */
-  height: 100%; /* アスペクト比を維持するために高さを自動で調整 */
+  width: 100%;
+  height: 100%;
   display: block; /* 余分なスペースを削除するために画像をブロック要素として表示 */
   position: absolute; /* 画像を相対的に配置 */
   top: 50%; /* 上端を親要素の50%の位置に配置 */
@@ -252,12 +272,51 @@ a {
   object-fit: cover; /* 画像が親要素にフィットするように調整 */
 }
 
+.articleSection {
+  width: 100%;
+}
+.articleArea {
+  padding: 0 50px;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    padding: 3px 0;
+  }
+}
+.articleArea img {
+  max-width: 100%;
+}
+
+.ownerArea {
+  padding: 0 30px;
+}
+
+.donateArea {
+  padding: 0 30px;
+}
+
+.nftContractArea > h3,
+.sbtContractArea > h3 {
+  padding: 0 30px;
+}
+
+.creatorsLinkList {
+  font-size: 1.8em;
+  margin: 0 30px;
+}
 .contractLinkList {
   font-size: 1.8em;
-  margin: 10px 30px;
+  margin: 0;
+  h3 {
+    margin: 20px 30px 10px;
+  }
 }
 .tokenBreadCrumb {
   font-size: 1.8em;
+  margin: 30px;
 }
 
 .floatClear {
@@ -365,18 +424,6 @@ a {
   margin-top: 15px;
   margin-bottom: 5px;
 }
-.articleSection {
-  width: 100%;
-}
-.articleArea {
-  width: 100%;
-  padding: 10px;
-}
-.articleArea img {
-  margin: 10px;
-  width: 90%;
-  max-width: 640px;
-}
 
 .custom-file-div {
   margin: 0 5px 0 0;
@@ -434,8 +481,11 @@ a {
   color: #4d4a4a;
   font-size: 0.6em;
 }
-.wcDiscordArea {
+.walletDiscordArea {
   display: inline-block;
+}
+.walletDiscordElement {
+  margin-right: 10px;
 }
 .walletDiscordIcon {
   margin-right: 10px;
@@ -443,9 +493,53 @@ a {
   vertical-align: middle;
 }
 
+#meta-control {
+  padding: 0 20px;
+}
 #meta-preview {
   background-color: #222222;
-  margin-top: 30px;
+  margin: 30px 20px;
   padding: 30px;
   border-radius: 20px;
+  h1 {
+    padding: 0;
+  }
+}
+
+.linkCopyElm {
+  display: inline-block;
+}
+.linkCopy {
+  font-size: 1.4em;
+  color: #8888bb;
+}
+
+.gallaryImgDiv {
+  border: 5px solid #a0a0a0;
+  box-sizing: border-box;
+  width: 350px;
+  height: 350px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 5px 4px #0a0c0f3d;
+}
+
+.gallaryImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  background-color: #fff;
+}
+.homeContents {
+  margin: 0 30px;
+}
+
+#connectWallet {
+  font-size: 1.6em;
 }
