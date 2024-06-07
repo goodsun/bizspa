@@ -192,9 +192,7 @@ export const checkMetamask = async () => {
   const balanceData = await checkBalance();
   if (String(balanceData.chainId) != String(CONST.BC_NETWORK_ID)) {
     connectWallet.innerHTML =
-      "NETWORK DIFFERENT | PLEASE CONNECT " +
-      CONST.BC_NETWORK_NAME +
-      " NETWORK ";
+      "PLEASE CONNECT " + CONST.BC_NETWORK_NAME + " NETWORK ";
   } else if (balanceData.eoa != undefined) {
     connectWallet.innerHTML = "";
     var discordArea = document.createElement("div");

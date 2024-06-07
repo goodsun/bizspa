@@ -2,10 +2,56 @@ import { getManager } from "../connect/getManager";
 import getTokenConnect from "../connect/getToken";
 import { getOwn } from "../connect/getOwn";
 import utils from "../common/util";
+import { router } from "../common/router";
 import detailDisplay from "./detailDisplay";
 import commonSnipet from "../snipet/common";
 import { CONST } from "../common/const";
 const mainContents = document.getElementById("mainContents");
+
+const getDiffTime = (date: string): string => {
+  const targetDate = new Date(date);
+  const now = new Date();
+  const diffInMilliseconds = now.getTime() - targetDate.getTime();
+
+  const millisecondsPerMinute = 60 * 1000;
+  const millisecondsPerHour = 60 * 60 * 1000;
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const millisecondsPerWeek = 7 * millisecondsPerDay;
+  const millisecondsPerMonth = 30 * millisecondsPerDay;
+  const millisecondsPerYear = 365 * millisecondsPerDay;
+
+  if (diffInMilliseconds >= millisecondsPerYear) {
+    const yearsDifference = Math.floor(
+      diffInMilliseconds / millisecondsPerYear
+    );
+    return `${yearsDifference} year${yearsDifference !== 1 ? "s" : ""} ago`;
+  } else if (diffInMilliseconds >= millisecondsPerMonth) {
+    const monthsDifference = Math.floor(
+      diffInMilliseconds / millisecondsPerMonth
+    );
+    return `${monthsDifference} month${monthsDifference !== 1 ? "s" : ""} ago`;
+  } else if (diffInMilliseconds >= millisecondsPerWeek) {
+    const weeksDifference = Math.floor(
+      diffInMilliseconds / millisecondsPerWeek
+    );
+    return `${weeksDifference} week${weeksDifference !== 1 ? "s" : ""} ago`;
+  } else if (diffInMilliseconds >= millisecondsPerDay) {
+    const daysDifference = Math.floor(diffInMilliseconds / millisecondsPerDay);
+    return `${daysDifference} day${daysDifference !== 1 ? "s" : ""} ago`;
+  } else if (diffInMilliseconds >= millisecondsPerHour) {
+    const hoursDifference = Math.floor(
+      diffInMilliseconds / millisecondsPerHour
+    );
+    return `${hoursDifference} hour${hoursDifference !== 1 ? "s" : ""} ago`;
+  } else {
+    const minutesDifference = Math.floor(
+      diffInMilliseconds / millisecondsPerMinute
+    );
+    return `${minutesDifference} minute${
+      minutesDifference !== 1 ? "s" : ""
+    } ago`;
+  }
+};
 
 export const displayMintUI = async (targetElem, params) => {
   const balance = await utils.checkBalance();
@@ -39,9 +85,7 @@ export const displayMintUI = async (targetElem, params) => {
 
   if (balance.chainId != CONST.BC_NETWORK_ID) {
     balanceElement.innerHTML +=
-      "NETWORK DIFFERENT | PLEASE CONNECT " +
-      CONST.BC_NETWORK_NAME +
-      " NETWORK ";
+      "PLEASE CONNECT " + CONST.BC_NETWORK_NAME + " NETWORK ";
     mintable = false;
   }
 
@@ -259,7 +303,7 @@ export const displayManagedData = async (type, title, filter) => {
         link.textContent = result[key][0];
       } else if (type == "creators") {
         link.innerHTML =
-          JSON.parse(result[key][1])["en"] +
+          JSON.parse(result[key][1])[router.lang] +
           "<span class='litelink'>" +
           result[key][2] +
           "<span>";
@@ -485,6 +529,34 @@ export const displayAssets = async (result, filter) => {
       }
     });
   }
+};
+
+export const displayArticleCard = (article, parentElm) => {
+  const cardArea = document.createElement("div");
+  cardArea.classList.add("cardContractArea");
+  parentElm.appendChild(cardArea);
+  var cardLink = document.createElement("a");
+  cardLink.href = "/contents/" + article.Path.substring(3);
+  cardArea.appendChild(cardLink);
+  const cardImg = document.createElement("img");
+  cardImg.src = article.Imgurl;
+  cardLink.appendChild(cardImg);
+  const textArea = document.createElement("div");
+  textArea.classList.add("cardTextArea");
+  cardLink.appendChild(textArea);
+  const cardHeader = document.createElement("h2");
+  cardHeader.textContent = article.Title;
+  textArea.appendChild(cardHeader);
+  const cardMain = document.createElement("p");
+  cardMain.innerHTML =
+    "Created <span class='date'>" +
+    getDiffTime(article.Created) +
+    "</span> | Last Access <span class='date'>" +
+    getDiffTime(article.Updated) +
+    "</span> | Access <span class='date'>" +
+    article.AccessCount +
+    " hit</span>";
+  textArea.appendChild(cardMain);
 };
 
 const filteringJudge = async (target, filter: Function | false) => {

@@ -1,15 +1,26 @@
 import { marked } from "marked";
 import { CONST } from "../../module/common/const";
 import { router } from "../../module/common/router";
+import { displayArticleCard } from "../snipet/display";
+import { uuidV4 } from "ethers";
 const mainContents = document.getElementById("mainContents");
 const options = {
   breaks: true,
 };
 marked.setOptions(options);
 
-const getMdDir = async () => {
-  const repoUrl = CONST.BOT_API_URL + "/contents/get/" + router.lang;
-  fetch(repoUrl)
+const getMdSiteMap = async () => {
+  const apiUrl = CONST.BOT_API_URL + "/contents/get/" + router.lang;
+  const contentsDirArea = document.createElement("div");
+  contentsDirArea.classList.add("contentsDirArea");
+  mainContents.appendChild(contentsDirArea);
+
+  var parentTitle = document.createElement("h2");
+  parentTitle.classList.add("contentParentTitle");
+  parentTitle.textContent = "Contents";
+  contentsDirArea.appendChild(parentTitle);
+
+  fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -17,11 +28,74 @@ const getMdDir = async () => {
       return response.json();
     })
     .then((data) => {
-      console.log("getMdData");
-      console.dir(data);
-      // レスポンスからファイルやディレクトリのリストを取得
-      const contents = data.map((item) => item.name);
-      console.log("Contents:", contents);
+      let sitemap = {};
+      for (let contents of data) {
+        const tmp = contents.Path.split("/");
+        if (!sitemap[tmp[1]]) {
+          sitemap[tmp[1]] = [];
+        }
+        sitemap[tmp[1]].push(contents);
+      }
+      console.dir(sitemap);
+      for (const key in sitemap) {
+        var dirTitle = document.createElement("h2");
+        dirTitle.classList.add("contentDirTitle");
+        var dirLink = document.createElement("a");
+        dirLink.href = "/contents/" + key;
+        dirLink.textContent = key;
+        dirTitle.appendChild(dirLink);
+        contentsDirArea.appendChild(dirTitle);
+        var dirList = document.createElement("div");
+        dirList.classList.add("contentChildList");
+        contentsDirArea.appendChild(dirList);
+        for (const dir in sitemap[key].slice(0, 5)) {
+          console.dir(sitemap[key][dir]);
+          var childLink = document.createElement("a");
+          childLink.href = "/contents/" + sitemap[key][dir].Path.substring(3);
+          childLink.innerHTML =
+            sitemap[key][dir].Title +
+            "<span class='ac'>(" +
+            sitemap[key][dir].AccessCount +
+            ")<span>";
+          dirList.appendChild(childLink);
+        }
+      }
+    })
+    .catch((error) => {
+      console.error("can't get directry", error);
+    });
+};
+
+const getMdDir = async (dirname) => {
+  const apiUrl =
+    CONST.BOT_API_URL + "/contents/get/" + router.lang + "/" + dirname;
+  const contentsDirArea = document.createElement("div");
+  contentsDirArea.classList.add("contentsDirArea");
+  mainContents.appendChild(contentsDirArea);
+  var parentTitle = document.createElement("h2");
+  parentTitle.classList.add("contentParentTitle");
+  var dirLink = document.createElement("a");
+  dirLink.href = "/contents/";
+  dirLink.textContent = "Contents";
+  parentTitle.appendChild(dirLink);
+  contentsDirArea.appendChild(parentTitle);
+
+  var dirTitle = document.createElement("h2");
+  dirTitle.classList.add("contentDirTitle");
+  dirTitle.textContent = dirname;
+  contentsDirArea.appendChild(dirTitle);
+
+  fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      for (let contents of data) {
+        displayArticleCard(contents, contentsDirArea);
+      }
     })
     .catch((error) => {
       console.error("can't get directry", error);
@@ -33,7 +107,8 @@ const getMdPath = async () => {
   const path = router.getParams();
   const lang = router.lang;
   const mdpath = `${baseUrl}contents/get/${lang}/${path}`;
-  parseMdPage(mdpath);
+  const original = `${CONST.ARTICLE_REPO_URL}${lang}/${path}.md`;
+  parseMdPage(mdpath, original);
 };
 
 const getMdContents = async (mdpath) => {
@@ -45,8 +120,6 @@ const getMdContents = async (mdpath) => {
     const mdBody = await response.json();
     let htmlContent = await marked(mdBody.Contents);
     const baseMdUrl = new URL(mdpath, window.location.origin);
-
-    getEssenssial(mdBody, baseMdUrl);
 
     htmlContent = htmlContent.replace(
       /(src|href)="([^"]*)"/g,
@@ -67,7 +140,7 @@ const getMdContents = async (mdpath) => {
   }
 };
 
-const parseMdPage = async (mdpath) => {
+const parseMdPage = async (mdpath, orgurl) => {
   const sectionElement = document.createElement("section");
   sectionElement.classList.add("articleSection");
   mainContents.appendChild(sectionElement);
@@ -79,39 +152,20 @@ const parseMdPage = async (mdpath) => {
   articleElement.classList.add("articleArea");
   sectionElement.appendChild(articleElement);
   articleElement.innerHTML = await getMdContents(mdpath);
-};
 
-const resolveRelativePath = (relativePath, basePath) => {
-  const absoluteUrl = new URL(relativePath, basePath).href;
-  return absoluteUrl;
-};
-
-const getEssenssial = async (mdBody, basePath) => {
-  // タイトル行とイメージのリンクを正規表現で抽出
-  const titleRegex = /^#{1,6}\s+(.*)$/gm;
-  const imageRegex = /!\[.*?\]\((.*?)\)/gm;
-
-  let match;
-  const titles = [];
-  while ((match = titleRegex.exec(mdBody)) !== null) {
-    titles.push(match[1]);
-  }
-
-  const images = [];
-  while ((match = imageRegex.exec(mdBody)) !== null) {
-    images.push(match[1]);
-  }
-
-  const absolutePaths = images.map((relativePath) =>
-    resolveRelativePath(relativePath, basePath)
-  );
-
-  console.log("Titles:", titles);
-  console.log("Images:", images);
-  console.log("Images:", absolutePaths);
+  const originalElement = document.createElement("div");
+  originalElement.classList.add("articleArea");
+  var githubLink = document.createElement("a");
+  githubLink.classList.add("githubMdLink");
+  githubLink.href = orgurl;
+  githubLink.innerHTML =
+    "<i class='fab fa-github'></i> <span>ORIGINAL MD FILE</span>";
+  originalElement.appendChild(githubLink);
+  sectionElement.appendChild(originalElement);
 };
 
 const article = {
+  getMdSiteMap,
   getMdPath,
   getMdDir,
   getMdContents,

@@ -40,8 +40,13 @@ async function parmaweb() {
 }
 async function setArticle() {
   articleSnipet.getMdPath();
-  articleSnipet.getMdDir();
 }
+async function setArticleDir(dir) {
+  articleSnipet.getMdDir(dir);
+}
+const setContents = async () => {
+  articleSnipet.getMdSiteMap();
+};
 async function setDonate(params) {
   const ca = await getManagerConnect.getCA("donate");
   const total = await getDonate("total", ca, params);
@@ -102,9 +107,6 @@ const setHome = async () => {
   mainContents.appendChild(await homeSnipet.getItems());
   mainContents.appendChild(await homeSnipet.getGallarys());
 };
-const setContents = async () => {
-  console.log("setContents");
-};
 
 const setContracts = async () => {
   await displayManagedData("contracts", "CONTRACTS", (filter) => {
@@ -128,7 +130,8 @@ const setCreator = async () => {
     router.lang +
     "/creator/" +
     router.params[2];
-  articleSnipet.parseMdPage(mdPath);
+  const original = `${CONST.ARTICLE_REPO_URL}${router.lang}/${router.params[2]}.md`;
+  articleSnipet.parseMdPage(mdPath, original);
   setOwnTokenContracts((filter) => {
     return filter[3] == true;
   });
@@ -298,6 +301,10 @@ const checkRoute = () => {
 
   if (param1 == "") {
     setHome();
+  } else if (param1 === "contents" && param2 && param3) {
+    setArticle();
+  } else if (param1 === "contents" && param2 && !param3) {
+    setArticleDir(param2);
   } else if (param1 === "contents") {
     setContents();
   } else if (param1 === "contract1") {

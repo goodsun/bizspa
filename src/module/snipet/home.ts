@@ -15,7 +15,6 @@ const getHome = async () => {
 };
 
 const getItems = async () => {
-  const data = [1, 2, 3, 4, 5, 6, 7];
   const slides = [];
   const Url = CONST.BOT_API_URL + "item";
   try {
@@ -48,21 +47,33 @@ const getItems = async () => {
       title.textContent = nftInfo.name;
       slideContentElement.appendChild(title);
 
+      const contentDiv = document.createElement("div");
+      contentDiv.classList.add("contentDiv");
+      slideContentElement.appendChild(contentDiv);
+
       const imgdiv = document.createElement("div");
-      imgdiv.classList.add("gallaryImgDiv");
+      imgdiv.classList.add("itemImgDiv");
       const image = document.createElement("img");
-      image.classList.add("gallaryImg");
+      image.classList.add("itemImg");
       image.src = nftInfo.image;
-      slideContentElement.appendChild(imgdiv);
+      contentDiv.appendChild(imgdiv);
       imgdiv.appendChild(image);
 
-      const subject = document.createElement("p");
-      subject.textContent = "PRICE:" + results[key].Price;
-      slideContentElement.appendChild(subject);
+      const textdiv = document.createElement("div");
+      textdiv.classList.add("itemTxtDiv");
+      contentDiv.appendChild(textdiv);
+
+      console.log("nftInfo");
+      console.dir(results[key]);
+      console.dir(nftInfo);
+
+      const priceinfo = document.createElement("p");
+      priceinfo.textContent = "PRICE:" + results[key].Price;
+      textdiv.appendChild(priceinfo);
 
       const subject2 = document.createElement("p");
       subject2.textContent = "Price:" + results[key].Status;
-      slideContentElement.appendChild(subject2);
+      textdiv.appendChild(subject2);
 
       slides.push(slideElement);
     }
@@ -74,9 +85,7 @@ const getItems = async () => {
 };
 
 const getGallarys = async () => {
-  const data = [1, 2, 3, 4, 5, 6, 7];
   const slides = [];
-
   const Url = CONST.BOT_API_URL + "shop";
   try {
     const response = await fetch(Url);
@@ -98,21 +107,33 @@ const getGallarys = async () => {
       title.textContent = gallaryInfo.name;
       slideContentElement.appendChild(title);
 
+      const contentDiv = document.createElement("div");
+      contentDiv.classList.add("contentDiv");
+      slideContentElement.appendChild(contentDiv);
+
       const imgdiv = document.createElement("div");
       imgdiv.classList.add("gallaryImgDiv");
       const image = document.createElement("img");
       image.classList.add("gallaryImg");
       image.src = results[key].Imgurl;
-      slideContentElement.appendChild(imgdiv);
+      contentDiv.appendChild(imgdiv);
       imgdiv.appendChild(image);
+
+      const textdiv = document.createElement("div");
+      textdiv.classList.add("itemTxtDiv");
+      contentDiv.appendChild(textdiv);
+
+      console.log("gallaryInfo");
+      console.dir(results[key]);
+      console.dir(gallaryInfo);
 
       const subject = document.createElement("p");
       subject.textContent = "CoruelContent:" + key;
-      slideContentElement.appendChild(subject);
+      textdiv.appendChild(subject);
 
       const subject2 = document.createElement("p");
       subject2.textContent = "Price:" + results[key].Status;
-      slideContentElement.appendChild(subject2);
+      textdiv.appendChild(subject2);
 
       slides.push(slideElement);
     }
