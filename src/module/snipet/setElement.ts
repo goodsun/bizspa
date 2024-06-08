@@ -45,6 +45,17 @@ export const makeInput = (
   return child;
 };
 
+export const makeSelect = (inputId: string, setClass: string) => {
+  const child = document.createElement("select");
+  child.id = inputId;
+  child.classList.add(setClass);
+  const option = document.createElement("option");
+  option.value = null;
+  option.innerHTML = "選択してください";
+  child.appendChild(option);
+  return child;
+};
+
 export const makeFileSelect = (
   inputId: string,
   setClass: string,
@@ -91,6 +102,7 @@ const setElement = {
   makeElement,
   makeInput,
   makeTextarea,
+  makeSelect,
   makeFileSelect,
   setChild,
   br,

@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
-import util from "../common/util";
+import utils from "../common/utils";
 import { ABIS } from "./abi";
 const donateAbi = ABIS.donate;
 
@@ -17,17 +17,17 @@ export const getDonate = async (
       const result = await contract.totalSupply().then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     } else if (mode == "allTotalUsed") {
       const result = await contract._allUsedPoints().then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     } else if (mode == "allTotalDonation") {
       const result = await contract._allTotalDonations().then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     }
   } catch (error) {
     console.dir(error);
@@ -49,7 +49,7 @@ export const donate = async (
   try {
     if (mode == "donate") {
       const result = await contract
-        .donate(input[0], {
+        .donate(input[0], input[2], input[3], {
           value: input[1],
         })
         .then((response) => {
@@ -60,32 +60,44 @@ export const donate = async (
       const result = await contract.balanceOf(eoa).then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     } else if (mode == "total") {
       const result = await contract.totalSupply().then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     } else if (mode == "usedpoints") {
       const result = await contract._usedPoints(eoa).then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     } else if (mode == "totaldonations") {
       const result = await contract._totalDonations(eoa).then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     } else if (mode == "allTotalUsed") {
       const result = await contract._allUsedPoints().then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
     } else if (mode == "allTotalDonation") {
       const result = await contract._allTotalDonations().then((response) => {
         return response;
       });
-      return util.waiToEth(Number(result));
+      return utils.waiToEth(Number(result));
+    } else if (mode == "getDonationHistory") {
+      const result = await contract.getDonationHistory(eoa).then((response) => {
+        return response;
+      });
+      return result;
+    } else if (mode == "getsubstituteDonationHistory") {
+      const result = await contract
+        .getsubstituteDonationHistory(eoa)
+        .then((response) => {
+          return response;
+        });
+      return result;
     } else if (mode == "list") {
       console.log("test");
     }
@@ -93,3 +105,10 @@ export const donate = async (
     console.dir(error);
   }
 };
+
+const donateConnect = {
+  donate,
+  getDonate,
+};
+
+export default donateConnect;

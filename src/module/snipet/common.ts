@@ -90,8 +90,12 @@ const eoa = (eoa, option = { link: "", target: "_self" }) => {
 };
 
 const discordByEoa = (discordUser) => {
-  const discordElem = document.createElement("div");
-  discordElem.classList.add("walletDiscordElement");
+  return getDiscordUserByEoa(discordUser, "div", "walletDiscordElement");
+};
+
+const getDiscordUserByEoa = (discordUser, elm, className) => {
+  const discordElem = document.createElement(elm);
+  discordElem.classList.add(className);
   var newImage = document.createElement("img");
   newImage.src = discordUser.Icon;
   newImage.classList.add("walletDiscordIcon");
@@ -109,7 +113,7 @@ const discordByEoa = (discordUser) => {
 
   // アイコン要素を作成してボタンに追加
   const copyicon = document.createElement("i");
-  copyicon.classList.add("far", "fa-copy", "fa-fw");
+  copyicon.classList.add("fa-brands", "fa-discord");
   copybtn.appendChild(copyicon);
 
   // ボタン要素をスパン要素に追加
@@ -153,13 +157,39 @@ export const copyAction = (text) => {
     });
 };
 
+export const donateDetail = (text: string) => {
+  const child = document.createElement("span");
+  const split = text.split(":");
+  if (split.length == 1) {
+    child.innerHTML = "[ " + split[0] + " ]";
+  } else if (split[0] == "SEND TOKEN") {
+    const link = document.createElement("a");
+    const nftInfo = split[1].split("/");
+    link.href = "/tokens/" + split[1];
+    link.target = "_brank";
+    link.innerHTML = "NFT:" + short(nftInfo[0]) + "#" + nftInfo[1];
+    child.appendChild(link);
+  }
+  return child;
+};
+
+const short = (text: string) => {
+  const front = text.substring(0, 6);
+  const end = text.substring(text.length - 4);
+  const replace = front + "..." + end;
+  return replace;
+};
+
 const commonSnipet = {
+  short,
   link,
   linkCopy,
   eoa,
   discordByEoa,
+  getDiscordUserByEoa,
   span,
   br,
   copyAction,
+  donateDetail,
 };
 export default commonSnipet;

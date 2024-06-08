@@ -619,6 +619,11 @@ export const ABIS = {
           name: "donor",
           type: "address",
         },
+        {
+          internalType: "string",
+          name: "detail",
+          type: "string",
+        },
       ],
       name: "donate",
       outputs: [],
@@ -631,6 +636,11 @@ export const ABIS = {
           internalType: "address",
           name: "donor",
           type: "address",
+        },
+        {
+          internalType: "string",
+          name: "detail",
+          type: "string",
         },
         {
           internalType: "uint256",
@@ -652,32 +662,6 @@ export const ABIS = {
         },
       ],
       name: "removeAdmin",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "rate",
-          type: "uint256",
-        },
-      ],
-      name: "setCashBackRate",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "price",
-          type: "uint256",
-        },
-      ],
-      name: "setCashBackStatic",
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
@@ -768,32 +752,6 @@ export const ABIS = {
       type: "function",
     },
     {
-      inputs: [],
-      name: "_cashBackRate",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "_cashBackStatic",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
       inputs: [
         {
           internalType: "uint256",
@@ -826,6 +784,40 @@ export const ABIS = {
           internalType: "uint256",
           name: "",
           type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      name: "_donationHistory",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "date",
+          type: "uint256",
+        },
+        {
+          internalType: "string",
+          name: "detail",
+          type: "string",
         },
       ],
       stateMutability: "view",
@@ -903,6 +895,45 @@ export const ABIS = {
           internalType: "address",
           name: "",
           type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      name: "_substituteDonationHistory",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+        {
+          internalType: "address",
+          name: "donor",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "date",
+          type: "uint256",
+        },
+        {
+          internalType: "string",
+          name: "detail",
+          type: "string",
         },
       ],
       stateMutability: "view",
@@ -1073,17 +1104,75 @@ export const ABIS = {
     {
       inputs: [
         {
-          internalType: "uint256",
-          name: "donation",
-          type: "uint256",
+          internalType: "address",
+          name: "sender",
+          type: "address",
         },
       ],
-      name: "checkCacheBack",
+      name: "getDonationHistory",
       outputs: [
         {
-          internalType: "uint256",
+          components: [
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "date",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "detail",
+              type: "string",
+            },
+          ],
+          internalType: "struct donateManage.Donation[]",
           name: "",
-          type: "uint256",
+          type: "tuple[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "sender",
+          type: "address",
+        },
+      ],
+      name: "getsubstituteDonationHistory",
+      outputs: [
+        {
+          components: [
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "donor",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "date",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "detail",
+              type: "string",
+            },
+          ],
+          internalType: "struct donateManage.SubstituteDonation[]",
+          name: "",
+          type: "tuple[]",
         },
       ],
       stateMutability: "view",

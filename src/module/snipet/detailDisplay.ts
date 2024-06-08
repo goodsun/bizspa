@@ -1,9 +1,10 @@
-import utils from "../common/util";
+import utils from "../common/utils";
 import { router } from "../../module/common/router";
 import { getTba } from "../../module/connect/getTba";
 import setElement from "./setElement";
 import setToken from "../connect/setToken";
 import getToken from "../connect/getToken";
+import discordConnect from "../connect/discordConnect";
 import commonSnipet from "../snipet/common";
 const headJsArea = document.getElementById("pageHeader");
 const footJsArea = document.getElementById("pageFooter");
@@ -13,10 +14,12 @@ export const showToken = async (
   metadata: any,
   owner,
   tokenUri,
-  divElement: HTMLParagraphElement
+  divElement: HTMLParagraphElement,
+  tokenBoundAccount
 ) => {
   console.log("select type: " + type);
   console.dir(metadata);
+  console.dir(tokenBoundAccount);
 
   const h2Element = document.createElement("h1");
   h2Element.textContent = metadata["name"];
@@ -51,11 +54,37 @@ export const showToken = async (
       tbaToken[2] +
       "'> token </a>";
     pOwnerElement.appendChild(tbaTag);
-  } else {
+  } else if (owner) {
+    console.log("OWNER:" + owner);
     pOwnerElement.appendChild(commonSnipet.span("owner: "));
     pOwnerElement.appendChild(
       commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
     );
+
+    await discordConnect.getUserByEoa(owner).then((discordUser) => {
+      if (discordUser.Eoa) {
+        pOwnerElement.appendChild(
+          commonSnipet.getDiscordUserByEoa(
+            discordUser,
+            "span",
+            "discordNameDisp"
+          )
+        );
+      }
+    });
+  }
+
+  if (tokenBoundAccount) {
+    const tbaOwner = await getTba.checkOwner(tokenBoundAccount);
+    if (tbaOwner) {
+      pOwnerElement.appendChild(commonSnipet.span(" ｜ TBA: "));
+      pOwnerElement.appendChild(
+        commonSnipet.eoa(tokenBoundAccount, {
+          link: "/assets/" + tokenBoundAccount,
+          target: "",
+        })
+      );
+    }
   }
 
   if (owner != "") {
@@ -271,11 +300,14 @@ export const tbaSendForm = (
 
   const makeElement = setElement.makeElement(
     "p",
-    "このNFTをEOA宛に送信します",
+    "このNFTをTBAからEOAに送信します",
     null,
     "createdPelemBySetElement"
   );
   divElement.appendChild(makeElement);
+
+  const discordUserCheckArea = document.createElement("div");
+  divElement.appendChild(discordUserCheckArea);
 
   const sendToInput = setElement.makeInput(
     "input",
@@ -294,6 +326,21 @@ export const tbaSendForm = (
   );
   makeSubmit.classList.add("w3p");
   divElement.appendChild(makeSubmit);
+
+  sendToInput.addEventListener("change", async (event) => {
+    discordUserCheckArea.innerHTML = "";
+    discordUserCheckArea.classList.remove("sendToUser");
+    if (sendToInput.value != "") {
+      discordConnect.getUserByEoa(sendToInput.value).then((discordUser) => {
+        if (discordUser.Eoa) {
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.discordByEoa(discordUser)
+          );
+        }
+      });
+    }
+  });
 
   makeSubmit.addEventListener("click", async () => {
     if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
@@ -325,6 +372,9 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   );
   divElement.appendChild(makeElement);
 
+  const discordUserCheckArea = document.createElement("div");
+  divElement.appendChild(discordUserCheckArea);
+
   const sendToInput = setElement.makeInput(
     "input",
     "sendTo",
@@ -342,6 +392,21 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   );
   makeSubmit.classList.add("w3p");
   divElement.appendChild(makeSubmit);
+
+  sendToInput.addEventListener("change", async (event) => {
+    discordUserCheckArea.innerHTML = "";
+    discordUserCheckArea.classList.remove("sendToUser");
+    if (sendToInput.value != "") {
+      discordConnect.getUserByEoa(sendToInput.value).then((discordUser) => {
+        if (discordUser.Eoa) {
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.discordByEoa(discordUser)
+          );
+        }
+      });
+    }
+  });
 
   makeSubmit.addEventListener("click", async () => {
     if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
@@ -439,6 +504,9 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     utils.toggleModal();
   });
 
+  const discordUserCheckArea = document.createElement("div");
+  divElement.appendChild(discordUserCheckArea);
+
   const eoaForm = setElement.makeInput(
     "input",
     "input4",
@@ -462,6 +530,21 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   previewElement.classList.add("previewArea");
   divElement.appendChild(previewElement);
 
+  eoaForm.addEventListener("change", async (event) => {
+    discordUserCheckArea.innerHTML = "";
+    discordUserCheckArea.classList.remove("sendToUser");
+    if (eoaForm.value != "") {
+      discordConnect.getUserByEoa(eoaForm.value).then((discordUser) => {
+        if (discordUser.Eoa) {
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.discordByEoa(discordUser)
+          );
+        }
+      });
+    }
+  });
+
   tokenUriForm.addEventListener("change", async (e) => {
     utils
       .fetchData(tokenUriForm.value)
@@ -472,7 +555,8 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
           tokenInfos,
           "",
           tokenUriForm.value,
-          previewElement
+          previewElement,
+          ""
         );
       })
       .catch(() => {

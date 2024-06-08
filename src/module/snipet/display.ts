@@ -1,11 +1,16 @@
 import { getManager } from "../connect/getManager";
-import getTokenConnect from "../connect/getToken";
+import getTokenConnect, { getToken } from "../connect/getToken";
 import { getOwn } from "../connect/getOwn";
-import utils from "../common/util";
+import utils from "../common/utils";
 import { router } from "../common/router";
 import detailDisplay from "./detailDisplay";
 import commonSnipet from "../snipet/common";
+import setElement from "./setElement";
 import { CONST } from "../common/const";
+import getManagerConnect from "../connect/getManager";
+import setToken from "../connect/setToken";
+import donateConnect from "../connect/donate";
+import discordConnect from "../connect/discordConnect";
 const mainContents = document.getElementById("mainContents");
 
 const getDiffTime = (date: string): string => {
@@ -168,7 +173,8 @@ export const displayToken = async (
       result,
       owner,
       tokenUri,
-      divElement
+      divElement,
+      tokenBoundAccount
     );
     console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
 
@@ -567,3 +573,193 @@ const filteringJudge = async (target, filter: Function | false) => {
   }
   return false;
 };
+
+const creatorDonateList = async (elm, eoa) => {
+  const title = document.createElement("h2");
+  title.classList.add("creatorDonatetitle");
+  title.innerHTML = "CreatorDonate";
+  elm.appendChild(title);
+  const subject = document.createElement("p");
+  subject.classList.add("creatorDonatetitle");
+  subject.innerHTML =
+    "BizenDAO登録作家はこちらで購入者に代わって代理寄付が可能です。<br />またガス代としてキャッシュバックすることができます。";
+  elm.appendChild(subject);
+
+  const hasNftList = await getTokenConnect.hasTokenList(eoa);
+  const selectForm = setElement.makeSelect("nftSelect", "BaseInput");
+  selectForm.classList.add("wfull");
+
+  let metaDataInfo = [];
+  for (const key in hasNftList) {
+    const option = document.createElement("option");
+    option.value = key;
+    const nftInfo = hasNftList[key];
+    const metadata = await utils.fetchData(nftInfo.tokenUri);
+    option.innerHTML =
+      nftInfo.name + " #" + nftInfo.tokenId + " | " + metadata.name;
+    selectForm.appendChild(option);
+    metaDataInfo.push(metadata);
+  }
+
+  const donate = setElement.makeInput("input", "sendTo", "BaseInput", "寄付額");
+  donate.classList.add("wfull");
+  const cashback = setElement.makeInput(
+    "input",
+    "sendTo",
+    "BaseInput",
+    "キャッシュバック額"
+  );
+  cashback.classList.add("wfull");
+  elm.appendChild(document.createElement("br"));
+  const sendTo = setElement.makeInput("input", "sendTo", "BaseInput", "寄付者");
+  sendTo.classList.add("wfull");
+  const sendDonateNftArea = document.createElement("div");
+  sendDonateNftArea.classList.add("sendDonateNftArea");
+  const sendNftFormArea = document.createElement("div");
+  sendNftFormArea.classList.add("sendDonateFormArea");
+  sendNftFormArea.appendChild(selectForm);
+  sendNftFormArea.appendChild(donate);
+  sendNftFormArea.appendChild(cashback);
+
+  const discordUserCheckArea = document.createElement("div");
+  sendNftFormArea.appendChild(discordUserCheckArea);
+
+  sendNftFormArea.appendChild(sendTo);
+  const makeSubmit = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "SUBSTITUTE DONATION",
+    "SUBSTITUTE DONATION"
+  );
+  makeSubmit.classList.add("wfull");
+  sendNftFormArea.appendChild(makeSubmit);
+  const sendNftPreviewArea = document.createElement("div");
+  const sendNftPreviewBg = document.createElement("div");
+  sendNftPreviewBg.classList.add("sendDonateNftPreviewBg");
+  sendNftPreviewArea.classList.add("sendDonateNftPreviewArea");
+  sendNftPreviewArea.appendChild(sendNftPreviewBg);
+  sendDonateNftArea.appendChild(sendNftPreviewArea);
+  sendDonateNftArea.appendChild(sendNftFormArea);
+
+  elm.appendChild(sendDonateNftArea);
+
+  sendTo.addEventListener("change", async (event) => {
+    discordUserCheckArea.innerHTML = "";
+    discordUserCheckArea.classList.remove("sendToUser");
+    if (sendTo.value != "") {
+      discordConnect.getUserByEoa(sendTo.value).then((discordUser) => {
+        if (discordUser.Eoa) {
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.discordByEoa(discordUser)
+          );
+        }
+      });
+    }
+  });
+
+  selectForm.addEventListener("change", async (event) => {
+    sendNftPreviewBg.innerHTML = "";
+    if (metaDataInfo[selectForm.value]) {
+      console.log("NFTを選択しました。" + selectForm.value);
+      console.dir(metaDataInfo[selectForm.value].image);
+      const nftimg = document.createElement("img");
+      nftimg.classList.add("sendNftPreviewImg");
+      nftimg.src = metaDataInfo[selectForm.value].image;
+      sendNftPreviewBg.appendChild(nftimg);
+    } else {
+      console.log("NFTを選択解除");
+    }
+  });
+
+  creatorDonateHistory(elm);
+
+  const sendSubDonate = async () => {
+    const balance = await utils.checkBalance();
+    if (utils.waiToEth(balance.balance) < Number(donate.value)) {
+      alert(CONST.DEFAULT_SYMBOL + " が足りません");
+      return;
+    }
+    if (parseInt(cashback.value) > parseInt(donate.value) / 2) {
+      alert("キャッシュバックが高すぎます");
+      return;
+    }
+    const mes =
+      "balance:" +
+      utils.waiToEth(balance.balance) +
+      "\nSEND TOKEN:" +
+      metaDataInfo[selectForm.value].name +
+      "\nSEND TO:" +
+      sendTo.value +
+      "\nVALUE:" +
+      donate.value +
+      "\nCASHBACK:" +
+      cashback.value;
+    if (confirm(mes)) {
+      console.log(mes);
+      const ca = await getManagerConnect.getCA("donate");
+      const donationList = await donateConnect.donate("donate", ca, [
+        sendTo.value,
+        String(utils.ethToWai(donate.value) + utils.ethToWai(cashback.value)),
+        "SEND TOKEN:" +
+          hasNftList[selectForm.value].ca +
+          "/" +
+          hasNftList[selectForm.value].tokenId,
+        String(utils.ethToWai(cashback.value)),
+      ]);
+      console.dir(donationList);
+      alert(metaDataInfo[selectForm.value].name + " を送信します。");
+      const result = await setToken.send(
+        hasNftList[selectForm.value].ca,
+        sendTo.value,
+        hasNftList[selectForm.value].tokenId
+      );
+      alert(metaDataInfo[selectForm.value].name + " を送信しました。");
+      console.dir(donationList);
+      location.reload();
+    }
+  };
+
+  makeSubmit.addEventListener("click", async () => {
+    sendSubDonate();
+  });
+};
+
+const creatorDonateHistory = async (elm) => {
+  const historyTitle = document.createElement("h2");
+  historyTitle.classList.add("creatorDonatetitle");
+  historyTitle.innerHTML = "CreatorDonateHistory";
+  elm.appendChild(historyTitle);
+  const checkBalance = await utils.checkBalance();
+  const subject = document.createElement("p");
+  subject.classList.add("creatorDonatetitle");
+  subject.innerHTML = "代理寄付履歴";
+  elm.appendChild(subject);
+  const historyDiv = document.createElement("div");
+  historyDiv.classList.add("creatorDonateHistory");
+  elm.appendChild(historyDiv);
+
+  const ca = await getManagerConnect.getCA("donate");
+  const subDonationList = await donateConnect.donate(
+    "getsubstituteDonationHistory",
+    ca
+  );
+  for (let key = subDonationList.length - 1; key >= 0; key--) {
+    const val = subDonationList[key];
+    const log = document.createElement("p");
+    log.appendChild(commonSnipet.span(utils.formatUnixTime(val[2])));
+    log.appendChild(commonSnipet.donateDetail(val[3]));
+    log.appendChild(commonSnipet.eoa(val[1]));
+    log.appendChild(
+      commonSnipet.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
+    );
+    historyDiv.appendChild(log);
+  }
+};
+
+const displaySnipet = {
+  creatorDonateList,
+  creatorDonateHistory,
+};
+export default displaySnipet;

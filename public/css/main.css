@@ -455,7 +455,7 @@ a {
   color: #ffffff;
   background: #7d043f;
   margin-right: 5px;
-  padding: 3px 6px;
+  padding: 3px 6px 16px 6px;
   height: 25px;
   border-radius: 4px;
 }
@@ -463,7 +463,7 @@ a {
   display: inline-block;
   color: #ffffff;
   margin-right: 5px;
-  padding: 3px 6px;
+  padding: 3px 6px 16px 6px;
   background: #280d7a;
   height: 25px;
   border-radius: 4px;
@@ -485,10 +485,13 @@ a {
   display: inline-block;
 }
 .walletDiscordElement {
-  margin-right: 10px;
+  margin-right: 15px;
+  img {
+    border-radius: 15px;
+  }
 }
 .walletDiscordIcon {
-  margin-right: 10px;
+  margin-right: 5px;
   width: 30px;
   vertical-align: middle;
 }
@@ -514,6 +517,10 @@ a {
   color: #8888bb;
 }
 
+.gallaryTxtDiv {
+  font-weight: lighter;
+}
+
 .gallaryImgDiv,
 .itemImgDiv {
   border: 5px solid #a0a0a0;
@@ -536,10 +543,14 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
   object-fit: cover;
-  background-color: #fff;
+  background: linear-gradient(30deg, #979191, #544f4b);
 }
 .homeContents {
   margin: 0 30px;
+  p {
+    padding: 0 20px;
+    font-size: 1.2em;
+  }
 }
 
 #connectWallet {
@@ -608,11 +619,126 @@ a {
   display: flex;
 }
 
+.itemLeftDiv {
+  p {
+    margin: 0px;
+    padding: 0;
+  }
+}
+
 .itemTxtDiv {
   display: block;
   margin-left: 20px;
+  width: 100%;
   p {
     margin: 0px;
     padding: 0px;
+  }
+  i {
+    text-align: center;
+    vertical-align: baseline;
+    width: 30px;
+    font-size: 0.8em;
+    color: #ffffff;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    padding: 5px 0;
+  }
+}
+.shopSiteLink {
+  display: block;
+  font-size: 2em;
+  margin-top: 20px;
+  padding: 10px;
+  width: 330px;
+  text-align: center;
+  background: #fff;
+  box-shadow: 0 5px 4px #274d7b3d;
+  border-radius: 10px;
+}
+.gallaryLink {
+  display: block;
+  font-size: 2em;
+  margin-top: 20px;
+  padding: 10px;
+  width: 330px;
+  text-align: center;
+  background: #fff;
+  box-shadow: 0 5px 4px #274d7b3d;
+  border-radius: 10px;
+}
+
+.carouselProfileArea {
+  margin-bottom: 20px;
+  width: 100%;
+  background: #4d4d4d;
+  box-shadow: 0 5px 4px #1e1e1e3d;
+  border-radius: 10px;
+  overflow: scroll;
+  max-height: 250px;
+  p {
+    padding: 10px 20px;
+  }
+}
+p.carouselProfileName {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 20px 0 0 20px;
+  padding: 0px;
+}
+
+.creatorDonateHistory {
+  background: #222222;
+  width: 100%;
+  max-height: 250px;
+  box-shadow: 0 5px 4px #1e1e1e3d;
+  border-radius: 10px;
+  overflow: scroll;
+  white-space: nowrap;
+  p {
+    margin: 2px 10px;
+    padding: 0px;
+  }
+  p > span {
+    margin-left: 15px;
+  }
+}
+
+.sendDonateNftArea {
+  display: flex;
+  width: 100%;
+}
+.sendDonateFormArea {
+  width: 60%;
+}
+.sendDonateNftPreviewArea {
+  width: 40%;
+  padding: 25px 25px 0 25px;
+}
+.sendDonateNftPreviewBg {
+  width: 100%;
+  height: 100%;
+  background-color: #222;
+  box-shadow: 0 5px 4px #1e1e1e3d;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.sendNftPreviewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.sendToUser {
+  font-size: 2em;
+  margin-top: 30px;
+  padding-left: 10px;
+}
+
+.discordNameDisp {
+  margin-left: 15px;
+  img {
+    border-radius: 15px;
   }
 }

@@ -1,4 +1,4 @@
-import utils from "../common/util";
+import utils from "../common/utils";
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
@@ -208,7 +208,14 @@ export const setTokenData = async () => {
     "meta-preview"
   ) as HTMLInputElement;
   metaPreview.innerHTML = "";
-  await detailDisplay.showToken("metabuilder", metadata, "", "", metaPreview);
+  await detailDisplay.showToken(
+    "metabuilder",
+    metadata,
+    "",
+    "",
+    metaPreview,
+    ""
+  );
   console.log("SetToken表示完了");
   if (metadata.name != "") {
     metaPreview.style.display = "block";

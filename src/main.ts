@@ -13,7 +13,7 @@ import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
 import commonSnipet from "./module/snipet/common";
-import util from "./module/common/util";
+import utils from "./module/common/utils";
 // import getAkord from "./module/connect/getAkord";
 import {
   displayAssets,
@@ -24,6 +24,7 @@ import {
   displayOwns,
   displayMintUI,
 } from "./module/snipet/display";
+import displaySnipet from "./module/snipet/display";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
@@ -48,24 +49,51 @@ const setContents = async () => {
   articleSnipet.getMdSiteMap();
 };
 async function setDonate(params) {
-  const ca = await getManagerConnect.getCA("donate");
-  const total = await getDonate("total", ca, params);
-  const allTotalUsed = await getDonate("allTotalUsed", ca, params);
-  const allTotalDonation = await getDonate("allTotalDonation", ca, params);
+  const creators = await getManager("creators");
+  const checkBalance = await utils.checkBalance();
+  for (const key in creators) {
+    if (creators[key][0] == checkBalance.eoa) {
+      const creatorDonateElement = document.createElement("div");
+      creatorDonateElement.classList.add("donateArea");
+      mainContents.appendChild(creatorDonateElement);
+      console.dir(checkBalance);
+      displaySnipet.creatorDonateList(creatorDonateElement, checkBalance.eoa);
+    }
+  }
 
   const divDonateElement = document.createElement("div");
   divDonateElement.classList.add("donateArea");
   mainContents.appendChild(divDonateElement);
 
+  const ca = await getManagerConnect.getCA("donate");
   const donateTitle = document.createElement("h2");
   donateTitle.innerHTML = "Donation";
-  donateTitle.appendChild(commonSnipet.span("Donation CA: "));
+  donateTitle.appendChild(commonSnipet.span(" CA: "));
   donateTitle.appendChild(commonSnipet.eoa(ca));
   divDonateElement.appendChild(donateTitle);
+
+  const historyDiv = document.createElement("div");
+  historyDiv.classList.add("creatorDonateHistory");
+  divDonateElement.appendChild(historyDiv);
+
+  const donationList = await donate("getDonationHistory", ca);
+  for (let key = donationList.length - 1; key >= 0; key--) {
+    const val = donationList[key];
+    const log = document.createElement("p");
+    log.appendChild(commonSnipet.span(utils.formatUnixTime(val[1])));
+    log.appendChild(commonSnipet.donateDetail(val[2]));
+    log.appendChild(
+      commonSnipet.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
+    );
+    historyDiv.appendChild(log);
+  }
+
+  const allTotalUsed = await getDonate("allTotalUsed", ca, params);
+  const allTotalDonation = await getDonate("allTotalDonation", ca, params);
+
   const donateContents = document.createElement("div");
   divDonateElement.appendChild(donateContents);
 
-  const checkBalance = await util.checkBalance();
   if (checkBalance.eoa != undefined) {
     const donateBalance = await donate("balance", ca, params);
     const usedpoints = await donate("usedpoints", ca, params);
@@ -104,6 +132,7 @@ async function setDonate(params) {
 
 const setHome = async () => {
   mainContents.appendChild(await homeSnipet.getHome());
+  await homeSnipet.getHomeContents();
   mainContents.appendChild(await homeSnipet.getItems());
   mainContents.appendChild(await homeSnipet.getGallarys());
 };
@@ -119,18 +148,9 @@ const setCreators = async () => {
 };
 
 const setCreator = async () => {
-  /*
-  await displayManagedData("creators", "CREATOR", (filter) => {
-    return filter[0] == router.params[2] && filter[3] == true;
-  });
-  */
-  const mdPath =
-    CONST.BOT_API_URL +
-    "contents/get/" +
-    router.lang +
-    "/creator/" +
-    router.params[2];
-  const original = `${CONST.ARTICLE_REPO_URL}${router.lang}/${router.params[2]}.md`;
+  const PATH = router.lang + "/creator/" + router.params[2];
+  const mdPath = CONST.BOT_API_URL + "contents/get/" + PATH;
+  const original = `${CONST.ARTICLE_REPO_URL}${PATH}.md`;
   articleSnipet.parseMdPage(mdPath, original);
   setOwnTokenContracts((filter) => {
     return filter[3] == true;
@@ -181,10 +201,15 @@ const setOwner = async (eoa) => {
   const tbaOwner = await getTba.checkOwner(eoa);
   const tbaToken = await getTba.checkToken(eoa);
   if (tbaOwner) {
-    pElement.textContent = "TokenBoundAccount : " + eoa;
+    pElement.innerHTML = "";
+    pElement.appendChild(commonSnipet.span("TBA : "));
+    pElement.appendChild(commonSnipet.eoa(eoa));
     const tbaOwnerElement = document.createElement("p");
-    tbaOwnerElement.innerHTML =
-      "TBA OWNER: <a href='/assets/" + tbaOwner + "'>" + tbaOwner + "</a>";
+    tbaOwnerElement.appendChild(commonSnipet.span("TBA Owner : "));
+    tbaOwnerElement.appendChild(
+      commonSnipet.eoa(tbaOwner, { link: "/assets/" + tbaOwner, target: "" })
+    );
+    // tbaOwnerElement.innerHTML = "TBA OWNER: <a href='/assets/" + tbaOwner + "'>" + tbaOwner + "</a>";
     divOwnerElement.appendChild(tbaOwnerElement);
     const tbaTokenElement = document.createElement("p");
     tbaTokenElement.innerHTML =
@@ -225,8 +250,12 @@ const setOwnTokenContracts = async (filter) => {
   const allList = await getManager("contracts");
   for (const key in allList) {
     if (allList[key][2] == "nft") {
-      getToken("getInfo", allList[key][0], "").then((response) => {
-        if (response[0] == router.params[2]) {
+      console.log("Check Type:" + allList[key][0]);
+      getToken("creator", allList[key][0], "").then((response) => {
+        console.log("setOwnTokenContracts checkCreator :" + allList[key]);
+        console.dir("creator: " + response);
+        console.dir("EOA: " + router.params[2]);
+        if (response == router.params[2]) {
           displayTokenContracts([allList[key]], filter);
         }
       });
@@ -363,4 +392,4 @@ const test = async () => {
 };
 
 checkRoute();
-util.checkMetamask();
+utils.checkMetamask();

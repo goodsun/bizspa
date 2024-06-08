@@ -60,3 +60,11 @@
     border-radius: 6px;
   }
 }
+i.opensea {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url("https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.svg");
+  background-size: cover;
+  vertical-align: middle;
+}

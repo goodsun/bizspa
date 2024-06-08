@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
+import manageConnect from "./getManager";
 
 const abi = ABIS.nft;
 const rpc_url = CONST.RPC_URL;
@@ -109,10 +110,49 @@ export const getCallData = async (ca: string, mode, args) => {
   return result;
 };
 
+export const tokenOfOwnerByIndex = async (ca: string, eoa, index) => {
+  const contract = new ethers.Contract(ca, abi, provider);
+  try {
+    const result = await contract
+      .tokenOfOwnerByIndex(eoa, index)
+      .then((response) => {
+        return response;
+      });
+    return result;
+  } catch (error) {
+    console.dir(error);
+  }
+};
+
+export const hasTokenList = async (eoa: string) => {
+  console.log("hasTokenList:" + eoa);
+  let result = [];
+  const contracts = await manageConnect.getManager("contracts");
+  for (const contract of contracts) {
+    if (contract[2] == "nft") {
+      const ca = contract[0];
+      const balance = await getToken("balanceOf", ca, eoa);
+      for (let i = balance; i > 0; i--) {
+        const tokenId = await tokenOfOwnerByIndex(ca, eoa, Number(i) - 1);
+        const name = await getToken("name", ca);
+        const tokenUri = await getToken("tokenURI", ca, tokenId);
+        result.push({
+          ca: ca,
+          tokenId: tokenId,
+          name: name,
+          tokenUri: tokenUri,
+        });
+      }
+    }
+  }
+  return result;
+};
+
 const getTokenConnect = {
   getToken,
   getTokenInfo,
   getCallData,
+  hasTokenList,
 };
 
 export default getTokenConnect;

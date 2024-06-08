@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
-import utils from "../common/util";
+import utils from "../common/utils";
 
 const rpc_url = CONST.RPC_URL;
 const provider = new ethers.JsonRpcProvider(rpc_url);

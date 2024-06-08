@@ -3,7 +3,7 @@ import { CONST } from "../common/const";
 import setElement from "../snipet/setElement";
 import orderConnect from "../../module/connect/order";
 import getManagerConnect from "../../module/connect/getManager";
-import utils from "../common/util";
+import utils from "../common/utils";
 
 const mainContents = document.getElementById("mainContents");
 
