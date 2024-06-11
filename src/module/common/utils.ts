@@ -279,7 +279,36 @@ export async function checkBalance() {
   };
 }
 
+const getMaticPrice = async () => {
+  const url = "https://api.coingecko.com/api/v3/simple/price";
+  const params = new URLSearchParams({
+    ids: "matic-network",
+    vs_currencies: "usd,jpy",
+  });
+
+  try {
+    const response = await fetch(`${url}?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const maticPriceInUsd = data["matic-network"].usd;
+    const jpy = data["matic-network"].jpy;
+    const usdToMatic = 1 / maticPriceInUsd;
+
+    console.log(`1ドルは約${usdToMatic.toFixed(4)} MATICです。`);
+    console.log(`1MATICは約${jpy.toFixed(4)} JPYです。`);
+    return {
+      matic_usd: usdToMatic.toFixed(4),
+      jpy_matic: jpy.toFixed(4),
+    };
+  } catch (error) {
+    console.error("価格データの取得中にエラーが発生しました:", error);
+  }
+};
+
 const utils = {
+  getMaticPrice,
   containsBrowserName,
   checkMetamask,
   getLocalTime,

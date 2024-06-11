@@ -7,12 +7,17 @@ import utils from "../common/utils";
 
 const mainContents = document.getElementById("mainContents");
 
-const polygonPrice = 1.35; //$1=1.35matic $12=16.2matic / 1G
-const vaultPriceByKb = (12 * polygonPrice) / 1000 / 1000 / 1000 / 0.42; //$12=16.2matic / 1G
-const polygonYenPrice = 109.9;
+const maticPrice = await utils.getMaticPrice();
+console.dir(maticPrice);
+const dollPolygonPrice = Number(maticPrice.matic_usd); //1.35; //$1=1.35matic $12=16.2matic / 1G
+const vaultPriceByByte = (12 * dollPolygonPrice) / 1000 / 1000 / 1000 / 0.42; //$12=16.2matic / 1G
+const polygonYenPrice = Number(maticPrice.jpy_matic); //109.9;
 
+console.dir(
+  "VaultPrice " + vaultPriceByByte * 1000 * 1000 * 1000 + " matic/GB"
+);
 const priceCarc = (filesize: number) => {
-  return filesize * vaultPriceByKb;
+  return filesize * vaultPriceByByte;
 };
 
 const getUI = async () => {
@@ -63,14 +68,18 @@ const setUI = (parent, eoa) => {
       "filename : " +
       file.name +
       "<br />filesize : " +
-      (file.size / 1024 / 1024).toFixed(2) +
+      (file.size / 1000 / 1000).toFixed(2) +
       " Mb<br />estimate : " +
       price.toFixed(8).substring(0, 10) +
       " " +
       CONST.DEFAULT_SYMBOL +
       " + GasFee" +
       "<br/>about JPY:" +
-      (price * polygonYenPrice).toFixed(2);
+      (price * polygonYenPrice).toFixed(2) +
+      "<br />※ " +
+      (vaultPriceByByte * polygonYenPrice * 1000 * 1000).toFixed(2) +
+      "JPY/1MB";
+
     uploadingInfoArea.classList.add("upload-confirm");
   });
 
@@ -97,7 +106,7 @@ const setUI = (parent, eoa) => {
           CONST.DEFAULT_SYMBOL +
           "\n" +
           "VAULT PRICE : " +
-          (vaultPriceByKb * 1000).toFixed(8).substring(0, 10) +
+          (vaultPriceByByte * 1000).toFixed(8).substring(0, 10) +
           " " +
           CONST.DEFAULT_SYMBOL +
           " / KB \n"

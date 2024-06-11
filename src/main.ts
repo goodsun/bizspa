@@ -99,17 +99,17 @@ async function setDonate(params) {
     const usedpoints = await donate("usedpoints", ca, params);
     const totaldonations = await donate("totaldonations", ca, params);
 
-    if (donateBalance > 0) {
-      donateContents.innerHTML +=
-        "<p>Balance : " + donateBalance + " donatePoint" + "</p>";
-    }
     if (totaldonations > 0) {
       donateContents.innerHTML +=
-        "<p>Total donations : " + allTotalDonation + " donatePoint" + "</p>";
+        "<p>Total donations : " + totaldonations + " donatePoint" + "</p>";
     }
     if (usedpoints > 0) {
       donateContents.innerHTML +=
         "<p>Used points : " + usedpoints + " donatePoint" + "</p>";
+    }
+    if (donateBalance > 0) {
+      donateContents.innerHTML +=
+        "<p>Balance : " + donateBalance + " donatePoint" + "</p>";
     }
   }
 

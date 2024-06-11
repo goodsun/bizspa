@@ -163,7 +163,7 @@ export const displayToken = async (
   pElement.appendChild(caLink);
 
   const spanSpace2 = document.createElement("span");
-  spanSpace2.textContent = " | ";
+  spanSpace2.textContent = " #" + id;
   pElement.appendChild(spanSpace2);
 
   console.log(utils.getLocalTime() + " 遅延実行開始 " + tokenUri);
@@ -751,6 +751,17 @@ const creatorDonateHistory = async (elm) => {
     log.appendChild(commonSnipet.span(utils.formatUnixTime(val[2])));
     log.appendChild(commonSnipet.donateDetail(val[3]));
     log.appendChild(commonSnipet.eoa(val[1]));
+    await discordConnect.getUserByEoa(val[1]).then((discordUser) => {
+      if (discordUser.Eoa) {
+        log.appendChild(
+          commonSnipet.getDiscordUserByEoa(
+            discordUser,
+            "span",
+            "discordNameDisp"
+          )
+        );
+      }
+    });
     log.appendChild(
       commonSnipet.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
     );
