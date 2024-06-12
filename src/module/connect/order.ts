@@ -13,13 +13,16 @@ export const order = async (contractAddress: string, value: string) => {
   try {
     const tx = await contract.order({ value: value });
     const receipt = await tx.wait();
+    let orderNumber;
     if (receipt.status === 1) {
       console.log("Order transaction hash:", tx.hash);
-      console.log(
-        "Order serial number:",
-        receipt.logs[0].args.orderNum.toString()
-      );
-      return receipt.logs[0].args.orderNum.toString(); // orderIdを返す
+      for (let i in receipt.logs) {
+        if (receipt.logs[i].args) {
+          orderNumber = receipt.logs[i].args.orderNum.toString(); // orderIdを返す
+          console.log("Order serial number:" + orderNumber);
+        }
+      }
+      return orderNumber;
     } else {
       console.error("Order transaction failed");
     }
