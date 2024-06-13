@@ -173,47 +173,21 @@ const setOwner = async (eoa) => {
   const discordElm = document.createElement("p");
   divOwnerElement.appendChild(discordElm);
 
-  discordConnect.getUserByEoa(eoa).then((discordUser) => {
-    if (discordUser.DiscordId && !discordUser.DeleteFlag) {
-      const image = document.createElement("img");
-      image.classList.add("discordIcon");
-      image.src = discordUser.Icon;
-      discordElm.appendChild(image);
-      discordElm.appendChild(commonSnipet.br());
-      discordElm.appendChild(
-        commonSnipet.span("DiscordId : " + discordUser.DiscordId)
-      );
-      discordElm.appendChild(commonSnipet.br());
-      discordElm.appendChild(
-        commonSnipet.span("DiscordName : " + discordUser.Name)
-      );
-      discordElm.appendChild(commonSnipet.br());
-    }
-  });
-
-  const pElement = document.createElement("p");
-  pElement.appendChild(commonSnipet.span("EOA: "));
-  pElement.appendChild(
-    commonSnipet.eoa(eoa, { link: "/assets/" + eoa, target: "" })
-  );
-  divOwnerElement.appendChild(pElement);
-
   const tbaOwner = await getTba.checkOwner(eoa);
   const tbaToken = await getTba.checkToken(eoa);
+
   if (tbaOwner) {
-    pElement.innerHTML = "";
-    pElement.appendChild(commonSnipet.span("TBA : "));
-    pElement.appendChild(commonSnipet.eoa(eoa));
-    const tbaOwnerElement = document.createElement("p");
-    tbaOwnerElement.appendChild(commonSnipet.span("TBA Owner : "));
-    tbaOwnerElement.appendChild(
-      commonSnipet.eoa(tbaOwner, { link: "/assets/" + tbaOwner, target: "" })
-    );
-    // tbaOwnerElement.innerHTML = "TBA OWNER: <a href='/assets/" + tbaOwner + "'>" + tbaOwner + "</a>";
-    divOwnerElement.appendChild(tbaOwnerElement);
-    const tbaTokenElement = document.createElement("p");
+    const image = document.createElement("img");
+    image.classList.add("ownerProfPictIcon");
+    image.src = "https://dao.bon-soleil.com/img/dummy.jpg";
+    discordElm.appendChild(image);
+    discordElm.appendChild(commonSnipet.br());
+    discordElm.appendChild(commonSnipet.span("DiscordId : " + "dummy"));
+    discordElm.appendChild(commonSnipet.br());
+
+    const tbaTokenElement = document.createElement("span");
     tbaTokenElement.innerHTML =
-      "TOKEN: <a href='/tokens/" +
+      "Token: <a href='/tokens/" +
       tbaToken[1] +
       "/" +
       tbaToken[2] +
@@ -222,7 +196,59 @@ const setOwner = async (eoa) => {
       "/" +
       tbaToken[2] +
       "</a>";
-    divOwnerElement.appendChild(tbaTokenElement);
+    discordElm.appendChild(tbaTokenElement);
+    discordElm.appendChild(commonSnipet.br());
+
+    const tbaOwnerElement = document.createElement("span");
+    tbaOwnerElement.appendChild(commonSnipet.span("Token owner : "));
+    tbaOwnerElement.appendChild(
+      commonSnipet.eoa(tbaOwner, { link: "/assets/" + tbaOwner, target: "" })
+    );
+    await discordConnect.getUserByEoa(tbaOwner).then((discordUser) => {
+      if (discordUser.Eoa) {
+        tbaOwnerElement.appendChild(
+          commonSnipet.getDiscordUserByEoa(
+            discordUser,
+            "span",
+            "discordNameDisp"
+          )
+        );
+      }
+    });
+    discordElm.appendChild(tbaOwnerElement);
+    discordElm.appendChild(commonSnipet.br());
+  } else {
+    discordConnect.getUserByEoa(eoa).then((discordUser) => {
+      if (discordUser.DiscordId && !discordUser.DeleteFlag) {
+        const image = document.createElement("img");
+        image.classList.add("ownerProfPictIcon");
+        image.src = discordUser.Icon;
+        discordElm.appendChild(image);
+        discordElm.appendChild(commonSnipet.br());
+        discordElm.appendChild(
+          commonSnipet.span("DiscordId : " + discordUser.DiscordId)
+        );
+        discordElm.appendChild(commonSnipet.br());
+        discordElm.appendChild(
+          commonSnipet.span("DiscordName : " + discordUser.Name)
+        );
+        discordElm.appendChild(commonSnipet.br());
+      }
+    });
+  }
+
+  const pElement = document.createElement("p");
+  pElement.appendChild(commonSnipet.span("EOA: "));
+  pElement.appendChild(
+    commonSnipet.eoa(eoa, { link: "/assets/" + eoa, target: "" })
+  );
+  divOwnerElement.appendChild(pElement);
+
+  if (tbaOwner) {
+    pElement.innerHTML = "";
+    pElement.appendChild(commonSnipet.span("TBA : "));
+    pElement.appendChild(commonSnipet.eoa(eoa));
+    // tbaOwnerElement.innerHTML = "TBA OWNER: <a href='/assets/" + tbaOwner + "'>" + tbaOwner + "</a>";
   }
   setOwns(eoa);
 };

@@ -742,6 +742,9 @@ p.carouselProfileName {
     border-radius: 15px;
   }
 }
-img.discordIcon {
+img.ownerProfPictIcon {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
   border-radius: 15px;
 }
