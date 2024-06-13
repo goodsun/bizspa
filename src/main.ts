@@ -1,8 +1,8 @@
 import { CONST } from "./module/common/const";
 import { router } from "./module/common/router";
 import { getManager } from "./module/connect/getManager";
-import { getToken } from "./module/connect/getToken";
-import { getTba } from "./module/connect/getTba";
+import getTokenConnect from "./module/connect/getToken";
+import getTbaConnect from "./module/connect/getTbaConnect";
 import { donate, getDonate } from "./module/connect/donate";
 import getManagerConnect from "./module/connect/getManager";
 import orderConnect from "./module/connect/order";
@@ -15,15 +15,6 @@ import articleSnipet from "./module/snipet/article";
 import commonSnipet from "./module/snipet/common";
 import utils from "./module/common/utils";
 // import getAkord from "./module/connect/getAkord";
-import {
-  displayAssets,
-  displayManagedData,
-  displayTokenContracts,
-  displayTokens,
-  displayToken,
-  displayOwns,
-  displayMintUI,
-} from "./module/snipet/display";
 import displaySnipet from "./module/snipet/display";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
@@ -138,13 +129,13 @@ const setHome = async () => {
 };
 
 const setContracts = async () => {
-  await displayManagedData("contracts", "CONTRACTS", (filter) => {
+  await displaySnipet.displayManagedData("contracts", "CONTRACTS", (filter) => {
     return filter[3] == true;
   });
 };
 
 const setCreators = async () => {
-  await displayManagedData("creators", "CREATORS", false);
+  await displaySnipet.displayManagedData("creators", "CREATORS", false);
 };
 
 const setCreator = async () => {
@@ -158,7 +149,7 @@ const setCreator = async () => {
 };
 
 const setAdmins = async () => {
-  await displayManagedData("admins", "Admins", false);
+  await displaySnipet.displayManagedData("admins", "Admins", false);
 };
 
 const setOwner = async (eoa) => {
@@ -173,42 +164,51 @@ const setOwner = async (eoa) => {
   const discordElm = document.createElement("p");
   divOwnerElement.appendChild(discordElm);
 
-  const tbaOwner = await getTba.checkOwner(eoa);
-  const tbaToken = await getTba.checkToken(eoa);
+  const tbaOwner = await getTbaConnect.checkOwner(eoa);
+  const tbaToken = await getTbaConnect.checkToken(eoa);
 
   if (tbaOwner) {
+    const tokenUri = await getTokenConnect.getToken(
+      "tokenURI",
+      tbaToken[1],
+      tbaToken[2]
+    );
+    console.log(tokenUri);
+    const tokenInfo = await utils.fetchData(tokenUri);
+    console.dir(tokenInfo);
+
     const image = document.createElement("img");
     image.classList.add("ownerProfPictIcon");
     image.src = "https://dao.bon-soleil.com/img/dummy.jpg";
+    image.src = tokenInfo.image;
     discordElm.appendChild(image);
     discordElm.appendChild(commonSnipet.br());
-    discordElm.appendChild(commonSnipet.span("DiscordId : " + "dummy"));
+    discordElm.appendChild(commonSnipet.span("TBA : "));
+    discordElm.appendChild(commonSnipet.eoa(eoa));
     discordElm.appendChild(commonSnipet.br());
 
     const tbaTokenElement = document.createElement("span");
     tbaTokenElement.innerHTML =
-      "Token: <a href='/tokens/" +
+      "NFT : <a href='/tokens/" +
       tbaToken[1] +
       "/" +
       tbaToken[2] +
       "'>" +
-      tbaToken[1] +
-      "/" +
-      tbaToken[2] +
+      tokenInfo.name +
       "</a>";
     discordElm.appendChild(tbaTokenElement);
     discordElm.appendChild(commonSnipet.br());
 
     const tbaOwnerElement = document.createElement("span");
-    tbaOwnerElement.appendChild(commonSnipet.span("Token owner : "));
+    tbaOwnerElement.appendChild(commonSnipet.span("NFT owner : "));
     tbaOwnerElement.appendChild(
       commonSnipet.eoa(tbaOwner, { link: "/assets/" + tbaOwner, target: "" })
     );
-    await discordConnect.getUserByEoa(tbaOwner).then((discordUser) => {
-      if (discordUser.Eoa) {
+    await utils.getUserByEoa(tbaOwner).then((eoaUser) => {
+      if (eoaUser.type == "discordConnect") {
         tbaOwnerElement.appendChild(
           commonSnipet.getDiscordUserByEoa(
-            discordUser,
+            eoaUser.discordUser,
             "span",
             "discordNameDisp"
           )
@@ -218,38 +218,41 @@ const setOwner = async (eoa) => {
     discordElm.appendChild(tbaOwnerElement);
     discordElm.appendChild(commonSnipet.br());
   } else {
-    discordConnect.getUserByEoa(eoa).then((discordUser) => {
-      if (discordUser.DiscordId && !discordUser.DeleteFlag) {
+    utils.getUserByEoa(eoa).then(async (eoaUser) => {
+      if (eoaUser.type == "discordConnect") {
         const image = document.createElement("img");
         image.classList.add("ownerProfPictIcon");
-        image.src = discordUser.Icon;
+        image.src = eoaUser.discordUser.Icon;
         discordElm.appendChild(image);
         discordElm.appendChild(commonSnipet.br());
+        discordElm.appendChild(commonSnipet.span("EOA : "));
+        discordElm.appendChild(commonSnipet.eoa(eoa));
+        discordElm.appendChild(commonSnipet.br());
+        discordElm.appendChild(commonSnipet.span("Discord :"));
         discordElm.appendChild(
-          commonSnipet.span("DiscordId : " + discordUser.DiscordId)
+          commonSnipet.getDiscordUserByEoa(
+            eoaUser.discordUser,
+            "span",
+            "discordNameDisp"
+          )
         );
         discordElm.appendChild(commonSnipet.br());
-        discordElm.appendChild(
-          commonSnipet.span("DiscordName : " + discordUser.Name)
-        );
+      } else {
+        discordElm.appendChild(commonSnipet.span("EOA : "));
+        discordElm.appendChild(commonSnipet.eoa(eoa));
         discordElm.appendChild(commonSnipet.br());
       }
     });
   }
 
-  const pElement = document.createElement("p");
-  pElement.appendChild(commonSnipet.span("EOA: "));
-  pElement.appendChild(
-    commonSnipet.eoa(eoa, { link: "/assets/" + eoa, target: "" })
-  );
-  divOwnerElement.appendChild(pElement);
-
-  if (tbaOwner) {
-    pElement.innerHTML = "";
-    pElement.appendChild(commonSnipet.span("TBA : "));
-    pElement.appendChild(commonSnipet.eoa(eoa));
-    // tbaOwnerElement.innerHTML = "TBA OWNER: <a href='/assets/" + tbaOwner + "'>" + tbaOwner + "</a>";
-  }
+  //mainContents.appendChild();
+  const mintableFormElm = document.createElement("div");
+  mintableFormElm.classList.add("mintableArea");
+  mintableFormElm.innerHTML =
+    "<span><div class='minispinner'></div>mintable contract loading...</span>";
+  mintableFormElm.style.display = "none";
+  mainContents.appendChild(mintableFormElm);
+  displaySnipet.setMintableForm(mintableFormElm, eoa);
   setOwns(eoa);
 };
 
@@ -259,17 +262,17 @@ const setOwns = async (eoa) => {
   mainContents.appendChild(divAssetElement);
 
   const result = await getManager("contracts");
-  displayOwns(divAssetElement, result, eoa);
+  displaySnipet.displayOwns(divAssetElement, result, eoa);
 };
 
 const setAssets = async (filter) => {
   const result = await getManager("contracts");
-  displayAssets(result, filter);
+  displaySnipet.displayAssets(result, filter);
 };
 
 const setTokenContracts = async (filter) => {
   const result = await getManager("contracts");
-  displayTokenContracts(result, filter);
+  displaySnipet.displayTokenContracts(result, filter);
 };
 
 const setOwnTokenContracts = async (filter) => {
@@ -277,26 +280,37 @@ const setOwnTokenContracts = async (filter) => {
   for (const key in allList) {
     if (allList[key][2] == "nft") {
       console.log("Check Type:" + allList[key][0]);
-      getToken("creator", allList[key][0], "").then((response) => {
-        console.log("setOwnTokenContracts checkCreator :" + allList[key]);
-        console.dir("creator: " + response);
-        console.dir("EOA: " + router.params[2]);
-        if (response == router.params[2]) {
-          displayTokenContracts([allList[key]], filter);
-        }
-      });
+      getTokenConnect
+        .getToken("creator", allList[key][0], "")
+        .then((response) => {
+          console.log("setOwnTokenContracts checkCreator :" + allList[key]);
+          console.dir("creator: " + response);
+          console.dir("EOA: " + router.params[2]);
+          if (response == router.params[2]) {
+            displaySnipet.displayTokenContracts([allList[key]], filter);
+          }
+        });
     }
   }
 };
 
 const setToken = async () => {
   const params = router.params;
-  const tokenBoundAccount = await getTba.getTbaInfo(params[2], params[3]);
-  const tbaOwner = await getTba.checkOwner(tokenBoundAccount);
+  const tokenBoundAccount = await getTbaConnect.getTbaInfo(
+    params[2],
+    params[3]
+  );
+  const tbaOwner = await getTbaConnect.checkOwner(tokenBoundAccount);
   const divElement = document.createElement("div");
   divElement.classList.add("nftArea");
   mainContents.appendChild(divElement);
-  displayToken(divElement, params[2], params[3], tokenBoundAccount, tbaOwner);
+  displaySnipet.displayToken(
+    divElement,
+    params[2],
+    params[3],
+    tokenBoundAccount,
+    tbaOwner
+  );
   if (tbaOwner) {
     setOwns(tokenBoundAccount);
   }
@@ -305,7 +319,7 @@ const mintToken = async () => {
   const params = router.params;
   const divElement = document.createElement("div");
   mainContents.appendChild(divElement);
-  displayMintUI(divElement, params);
+  displaySnipet.displayMintUI(divElement, params);
 };
 
 const setTokens = async () => {
@@ -331,7 +345,11 @@ const setTokens = async () => {
   pElement.appendChild(spanSpace);
 
   const tokenName = document.createElement("span");
-  tokenName.textContent = await getToken("name", router.params[2], "");
+  tokenName.textContent = await getTokenConnect.getToken(
+    "name",
+    router.params[2],
+    ""
+  );
   pElement.appendChild(tokenName);
 
   var mintLink = document.createElement("a");
@@ -343,7 +361,7 @@ const setTokens = async () => {
 
   // ----------------------------------------
 
-  displayTokens(divTokensElement, router.params[2], false);
+  displaySnipet.displayTokens(divTokensElement, router.params[2], false);
 };
 
 const checkRoute = () => {

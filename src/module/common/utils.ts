@@ -5,6 +5,8 @@ import getManagerConnect from "../../module/connect/getManager";
 import discordConnect from "../../module/connect/discordConnect";
 import orderConnect from "../../module/connect/order";
 import commonSnipet from "../snipet/common";
+import getTokenConnect from "../../module/connect/getToken";
+import getTbaConnect from "../../module/connect/getTbaConnect";
 
 const connectWallet = document.getElementById("connectWallet");
 const modalbase = document.getElementById("modalbase");
@@ -188,6 +190,46 @@ export const ethToWai = (input) => {
   return BigInt(Math.round(input * 1000000000000000000));
 };
 
+const getTbaInfoByEoa = async (eoa) => {
+  const tbaToken = await getTbaConnect.checkToken(eoa);
+  if (tbaToken) {
+    const tbaToken = await getTbaConnect.checkToken(eoa);
+    const tokenUri = await getTokenConnect.getToken(
+      "tokenURI",
+      tbaToken[1],
+      tbaToken[2]
+    );
+    const tokenInfo = await fetchData(tokenUri);
+    return {
+      ca: tbaToken[1],
+      tokenId: tbaToken[2],
+      tokenUri: tokenUri,
+      tokenInfo: tokenInfo,
+    };
+  } else {
+    console.log("TODO: ここでCA/EOA判定を行う");
+    return {};
+  }
+};
+
+const getUserByEoa = async (eoa) => {
+  let type = "none";
+  const tbaInfo = await getTbaInfoByEoa(eoa);
+  const discordUser = await discordConnect.getUserByEoa(eoa);
+  if (tbaInfo.tokenUri) {
+    type = "tba";
+    console.dir(tbaInfo);
+  }
+  if (discordUser.DiscordId) {
+    type = "discordConnect";
+  }
+  return {
+    type: type,
+    discordUser: discordUser,
+    tbaInfo: tbaInfo,
+  };
+};
+
 export const checkMetamask = async () => {
   const balanceData = await checkBalance();
   if (String(balanceData.chainId) != String(CONST.BC_NETWORK_ID)) {
@@ -199,9 +241,10 @@ export const checkMetamask = async () => {
     discordArea.classList.add("walletDiscordArea");
     connectWallet.appendChild(discordArea);
 
-    discordConnect.getUserByEoa(balanceData.eoa).then((discordUser) => {
-      if (discordUser.Eoa) {
-        discordArea.appendChild(commonSnipet.discordByEoa(discordUser));
+    getUserByEoa(balanceData.eoa).then((eoaUser) => {
+      //メタマスクでつなぐ場合TBAはない
+      if (eoaUser.type == "discordConnect") {
+        discordArea.appendChild(commonSnipet.discordByEoa(eoaUser.discordUser));
       }
     });
 
@@ -322,6 +365,8 @@ const utils = {
   getParmawebList,
   formatUnixTime,
   openInNativeBrowser,
+  getUserByEoa,
+  getTbaInfoByEoa,
 };
 
 export default utils;

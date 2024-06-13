@@ -18,7 +18,7 @@ const getTbaInfo = async (ca, id) => {
   const tba = [];
   for (const key in tbaContracts) {
     console.dir(tbaContracts[key]);
-    const tokenBoundAccount = await getTba.getAddress(
+    const tokenBoundAccount = await getAddress(
       tbaContracts[key][1],
       tbaContracts[key][0],
       CONST.BC_NETWORK_ID,
@@ -139,7 +139,7 @@ export const createAccount = async (ca: string, id: string) => {
   return result;
 };
 
-export const getTba = {
+const getTbaConnect = {
   getTbaInfo,
   getAddress,
   executeCall,
@@ -147,3 +147,5 @@ export const getTba = {
   checkToken,
   createAccount,
 };
+
+export default getTbaConnect;

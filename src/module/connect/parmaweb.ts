@@ -7,17 +7,19 @@ import utils from "../common/utils";
 
 const mainContents = document.getElementById("mainContents");
 
-const maticPrice = await utils.getMaticPrice();
-console.dir(maticPrice);
-const dollPolygonPrice = Number(maticPrice.matic_usd); //1.35; //$1=1.35matic $12=16.2matic / 1G
-const vaultPriceByByte = (12 * dollPolygonPrice) / 1000 / 1000 / 1000 / 0.42; //$12=16.2matic / 1G
-const polygonYenPrice = Number(maticPrice.jpy_matic); //109.9;
-
-console.dir(
-  "VaultPrice " + vaultPriceByByte * 1000 * 1000 * 1000 + " matic/GB"
-);
-const priceCarc = (filesize: number) => {
-  return filesize * vaultPriceByByte;
+const checkPrice = async () => {
+  const maticPrice = await utils.getMaticPrice();
+  const dollPolygonPrice = Number(maticPrice.matic_usd); //1.35; //$1=1.35matic $12=16.2matic / 1G
+  const vaultPriceByByte = (12 * dollPolygonPrice) / 1000 / 1000 / 1000 / 0.42; //$12=16.2matic / 1G
+  const polygonYenPrice = Number(maticPrice.jpy_matic); //109.9;
+  console.dir(
+    "VaultPrice " + vaultPriceByByte * 1000 * 1000 * 1000 + " matic/GB"
+  );
+  return {
+    dollPolygonPrice: dollPolygonPrice,
+    vaultPriceByByte: vaultPriceByByte,
+    polygonYenPrice: polygonYenPrice,
+  };
 };
 
 const getUI = async () => {
@@ -60,9 +62,10 @@ const setUI = (parent, eoa) => {
   parent.appendChild(fileUpload);
 
   fileSelect.addEventListener("change", async (event) => {
+    const Price = await checkPrice();
     const fileInput = document.getElementById("updateFile") as HTMLInputElement;
     const file = fileInput.files[0];
-    const price = priceCarc(file.size);
+    const price = Price.vaultPriceByByte * file.size;
     console.log(price);
     uploadingInfoArea.innerHTML =
       "filename : " +
@@ -75,19 +78,22 @@ const setUI = (parent, eoa) => {
       CONST.DEFAULT_SYMBOL +
       " + GasFee" +
       "<br/>about JPY:" +
-      (price * polygonYenPrice).toFixed(2) +
+      (price * Price.polygonYenPrice).toFixed(2) +
       "<br />※ " +
-      (vaultPriceByByte * polygonYenPrice * 1000 * 1000).toFixed(2) +
+      (Price.vaultPriceByByte * Price.polygonYenPrice * 1000 * 1000).toFixed(
+        2
+      ) +
       "JPY/1MB";
 
     uploadingInfoArea.classList.add("upload-confirm");
   });
 
   fileUpload.addEventListener("click", async (event) => {
+    const Price = await checkPrice();
     event.preventDefault();
     const fileInput = document.getElementById("updateFile") as HTMLInputElement;
     const file = await fileInput.files[0];
-    const price = priceCarc(file.size);
+    const price = Price.vaultPriceByByte * file.size;
     if (
       confirm(
         "以下のファイルをアップロードします。よろしいですか？\n" +
@@ -106,7 +112,7 @@ const setUI = (parent, eoa) => {
           CONST.DEFAULT_SYMBOL +
           "\n" +
           "VAULT PRICE : " +
-          (vaultPriceByByte * 1000).toFixed(8).substring(0, 10) +
+          (Price.vaultPriceByByte * 1000).toFixed(8).substring(0, 10) +
           " " +
           CONST.DEFAULT_SYMBOL +
           " / KB \n"

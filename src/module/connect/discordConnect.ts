@@ -65,6 +65,7 @@ const getUserByEoa = async (eoa) => {
     console.error("There was a problem with the fetch operation:", error);
   }
 };
+
 const sendRegist = async (discordId, secret) => {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();

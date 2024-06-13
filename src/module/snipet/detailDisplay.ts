@@ -1,10 +1,9 @@
 import utils from "../common/utils";
 import { router } from "../../module/common/router";
-import { getTba } from "../../module/connect/getTba";
+import getTbaConnect from "../../module/connect/getTbaConnect";
 import setElement from "./setElement";
 import setToken from "../connect/setToken";
 import getToken from "../connect/getToken";
-import discordConnect from "../connect/discordConnect";
 import commonSnipet from "../snipet/common";
 const headJsArea = document.getElementById("pageHeader");
 const footJsArea = document.getElementById("pageFooter");
@@ -32,8 +31,8 @@ export const showToken = async (
   );
   divElement.appendChild(pDescriptionElement);
 
-  const tbaOwner = await getTba.checkOwner(owner);
-  const tbaToken = await getTba.checkToken(owner);
+  const tbaOwner = await getTbaConnect.checkOwner(owner);
+  const tbaToken = await getTbaConnect.checkToken(owner);
   const pOwnerElement = document.createElement("p");
   if (tbaOwner) {
     pOwnerElement.appendChild(commonSnipet.span("ca: "));
@@ -61,11 +60,13 @@ export const showToken = async (
       commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
     );
 
-    await discordConnect.getUserByEoa(owner).then((discordUser) => {
-      if (discordUser.Eoa) {
+    await utils.getUserByEoa(owner).then((eoaUser) => {
+      if (eoaUser.type == "tba") {
+        alert("DISP EOAUSER SHOWTOKEN");
+      } else if (eoaUser.type == "discordConnect") {
         pOwnerElement.appendChild(
           commonSnipet.getDiscordUserByEoa(
-            discordUser,
+            eoaUser.discordUser,
             "span",
             "discordNameDisp"
           )
@@ -75,7 +76,7 @@ export const showToken = async (
   }
 
   if (tokenBoundAccount) {
-    const tbaOwner = await getTba.checkOwner(tokenBoundAccount);
+    const tbaOwner = await getTbaConnect.checkOwner(tokenBoundAccount);
     if (tbaOwner) {
       pOwnerElement.appendChild(commonSnipet.span(" ｜ TBA: "));
       pOwnerElement.appendChild(
@@ -331,11 +332,13 @@ export const tbaSendForm = (
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendToInput.value != "") {
-      discordConnect.getUserByEoa(sendToInput.value).then((discordUser) => {
-        if (discordUser.Eoa) {
+      utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
+        if (eoaUser.type == "tba") {
+          alert("DISP EOAUSER TBASEND");
+        } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(discordUser)
+            commonSnipet.discordByEoa(eoaUser.discordUser)
           );
         }
       });
@@ -348,7 +351,12 @@ export const tbaSendForm = (
       const value = 0;
       const calldata = await getToken.getCallData(ca, "transferFrom", args);
       console.log("CALLDATA:" + calldata);
-      const result = await getTba.executeCall(owner, ca, value, calldata);
+      const result = await getTbaConnect.executeCall(
+        owner,
+        ca,
+        value,
+        calldata
+      );
       console.log(result);
       alert("送信しました");
     }
@@ -397,11 +405,13 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendToInput.value != "") {
-      discordConnect.getUserByEoa(sendToInput.value).then((discordUser) => {
-        if (discordUser.Eoa) {
+      utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
+        if (eoaUser.type == "tba") {
+          alert("DISP EOAUSER SEND");
+        } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(discordUser)
+            commonSnipet.discordByEoa(eoaUser.discordUser)
           );
         }
       });
@@ -457,7 +467,7 @@ export const tbaRegist = (
 
   makeSubmit.addEventListener("click", async () => {
     if (confirm("本当にTBAを発行しますか\nToken info\n" + ca + " #" + id)) {
-      const tbaOwner = await getTba.createAccount(ca, id);
+      const tbaOwner = await getTbaConnect.createAccount(ca, id);
       alert("registerd ： " + ca + " #" + id);
     }
   });
@@ -534,11 +544,13 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (eoaForm.value != "") {
-      discordConnect.getUserByEoa(eoaForm.value).then((discordUser) => {
-        if (discordUser.Eoa) {
+      utils.getUserByEoa(eoaForm.value).then((eoaUser) => {
+        if (eoaUser.type == "tba") {
+          alert("DISP EOAUSER MINT");
+        } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(discordUser)
+            commonSnipet.discordByEoa(eoaUser.discordUser)
           );
         }
       });

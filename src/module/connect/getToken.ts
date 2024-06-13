@@ -9,10 +9,10 @@ const provider = new ethers.JsonRpcProvider(rpc_url);
 
 export const getToken = async (
   method: string,
-  contractAddress: string,
+  ca: string,
   id?: string | null
 ) => {
-  const contract = new ethers.Contract(contractAddress, abi, provider);
+  const contract = new ethers.Contract(ca, abi, provider);
   try {
     if (method == "getInfo") {
       const result = await contract.getInfo().then((response) => {
@@ -24,7 +24,7 @@ export const getToken = async (
         return response;
       });
       return result;
-    } else if (method == "chkfree") {
+    } else if (method == "creatorOnly") {
       const result = await contract._creatorOnly().then((response) => {
         return response;
       });
@@ -76,7 +76,8 @@ export const getToken = async (
       return result;
     }
   } catch (error) {
-    console.dir(error);
+    console.error("can't get tokenInfo" + ca + ":" + method);
+    //throw new Error("can't get tokenInfo " + ca + " : " + method);
   }
 };
 
@@ -93,15 +94,19 @@ export const getDonatePoint = async (contractAddress: string) => {
 };
 
 export const getTokenInfo = async (ca: string) => {
-  const result = {
-    ca: ca,
-    name: await getToken("name", ca),
-    creator: await getToken("creator", ca),
-    owner: await getToken("owner", ca),
-    creatorOnly: await getToken("chkfree", ca),
-    needPoint: await getDonatePoint(ca), // 必要なdpoint
-  };
-  return result;
+  try {
+    const result = {
+      ca: ca,
+      name: await getToken("name", ca),
+      creator: await getToken("creator", ca),
+      owner: await getToken("owner", ca),
+      creatorOnly: await getToken("creatorOnly", ca),
+      needPoint: await getDonatePoint(ca), // 必要なdpoint
+    };
+    return result;
+  } catch (error) {
+    console.dir(error);
+  }
 };
 
 export const getCallData = async (ca: string, mode, args) => {

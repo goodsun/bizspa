@@ -748,3 +748,30 @@ img.ownerProfPictIcon {
   object-fit: cover;
   border-radius: 15px;
 }
+
+.mintableArea {
+  margin: 10px 30px;
+  border-radius: 15px;
+  background-color: #222;
+  .previewArea {
+    padding: 30px;
+  }
+  .mintableFormArea {
+    padding: 0 20px 20px 20px;
+}
+
+.loading {
+  padding: 0 20px;
+}
+
+.minispinner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  border-top-color: #00bcd4;
+  margin: 15px 10px 15px 15px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle; /* テキストと中央揃えするため */
+}

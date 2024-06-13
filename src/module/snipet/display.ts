@@ -11,6 +11,7 @@ import getManagerConnect from "../connect/getManager";
 import setToken from "../connect/setToken";
 import donateConnect from "../connect/donate";
 import discordConnect from "../connect/discordConnect";
+import manageService from "../service/manageService";
 const mainContents = document.getElementById("mainContents");
 
 const getDiffTime = (date: string): string => {
@@ -648,11 +649,13 @@ const creatorDonateList = async (elm, eoa) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendTo.value != "") {
-      discordConnect.getUserByEoa(sendTo.value).then((discordUser) => {
-        if (discordUser.Eoa) {
+      utils.getUserByEoa(sendTo.value).then((eoaUser) => {
+        if (eoaUser.type == "tba") {
+          alert("DISP EOAUSER SUBDONATE");
+        } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(discordUser)
+            commonSnipet.discordByEoa(eoaUser.discordUser)
           );
         }
       });
@@ -751,11 +754,13 @@ const creatorDonateHistory = async (elm) => {
     log.appendChild(commonSnipet.span(utils.formatUnixTime(val[2])));
     log.appendChild(commonSnipet.donateDetail(val[3]));
     log.appendChild(commonSnipet.eoa(val[1]));
-    await discordConnect.getUserByEoa(val[1]).then((discordUser) => {
-      if (discordUser.Eoa) {
+    await utils.getUserByEoa(val[1]).then((eoaUser) => {
+      if (eoaUser.type == "tba") {
+        alert("DISP EOAUSER SUBDONATELIST");
+      } else if (eoaUser.type == "discordConnect") {
         log.appendChild(
           commonSnipet.getDiscordUserByEoa(
-            discordUser,
+            eoaUser.discordUser,
             "span",
             "discordNameDisp"
           )
@@ -769,8 +774,104 @@ const creatorDonateHistory = async (elm) => {
   }
 };
 
+const setMintableForm = async (parentElm, sendTo) => {
+  utils.checkBalance().then(async (balance) => {
+    if (balance.eoa) {
+      parentElm.style.display = "block";
+      const mintableInfo = await manageService.getMintableContract(balance.eoa);
+      mintableContractSelect(parentElm, mintableInfo, sendTo);
+    }
+  });
+};
+
+const mintableContractSelect = async (elm, mintableContract, sendTo) => {
+  const selectForm = setElement.makeSelect("nftSelect", "BaseInput");
+  selectForm.classList.add("wfull");
+  for (const key in mintableContract) {
+    const option = document.createElement("option");
+    option.value = key;
+    const contract = mintableContract[key];
+    option.innerHTML = contract.name + " | " + contract.needPoint;
+    selectForm.appendChild(option);
+  }
+  elm.innerHTML = "";
+  const tokenUri = setElement.makeInput(
+    "input",
+    "tokenUri",
+    "BaseInput",
+    "tokenUri"
+  );
+  tokenUri.classList.add("wfull");
+  const mintableFormArea = document.createElement("div");
+  mintableFormArea.classList.add("mintableFormArea");
+  mintableFormArea.appendChild(selectForm);
+  mintableFormArea.appendChild(tokenUri);
+  const makeSubmit = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "MINT",
+    "MINT"
+  );
+  makeSubmit.classList.add("wfull");
+  mintableFormArea.appendChild(makeSubmit);
+  elm.appendChild(mintableFormArea);
+
+  const previewElement = document.createElement("div");
+  previewElement.classList.add("previewArea");
+  elm.appendChild(previewElement);
+
+  selectForm.addEventListener("change", async () => {
+    console.log("フォーム変更" + mintableContract[selectForm.value].name);
+  });
+
+  makeSubmit.addEventListener("click", async () => {
+    const contract = mintableContract[selectForm.value];
+    console.dir(contract);
+    let message =
+      sendTo + "宛に" + contract.name + " をMINTしようとしています\n";
+    if (contract.needPoint > 0) {
+      message +=
+        "このNFTのmintはdonatePointを" + contract.needPoint + "pt消費します。";
+    }
+    if (confirm(message)) {
+      const result = await setToken.mint(contract.ca, sendTo, tokenUri.value);
+    }
+  });
+
+  tokenUri.addEventListener("change", async (e) => {
+    utils
+      .fetchData(tokenUri.value)
+      .then(async (tokenInfos) => {
+        previewElement.innerHTML = "";
+        detailDisplay.showToken(
+          "pc_normal",
+          tokenInfos,
+          "",
+          tokenUri.value,
+          previewElement,
+          ""
+        );
+      })
+      .catch(() => {
+        alert(tokenUri.value + " は無効なtokenURIです。");
+      });
+  });
+};
+
 const displaySnipet = {
   creatorDonateList,
   creatorDonateHistory,
+  displayMintUI,
+  displayToken,
+  displayOwnTokens,
+  displayTokens,
+  displayManagedData,
+  displayOwns,
+  displayTokenContracts,
+  displayAssets,
+  displayArticleCard,
+  setMintableForm,
+  mintableContractSelect,
 };
 export default displaySnipet;
