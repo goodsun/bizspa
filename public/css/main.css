@@ -300,7 +300,9 @@ a {
 
 .nftContractArea > h3,
 .sbtContractArea > h3 {
+  font-size: 2.5em;
   padding: 0 30px;
+  margin: 50px 0 0 0;
 }
 
 .creatorsLinkList {
@@ -775,4 +777,18 @@ img.ownerProfPictIcon {
     display: inline-block;
     vertical-align: middle; /* テキストと中央揃えするため */
   }
+}
+
+.ownTokenCaTitle {
+  font-size: 1.2em;
+  margin: 25px 30px 10px;
+  padding: 0 0 0 0;
+}
+
+.unknownEoa {
+  color: #af0101;
+}
+
+.unknownCa {
+  color: #7b00ff;
 }

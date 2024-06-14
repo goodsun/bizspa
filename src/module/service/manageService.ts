@@ -21,6 +21,11 @@ const getMintableContract = async (eoa) => {
     console.log(
       "getMintableContract: loop " + key + " CA " + contracts[key][0]
     );
+    const contract = await checkMintable(contracts[key][0], eoa);
+    if (contract) {
+      result.push(contract);
+    }
+    /*
     const contract = await getTokenConnect.getTokenInfo(contracts[key][0]);
     if (
       !contract.creatorOnly ||
@@ -32,6 +37,7 @@ const getMintableContract = async (eoa) => {
       console.log(contract.name + " is not mintable");
       console.dir(contract);
     }
+      */
   }
   console.log("manageService.getMintableContract");
   console.dir(result);
@@ -44,10 +50,26 @@ const getOwnTokens = async (eoa) => {
   return result;
 };
 
+const checkMintable = async (ca, eoa) => {
+  const contract = await getTokenConnect.getTokenInfo(ca);
+  if (
+    !contract.creatorOnly ||
+    contract.creator == eoa ||
+    contract.owner == eoa
+  ) {
+    return contract;
+  } else {
+    console.log(contract.name + " is not mintable");
+    console.dir(contract);
+  }
+  return false;
+};
+
 const manageService = {
   getMintableContract,
   getAllContracts,
   getOwnTokens,
+  checkMintable,
 };
 
 export default manageService;

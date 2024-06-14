@@ -42,6 +42,23 @@ const linkCopy = (link, message?) => {
   return linkCopyElm;
 };
 
+const scan = (eoa, label, labelClass) => {
+  const eoaElm = document.createElement("span");
+  const front = eoa.substring(0, 6);
+  const end = eoa.substring(eoa.length - 4);
+  const replace = front + "..." + end;
+  eoaElm.innerHTML =
+    "<span class='" + labelClass + "'>" + label + "</span> " + replace + " ";
+  const copybtn = document.createElement("a");
+  copybtn.href = "https://polygonscan.com/address/" + eoa;
+  copybtn.target = "_blank";
+  const copyicon = document.createElement("i");
+  copyicon.classList.add("far", "fa-solid", "fa-magnifying-glass");
+  copybtn.appendChild(copyicon);
+  eoaElm.appendChild(copybtn);
+  return eoaElm;
+};
+
 const eoa = (eoa, option = { link: "", target: "_self" }) => {
   const { link, target } = option;
   const eoaElm = document.createElement("span");
@@ -211,6 +228,7 @@ const commonSnipet = {
   link,
   linkCopy,
   eoa,
+  scan,
   dispTbaOwner,
   dispDiscordUser,
   getTbaOwnerSnipet,

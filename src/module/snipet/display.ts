@@ -206,6 +206,7 @@ export const displayOwnTokens = async (
       for (const key in result) {
         parentElement.style.display = "block";
         tokensElement.style.display = "block";
+        titleElement.style.display = "block";
         const tokenData = result[key];
         var childNftDiv = document.createElement("div");
         childNftDiv.classList.add("childNft");
@@ -367,7 +368,8 @@ export const displayOwns = async (parentElement, result, eoa) => {
       console.log(utils.getLocalTime() + "非表示判定" + result[key]);
     } else if (result[key][2] === "nft") {
       const titleElm = document.createElement("h2");
-      titleElm.classList.add("linktitle");
+      titleElm.classList.add("ownTokenCaTitle");
+      titleElm.style.display = "none";
       const link = document.createElement("a");
       link.href = "/tokens/" + result[key][0];
       link.textContent = result[key][1];
@@ -378,7 +380,8 @@ export const displayOwns = async (parentElement, result, eoa) => {
       floatClear.classList.add("floatClear");
     } else if (result[key][2] === "sbt") {
       const titleElm = document.createElement("h2");
-      titleElm.classList.add("linktitle");
+      titleElm.classList.add("ownTokenCaTitle");
+      titleElm.style.display = "none";
       const link = document.createElement("a");
       link.href = "/tokens/" + result[key][0];
       link.textContent = result[key][1];
@@ -435,13 +438,12 @@ export const displayTokenContracts = async (result, filter) => {
         const contractLink = document.createElement("a");
         contractLink.href = "/tokens/" + result[key][0];
         contractLink.innerHTML = result[key][1];
-        const mintLink = document.createElement("a");
-        mintLink.classList.add("litelink");
-        mintLink.classList.add("mintlink");
-        mintLink.href = "/tokens/" + result[key][0] + "/mint";
-        mintLink.innerHTML = "mint";
         contractTitle.appendChild(contractLink);
-        contractTitle.appendChild(mintLink);
+
+        const mintLinkArea = document.createElement("span");
+        contractTitle.appendChild(mintLinkArea);
+        createMintLinkElm(result[key][0], mintLinkArea);
+
         displayTokens(nftListElm, result[key][0], false);
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
@@ -453,19 +455,12 @@ export const displayTokenContracts = async (result, filter) => {
         const contractLink = document.createElement("a");
         contractLink.href = "/tokens/" + result[key][0];
         contractLink.innerHTML = result[key][1];
-        const mintLink = document.createElement("a");
-        mintLink.classList.add("litelink");
-        mintLink.classList.add("mintlink");
-        mintLink.href = "/tokens/" + result[key][0] + "/mint";
-        mintLink.innerHTML = "mint";
         contractTitle.appendChild(contractLink);
-        contractTitle.appendChild(mintLink);
-        /*
-        const link = document.createElement("a");
-        link.href = "/tokens/" + result[key][0];
-        link.innerHTML = "<h3>" + result[key][1] + " mint</h3>";
-        sbtListElm.appendChild(link);
-        */
+
+        const mintLinkArea = document.createElement("span");
+        contractTitle.appendChild(mintLinkArea);
+        createMintLinkElm(result[key][0], mintLinkArea);
+
         displayTokens(sbtListElm, result[key][0], false);
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
@@ -650,16 +645,24 @@ const creatorDonateList = async (elm, eoa) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendTo.value != "") {
+      discordUserCheckArea.classList.add("sendToUser");
       utils.getUserByEoa(sendTo.value).then((eoaUser) => {
+        console.dir(eoaUser);
         if (eoaUser.type == "tba") {
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
           );
         } else if (eoaUser.type == "discordConnect") {
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispDiscordUser(eoaUser.discordUser)
+          );
+        } else if (eoaUser.type == "eoa") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+          );
+        } else if (eoaUser.type == "ca") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });
@@ -879,6 +882,22 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   });
 };
 
+const createMintLinkElm = (ca, elm) => {
+  const mintLink = document.createElement("a");
+  elm.appendChild(mintLink);
+  utils.checkBalance().then(async (response) => {
+    if (response.eoa) {
+      if (await manageService.checkMintable(ca, response.eoa)) {
+        console.log(ca + "is mintable");
+        mintLink.classList.add("litelink");
+        mintLink.classList.add("mintlink");
+        mintLink.href = "/tokens/" + ca + "/mint";
+        mintLink.innerHTML = "mint";
+      }
+    }
+  });
+};
+
 const displaySnipet = {
   creatorDonateList,
   creatorDonateHistory,
@@ -893,5 +912,6 @@ const displaySnipet = {
   displayArticleCard,
   setMintableForm,
   mintableContractSelect,
+  createMintLinkElm,
 };
 export default displaySnipet;

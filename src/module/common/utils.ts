@@ -14,6 +14,12 @@ const closeModal = document.getElementById("closemodal");
 const modalcontent = document.getElementById("modalcontent");
 let dispmodal = false;
 
+const isContract = async (address) => {
+  const provider = new ethers.JsonRpcProvider(CONST.RPC_URL);
+  const code = await provider.getCode(address);
+  return code !== "0x" && code !== "0x0";
+};
+
 function containsBrowserName(browserName) {
   var userAgent = navigator.userAgent.toLowerCase();
   return userAgent.includes(browserName.toLowerCase());
@@ -210,8 +216,13 @@ const getTbaInfoByEoa = async (eoa) => {
       tokenInfo: tokenInfo,
     };
   } else {
-    console.log("TODO: ここでCA/EOA判定を行う");
-    return {};
+    let type = "";
+    if (await isContract(eoa)) {
+      type = "ca";
+    } else {
+      type = "eoa";
+    }
+    return { type: type };
   }
 };
 
@@ -222,6 +233,8 @@ const getUserByEoa = async (eoa) => {
   if (tbaInfo.tokenUri) {
     type = "tba";
     console.dir(tbaInfo);
+  } else {
+    type = tbaInfo.type;
   }
   if (discordUser.DiscordId) {
     type = "discordConnect";
@@ -230,6 +243,7 @@ const getUserByEoa = async (eoa) => {
     type: type,
     discordUser: discordUser,
     tbaInfo: tbaInfo,
+    eoa: eoa,
   };
 };
 
@@ -356,6 +370,7 @@ const getMaticPrice = async () => {
 };
 
 const utils = {
+  isContract,
   getMaticPrice,
   containsBrowserName,
   checkMetamask,

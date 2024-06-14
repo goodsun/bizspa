@@ -62,7 +62,6 @@ export const showToken = async (
 
     await utils.getUserByEoa(owner).then((eoaUser) => {
       if (eoaUser.type == "tba") {
-        alert("DISP EOAUSER SHOWTOKEN");
         pOwnerElement.appendChild(
           commonSnipet.getTbaOwnerSnipet(
             eoaUser.tbaInfo,
@@ -77,6 +76,14 @@ export const showToken = async (
             "span",
             "discordNameDisp"
           )
+        );
+      } else if (eoaUser.type == "eoa") {
+        pOwnerElement.appendChild(
+          commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+        );
+      } else if (eoaUser.type == "ca") {
+        pOwnerElement.appendChild(
+          commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
         );
       }
     });
@@ -339,17 +346,23 @@ export const tbaSendForm = (
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendToInput.value != "") {
+      discordUserCheckArea.classList.add("sendToUser");
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
-          alert("DISP EOAUSER TBASEND");
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
           );
         } else if (eoaUser.type == "discordConnect") {
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispDiscordUser(eoaUser.discordUser)
+          );
+        } else if (eoaUser.type == "eoa") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+          );
+        } else if (eoaUser.type == "ca") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });
@@ -417,16 +430,22 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendToInput.value != "") {
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
+        discordUserCheckArea.classList.add("sendToUser");
         if (eoaUser.type == "tba") {
-          alert("DISP EOAUSER SEND");
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
           );
         } else if (eoaUser.type == "discordConnect") {
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispDiscordUser(eoaUser.discordUser)
+          );
+        } else if (eoaUser.type == "eoa") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+          );
+        } else if (eoaUser.type == "ca") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });
@@ -560,16 +579,22 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     discordUserCheckArea.classList.remove("sendToUser");
     if (eoaForm.value != "") {
       utils.getUserByEoa(eoaForm.value).then((eoaUser) => {
+        discordUserCheckArea.classList.add("sendToUser");
         if (eoaUser.type == "tba") {
-          alert("DISP EOAUSER MINT");
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
           );
         } else if (eoaUser.type == "discordConnect") {
-          discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
             commonSnipet.dispDiscordUser(eoaUser.discordUser)
+          );
+        } else if (eoaUser.type == "eoa") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+          );
+        } else if (eoaUser.type == "ca") {
+          discordUserCheckArea.appendChild(
+            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });

@@ -350,13 +350,9 @@ const setTokens = async () => {
   );
   pElement.appendChild(tokenName);
 
-  var mintLink = document.createElement("a");
-  mintLink.classList.add("litelink");
-  mintLink.classList.add("mintlink");
-  mintLink.href = "/tokens/" + router.params[2] + "/mint/";
-  mintLink.textContent = "mint";
-  pElement.appendChild(mintLink);
-
+  const mintLinkArea = document.createElement("span");
+  pElement.appendChild(mintLinkArea);
+  displaySnipet.createMintLinkElm(router.params[2], mintLinkArea);
   // ----------------------------------------
 
   displaySnipet.displayTokens(divTokensElement, router.params[2], false);
