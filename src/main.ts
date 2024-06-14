@@ -1,6 +1,5 @@
 import { CONST } from "./module/common/const";
 import { router } from "./module/common/router";
-import { getManager } from "./module/connect/getManager";
 import getTokenConnect from "./module/connect/getToken";
 import getTbaConnect from "./module/connect/getTbaConnect";
 import { donate, getDonate } from "./module/connect/donate";
@@ -14,7 +13,6 @@ import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
 import commonSnipet from "./module/snipet/common";
 import utils from "./module/common/utils";
-// import getAkord from "./module/connect/getAkord";
 import displaySnipet from "./module/snipet/display";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
@@ -40,7 +38,7 @@ const setContents = async () => {
   articleSnipet.getMdSiteMap();
 };
 async function setDonate(params) {
-  const creators = await getManager("creators");
+  const creators = await getManagerConnect.getManager("creators");
   const checkBalance = await utils.checkBalance();
   for (const key in creators) {
     if (creators[key][0] == checkBalance.eoa) {
@@ -207,7 +205,7 @@ const setOwner = async (eoa) => {
     await utils.getUserByEoa(tbaOwner).then((eoaUser) => {
       if (eoaUser.type == "discordConnect") {
         tbaOwnerElement.appendChild(
-          commonSnipet.getDiscordUserByEoa(
+          commonSnipet.getDiscordUserSnipet(
             eoaUser.discordUser,
             "span",
             "discordNameDisp"
@@ -230,7 +228,7 @@ const setOwner = async (eoa) => {
         discordElm.appendChild(commonSnipet.br());
         discordElm.appendChild(commonSnipet.span("Discord :"));
         discordElm.appendChild(
-          commonSnipet.getDiscordUserByEoa(
+          commonSnipet.getDiscordUserSnipet(
             eoaUser.discordUser,
             "span",
             "discordNameDisp"
@@ -261,22 +259,22 @@ const setOwns = async (eoa) => {
   divAssetElement.classList.add("assetArea");
   mainContents.appendChild(divAssetElement);
 
-  const result = await getManager("contracts");
+  const result = await getManagerConnect.getManager("contracts");
   displaySnipet.displayOwns(divAssetElement, result, eoa);
 };
 
 const setAssets = async (filter) => {
-  const result = await getManager("contracts");
+  const result = await getManagerConnect.getManager("contracts");
   displaySnipet.displayAssets(result, filter);
 };
 
 const setTokenContracts = async (filter) => {
-  const result = await getManager("contracts");
+  const result = await getManagerConnect.getManager("contracts");
   displaySnipet.displayTokenContracts(result, filter);
 };
 
 const setOwnTokenContracts = async (filter) => {
-  const allList = await getManager("contracts");
+  const allList = await getManagerConnect.getManager("contracts");
   for (const key in allList) {
     if (allList[key][2] == "nft") {
       console.log("Check Type:" + allList[key][0]);

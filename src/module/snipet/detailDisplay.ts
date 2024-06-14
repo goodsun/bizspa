@@ -63,9 +63,16 @@ export const showToken = async (
     await utils.getUserByEoa(owner).then((eoaUser) => {
       if (eoaUser.type == "tba") {
         alert("DISP EOAUSER SHOWTOKEN");
+        pOwnerElement.appendChild(
+          commonSnipet.getTbaOwnerSnipet(
+            eoaUser.tbaInfo,
+            "span",
+            "discordNameDisp"
+          )
+        );
       } else if (eoaUser.type == "discordConnect") {
         pOwnerElement.appendChild(
-          commonSnipet.getDiscordUserByEoa(
+          commonSnipet.getDiscordUserSnipet(
             eoaUser.discordUser,
             "span",
             "discordNameDisp"
@@ -335,6 +342,10 @@ export const tbaSendForm = (
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
           alert("DISP EOAUSER TBASEND");
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
+          );
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
@@ -408,6 +419,10 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
           alert("DISP EOAUSER SEND");
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
+          );
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
@@ -547,6 +562,10 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
       utils.getUserByEoa(eoaForm.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
           alert("DISP EOAUSER MINT");
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
+          );
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(

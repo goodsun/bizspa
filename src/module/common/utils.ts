@@ -194,6 +194,7 @@ const getTbaInfoByEoa = async (eoa) => {
   const tbaToken = await getTbaConnect.checkToken(eoa);
   if (tbaToken) {
     const tbaToken = await getTbaConnect.checkToken(eoa);
+    const caName = await getTokenConnect.getToken("name", tbaToken[1]);
     const tokenUri = await getTokenConnect.getToken(
       "tokenURI",
       tbaToken[1],
@@ -201,7 +202,9 @@ const getTbaInfoByEoa = async (eoa) => {
     );
     const tokenInfo = await fetchData(tokenUri);
     return {
+      eoa: eoa,
       ca: tbaToken[1],
+      caName: caName,
       tokenId: tbaToken[2],
       tokenUri: tokenUri,
       tokenInfo: tokenInfo,

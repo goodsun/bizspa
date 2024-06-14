@@ -1,12 +1,12 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
-import { getManager } from "../../module/connect/getManager";
+import getManagerConnect from "../../module/connect/getManager";
 const rpc_url = CONST.RPC_URL;
 const provider = new ethers.JsonRpcProvider(rpc_url);
 
 const getTbaContracts = async () => {
-  const result = await getManager("contracts");
+  const result = await getManagerConnect.getManager("contracts");
   var tbaContracts = result.filter(function (contract) {
     return contract[2] == "tba";
   });

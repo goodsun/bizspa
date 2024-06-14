@@ -1,23 +1,21 @@
-import { getManager } from "../connect/getManager";
+import getManagerConnect from "../connect/getManager";
 import getTokenConnect from "../connect/getToken";
 
 const getAllContracts = async (filter: Array<String>) => {
   let result = [];
-  const allList = await getManager("contracts");
+  const allList = await getManagerConnect.getManager("contracts");
   for (const key in allList) {
-    console.log("allContracts:" + key);
-    console.dir(allList[key]);
     if (filter.includes(allList[key][2])) {
       result.push(allList[key]);
     }
   }
+  console.log("manageService.getAllContracts");
+  console.dir(result);
   return result;
 };
 
 const getMintableContract = async (eoa) => {
   const contracts = await getAllContracts(["nft", "sbt"]);
-  console.log("getMintableContract: p1 getAllContract");
-  console.dir(contracts);
   let result = [];
   for (const key in contracts) {
     console.log(
@@ -35,12 +33,21 @@ const getMintableContract = async (eoa) => {
       console.dir(contract);
     }
   }
+  console.log("manageService.getMintableContract");
+  console.dir(result);
+  return result;
+};
+
+const getOwnTokens = async (eoa) => {
+  const result = await getTokenConnect.hasTokenList(eoa);
+  console.dir(result);
   return result;
 };
 
 const manageService = {
   getMintableContract,
   getAllContracts,
+  getOwnTokens,
 };
 
 export default manageService;

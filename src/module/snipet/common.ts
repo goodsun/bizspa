@@ -89,11 +89,37 @@ const eoa = (eoa, option = { link: "", target: "_self" }) => {
   return eoaElm;
 };
 
-const dispDiscordUser = (discordUser) => {
-  return getDiscordUserByEoa(discordUser, "div", "walletDiscordElement");
+const dispTbaOwner = (tbaInfo) => {
+  return getTbaOwnerSnipet(tbaInfo, "div", "walletDiscordElement");
 };
 
-const getDiscordUserByEoa = (discordUser, elm, className) => {
+const dispDiscordUser = (discordUser) => {
+  return getDiscordUserSnipet(discordUser, "div", "walletDiscordElement");
+};
+
+const getTbaOwnerSnipet = (tbaInfo, elm, className) => {
+  const discordElem = document.createElement(elm);
+  discordElem.classList.add(className);
+  var newImage = document.createElement("img");
+  newImage.src = tbaInfo.tokenInfo.image;
+  newImage.classList.add("walletDiscordIcon");
+  discordElem.appendChild(newImage);
+  const name = document.createElement("span");
+  name.innerHTML =
+    '<a href="tokens/' +
+    tbaInfo.ca +
+    "/" +
+    tbaInfo.tokenId +
+    '" target="_blank">' +
+    tbaInfo.caName +
+    " #" +
+    tbaInfo.tokenId +
+    "</a>";
+  discordElem.appendChild(name);
+  return discordElem;
+};
+
+const getDiscordUserSnipet = (discordUser, elm, className) => {
   const discordElem = document.createElement(elm);
   discordElem.classList.add(className);
   var newImage = document.createElement("img");
@@ -185,8 +211,10 @@ const commonSnipet = {
   link,
   linkCopy,
   eoa,
+  dispTbaOwner,
   dispDiscordUser,
-  getDiscordUserByEoa,
+  getTbaOwnerSnipet,
+  getDiscordUserSnipet,
   span,
   br,
   copyAction,

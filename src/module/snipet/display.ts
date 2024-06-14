@@ -1,5 +1,4 @@
-import { getManager } from "../connect/getManager";
-import getTokenConnect, { getToken } from "../connect/getToken";
+import getTokenConnect from "../connect/getToken";
 import { getOwn } from "../connect/getOwn";
 import utils from "../common/utils";
 import { router } from "../common/router";
@@ -10,7 +9,6 @@ import { CONST } from "../common/const";
 import getManagerConnect from "../connect/getManager";
 import setToken from "../connect/setToken";
 import donateConnect from "../connect/donate";
-import discordConnect from "../connect/discordConnect";
 import manageService from "../service/manageService";
 const mainContents = document.getElementById("mainContents");
 
@@ -189,10 +187,11 @@ export const displayToken = async (
 };
 
 export const displayOwnTokens = async (
-  tokensElement,
   ca,
   eoa,
-  parentElement
+  parentElement,
+  tokensElement,
+  titleElement
 ) => {
   var newArea = document.createElement("div");
   newArea.classList.add("childNftArea");
@@ -293,7 +292,7 @@ export const displayTokens = async (tokensElement, ca, filter) => {
 };
 
 export const displayManagedData = async (type, title, filter) => {
-  const result = await getManager(type);
+  const result = await getManagerConnect.getManager(type);
   const header = document.createElement("h2");
   header.textContent = title;
   mainContents.appendChild(header);
@@ -335,11 +334,11 @@ export const displayOwns = async (parentElement, result, eoa) => {
   nftArea.style.display = "none";
   const nftHeader = document.createElement("h3");
   nftHeader.textContent = "NFT COLLECTIONS";
-  const nftList = document.createElement("div");
-  nftList.style.display = "none";
-  nftList.classList.add("contractLinkList");
+  const nftListElm = document.createElement("div");
+  nftListElm.style.display = "none";
+  nftListElm.classList.add("contractLinkList");
   nftArea.appendChild(nftHeader);
-  nftArea.appendChild(nftList);
+  nftArea.appendChild(nftListElm);
   parentElement.appendChild(nftArea);
 
   const nftfloatClear = document.createElement("div");
@@ -351,12 +350,12 @@ export const displayOwns = async (parentElement, result, eoa) => {
   sbtArea.classList.add("sbtContractArea");
   const sbtHeader = document.createElement("h3");
   sbtHeader.textContent = "SBT COLLECTIONS";
-  const sbtList = document.createElement("div");
-  sbtList.style.display = "none";
-  sbtList.classList.add("contractLinkList");
-  parentElement.appendChild(sbtList);
+  const sbtListElm = document.createElement("div");
+  sbtListElm.style.display = "none";
+  sbtListElm.classList.add("contractLinkList");
+  parentElement.appendChild(sbtListElm);
   sbtArea.appendChild(sbtHeader);
-  sbtArea.appendChild(sbtList);
+  sbtArea.appendChild(sbtListElm);
   parentElement.appendChild(sbtArea);
 
   const sbtfloatClear = document.createElement("div");
@@ -367,23 +366,25 @@ export const displayOwns = async (parentElement, result, eoa) => {
     if (!result[key][3]) {
       console.log(utils.getLocalTime() + "非表示判定" + result[key]);
     } else if (result[key][2] === "nft") {
-      console.log(utils.getLocalTime() + "NFT add:" + result[key][1]);
-      // nftArea.style.display = "block";
+      const titleElm = document.createElement("h2");
+      titleElm.classList.add("linktitle");
       const link = document.createElement("a");
       link.href = "/tokens/" + result[key][0];
       link.textContent = result[key][1];
-      nftList.appendChild(link);
-      displayOwnTokens(nftList, result[key][0], eoa, nftArea);
+      titleElm.appendChild(link);
+      nftListElm.appendChild(titleElm);
+      displayOwnTokens(result[key][0], eoa, nftArea, nftListElm, titleElm);
       const floatClear = document.createElement("div");
       floatClear.classList.add("floatClear");
     } else if (result[key][2] === "sbt") {
-      console.log(utils.getLocalTime() + "SBT add:" + result[key][1]);
-      // sbtArea.style.display = "block";
+      const titleElm = document.createElement("h2");
+      titleElm.classList.add("linktitle");
       const link = document.createElement("a");
       link.href = "/tokens/" + result[key][0];
       link.textContent = result[key][1];
-      sbtList.appendChild(link);
-      displayOwnTokens(sbtList, result[key][0], eoa, sbtArea);
+      titleElm.appendChild(link);
+      sbtListElm.appendChild(titleElm);
+      displayOwnTokens(result[key][0], eoa, sbtArea, sbtListElm, titleElm);
       const floatClear = document.createElement("div");
       floatClear.classList.add("floatClear");
     }
@@ -396,10 +397,10 @@ export const displayTokenContracts = async (result, filter) => {
   nftArea.style.display = "none";
   const nftHeader = document.createElement("h3");
   nftHeader.textContent = "NFT COLLECTIONS";
-  const nftList = document.createElement("div");
-  nftList.classList.add("contractLinkList");
+  const nftListElm = document.createElement("div");
+  nftListElm.classList.add("contractLinkList");
   nftArea.appendChild(nftHeader);
-  nftArea.appendChild(nftList);
+  nftArea.appendChild(nftListElm);
   mainContents.appendChild(nftArea);
 
   const nftfloatClear = document.createElement("div");
@@ -411,11 +412,11 @@ export const displayTokenContracts = async (result, filter) => {
   sbtArea.classList.add("sbtContractArea");
   const sbtHeader = document.createElement("h3");
   sbtHeader.textContent = "SBT COLLECTIONS";
-  const sbtList = document.createElement("div");
-  sbtList.classList.add("contractLinkList");
-  mainContents.appendChild(sbtList);
+  const sbtListElm = document.createElement("div");
+  sbtListElm.classList.add("contractLinkList");
+  mainContents.appendChild(sbtListElm);
   sbtArea.appendChild(sbtHeader);
-  sbtArea.appendChild(sbtList);
+  sbtArea.appendChild(sbtListElm);
   mainContents.appendChild(sbtArea);
 
   const sbtfloatClear = document.createElement("div");
@@ -430,7 +431,7 @@ export const displayTokenContracts = async (result, filter) => {
         console.log("NFT add:" + result[key][1]);
         nftArea.style.display = "block";
         const contractTitle = document.createElement("h3");
-        nftList.appendChild(contractTitle);
+        nftListElm.appendChild(contractTitle);
         const contractLink = document.createElement("a");
         contractLink.href = "/tokens/" + result[key][0];
         contractLink.innerHTML = result[key][1];
@@ -441,14 +442,14 @@ export const displayTokenContracts = async (result, filter) => {
         mintLink.innerHTML = "mint";
         contractTitle.appendChild(contractLink);
         contractTitle.appendChild(mintLink);
-        displayTokens(nftList, result[key][0], false);
+        displayTokens(nftListElm, result[key][0], false);
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
       } else if (result[key][2] === "sbt") {
         console.log("SBT add:" + result[key][1]);
         sbtArea.style.display = "block";
         const contractTitle = document.createElement("h3");
-        sbtList.appendChild(contractTitle);
+        sbtListElm.appendChild(contractTitle);
         const contractLink = document.createElement("a");
         contractLink.href = "/tokens/" + result[key][0];
         contractLink.innerHTML = result[key][1];
@@ -463,9 +464,9 @@ export const displayTokenContracts = async (result, filter) => {
         const link = document.createElement("a");
         link.href = "/tokens/" + result[key][0];
         link.innerHTML = "<h3>" + result[key][1] + " mint</h3>";
-        sbtList.appendChild(link);
+        sbtListElm.appendChild(link);
         */
-        displayTokens(sbtList, result[key][0], false);
+        displayTokens(sbtListElm, result[key][0], false);
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
       }
@@ -479,10 +480,10 @@ export const displayAssets = async (result, filter) => {
   nftArea.style.display = "none";
   const nftHeader = document.createElement("h4");
   nftHeader.textContent = "NFT ASSETS";
-  const nftList = document.createElement("div");
-  nftList.classList.add("contractLinkList");
+  const nftListElm = document.createElement("div");
+  nftListElm.classList.add("contractLinkList");
   nftArea.appendChild(nftHeader);
-  nftArea.appendChild(nftList);
+  nftArea.appendChild(nftListElm);
   mainContents.appendChild(nftArea);
 
   const sbtArea = document.createElement("div");
@@ -490,11 +491,11 @@ export const displayAssets = async (result, filter) => {
   sbtArea.classList.add("sbtContractArea");
   const sbtHeader = document.createElement("h4");
   sbtHeader.textContent = "SBT ASSETS";
-  const sbtList = document.createElement("div");
-  sbtList.classList.add("contractLinkList");
-  mainContents.appendChild(sbtList);
+  const sbtListElm = document.createElement("div");
+  sbtListElm.classList.add("contractLinkList");
+  mainContents.appendChild(sbtListElm);
   sbtArea.appendChild(sbtHeader);
-  sbtArea.appendChild(sbtList);
+  sbtArea.appendChild(sbtListElm);
   mainContents.appendChild(sbtArea);
 
   for (const key in result) {
@@ -505,7 +506,7 @@ export const displayAssets = async (result, filter) => {
         nftArea.style.display = "block";
         const dataList = document.createElement("div");
         dataList.classList.add("tokenLinkList");
-        nftList.appendChild(dataList);
+        nftListElm.appendChild(dataList);
         const nftTitle = document.createElement("h3");
         nftTitle.textContent = result[key][1];
         dataList.appendChild(nftTitle);
@@ -521,7 +522,7 @@ export const displayAssets = async (result, filter) => {
         sbtArea.style.display = "block";
         const dataList = document.createElement("div");
         dataList.classList.add("tokenLinkList");
-        sbtList.appendChild(dataList);
+        sbtListElm.appendChild(dataList);
         const sbtTitle = document.createElement("h3");
         sbtTitle.textContent = result[key][1];
         dataList.appendChild(sbtTitle);
@@ -651,10 +652,9 @@ const creatorDonateList = async (elm, eoa) => {
     if (sendTo.value != "") {
       utils.getUserByEoa(sendTo.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
-          alert("DISP EOAUSER SUBDONATE");
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.dispDiscordUser(eoaUser.discordUser)
+            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
           );
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
@@ -760,10 +760,16 @@ const creatorDonateHistory = async (elm) => {
     log.appendChild(commonSnipet.eoa(val[1]));
     await utils.getUserByEoa(val[1]).then((eoaUser) => {
       if (eoaUser.type == "tba") {
-        alert("DISP EOAUSER SUBDONATELIST");
+        log.appendChild(
+          commonSnipet.getTbaOwnerSnipet(
+            eoaUser.tbaInfo,
+            "span",
+            "discordNameDisp"
+          )
+        );
       } else if (eoaUser.type == "discordConnect") {
         log.appendChild(
-          commonSnipet.getDiscordUserByEoa(
+          commonSnipet.getDiscordUserSnipet(
             eoaUser.discordUser,
             "span",
             "discordNameDisp"
@@ -795,7 +801,11 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     const option = document.createElement("option");
     option.value = key;
     const contract = mintableContract[key];
-    option.innerHTML = contract.name + " | " + contract.needPoint;
+    option.innerHTML = contract.name;
+    if (contract.needPoint) {
+      option.innerHTML +=
+        " | <span class='needpoint'>" + contract.needPoint + " pt</span>";
+    }
     selectForm.appendChild(option);
   }
   elm.innerHTML = "";
@@ -826,7 +836,13 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   elm.appendChild(previewElement);
 
   selectForm.addEventListener("change", async () => {
-    console.log("フォーム変更" + mintableContract[selectForm.value].name);
+    const cainfo = mintableContract[selectForm.value];
+    const balance = await utils.checkBalance();
+    console.dir(mintableContract[selectForm.value]);
+    if (balance.dpoint < cainfo.needPoint) {
+      alert("Mintするのに必要なポイントが足りません。");
+      selectForm.value = "選択してください";
+    }
   });
 
   makeSubmit.addEventListener("click", async () => {
