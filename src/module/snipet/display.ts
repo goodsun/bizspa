@@ -7,6 +7,7 @@ import commonSnipet from "../snipet/common";
 import setElement from "./setElement";
 import { CONST } from "../common/const";
 import getManagerConnect from "../connect/getManager";
+import getTbaConnect from "../connect/getTbaConnect";
 import setToken from "../connect/setToken";
 import donateConnect from "../connect/donate";
 import manageService from "../service/manageService";
@@ -124,15 +125,7 @@ export const displayToken = async (
   const balance = await utils.checkBalance();
   const tbaInfoElement = document.createElement("p");
 
-  if (tbaOwner) {
-    tbaInfoElement.appendChild(commonSnipet.span("This NFT has TBA: "));
-    tbaInfoElement.appendChild(
-      commonSnipet.eoa(tokenBoundAccount, {
-        link: "/assets/" + tokenBoundAccount,
-        target: "",
-      })
-    );
-  } else {
+  if (!tbaOwner) {
     if (
       balance.balance != undefined &&
       utils.isAddressesEqual(owner, balance.eoa)
@@ -228,6 +221,22 @@ export const displayOwnTokens = async (
           newImage.src = nftinfo["image"];
           newImage.classList.add("nftThumb");
           squareImg.appendChild(newImage);
+
+          getTbaConnect.getTbaInfo(ca, tokenData.tokenId).then((tba) => {
+            getTbaConnect.checkOwner(tba).then((response) => {
+              if (response) {
+                var tbamark = document.createElement("i");
+                tbamark.classList.add(
+                  "far",
+                  "fa-solid",
+                  "fa-bag-shopping",
+                  "tbamark"
+                );
+                squareImg.appendChild(tbamark);
+              }
+            });
+          });
+
           newLink.appendChild(squareImg);
 
           var childNftBg = document.createElement("div");
@@ -278,6 +287,22 @@ export const displayTokens = async (tokensElement, ca, filter) => {
         newImage.src = nftinfo["image"];
         newImage.classList.add("nftThumb");
         squareImg.appendChild(newImage);
+
+        getTbaConnect.getTbaInfo(ca, i).then((tba) => {
+          getTbaConnect.checkOwner(tba).then((response) => {
+            if (response) {
+              var tbamark = document.createElement("i");
+              tbamark.classList.add(
+                "far",
+                "fa-solid",
+                "fa-bag-shopping",
+                "tbamark"
+              );
+              squareImg.appendChild(tbamark);
+            }
+          });
+        });
+
         newLink.appendChild(squareImg);
         return newLink;
       });

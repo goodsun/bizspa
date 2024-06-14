@@ -272,6 +272,7 @@ export const checkMetamask = async () => {
       commonSnipet.eoa(balanceData.eoa, {
         link: "#",
         target: "",
+        icon: "fa-copy",
       })
     );
     connectWallet.appendChild(commonSnipet.span(" balance: "));

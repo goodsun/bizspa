@@ -206,6 +206,9 @@ a {
 .rev {
   color: #0000aa;
 }
+.nftArea {
+  margin: 10px 30px;
+}
 .childNftArea {
   width: 100%;
 }
@@ -786,9 +789,26 @@ img.ownerProfPictIcon {
 }
 
 .unknownEoa {
-  color: #af0101;
+  color: #a200ff;
 }
 
 .unknownCa {
-  color: #7b00ff;
+  color: #ce0404;
+}
+
+i.tbamark {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 10;
+  font-size: 20px;
+  width: 20px;
+  color: #707070;
+  background-color: #ffffff;
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

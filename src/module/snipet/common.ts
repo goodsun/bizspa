@@ -59,8 +59,8 @@ const scan = (eoa, label, labelClass) => {
   return eoaElm;
 };
 
-const eoa = (eoa, option = { link: "", target: "_self" }) => {
-  const { link, target } = option;
+const eoa = (eoa, option = { link: "", target: "_self", icon: "fa-copy" }) => {
+  const { link, target, icon } = option;
   const eoaElm = document.createElement("span");
   const front = eoa.substring(0, 6);
   const end = eoa.substring(eoa.length - 4);
@@ -84,7 +84,7 @@ const eoa = (eoa, option = { link: "", target: "_self" }) => {
 
   // アイコン要素を作成してボタンに追加
   const copyicon = document.createElement("i");
-  copyicon.classList.add("far", "fa-copy", "fa-fw");
+  copyicon.classList.add("far", icon, "fa-fw");
   copybtn.appendChild(copyicon);
 
   // ボタン要素をスパン要素に追加

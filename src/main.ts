@@ -200,7 +200,11 @@ const setOwner = async (eoa) => {
     const tbaOwnerElement = document.createElement("span");
     tbaOwnerElement.appendChild(commonSnipet.span("NFT owner : "));
     tbaOwnerElement.appendChild(
-      commonSnipet.eoa(tbaOwner, { link: "/assets/" + tbaOwner, target: "" })
+      commonSnipet.eoa(tbaOwner, {
+        link: "/assets/" + tbaOwner,
+        target: "",
+        icon: "fa-copy",
+      })
     );
     await utils.getUserByEoa(tbaOwner).then((eoaUser) => {
       if (eoaUser.type == "discordConnect") {

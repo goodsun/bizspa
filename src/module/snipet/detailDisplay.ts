@@ -37,7 +37,11 @@ export const showToken = async (
   if (tbaOwner) {
     pOwnerElement.appendChild(commonSnipet.span("ca: "));
     pOwnerElement.appendChild(
-      commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
+      commonSnipet.eoa(owner, {
+        link: "/assets/" + owner,
+        target: "",
+        icon: "fa-copy",
+      })
     );
 
     const parentTag = document.createElement("span");
@@ -57,7 +61,11 @@ export const showToken = async (
     console.log("OWNER:" + owner);
     pOwnerElement.appendChild(commonSnipet.span("owner: "));
     pOwnerElement.appendChild(
-      commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
+      commonSnipet.eoa(owner, {
+        link: "/assets/" + owner,
+        target: "",
+        icon: "fa-copy",
+      })
     );
 
     await utils.getUserByEoa(owner).then((eoaUser) => {
@@ -77,14 +85,6 @@ export const showToken = async (
             "discordNameDisp"
           )
         );
-      } else if (eoaUser.type == "eoa") {
-        pOwnerElement.appendChild(
-          commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
-        );
-      } else if (eoaUser.type == "ca") {
-        pOwnerElement.appendChild(
-          commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
-        );
       }
     });
   }
@@ -92,11 +92,12 @@ export const showToken = async (
   if (tokenBoundAccount) {
     const tbaOwner = await getTbaConnect.checkOwner(tokenBoundAccount);
     if (tbaOwner) {
-      pOwnerElement.appendChild(commonSnipet.span(" ｜ TBA: "));
+      pOwnerElement.appendChild(commonSnipet.span(" ｜ "));
       pOwnerElement.appendChild(
         commonSnipet.eoa(tokenBoundAccount, {
           link: "/assets/" + tokenBoundAccount,
           target: "",
+          icon: "fa-copy",
         })
       );
     }
@@ -294,7 +295,7 @@ export const tbaSendForm = (
   h2Element.appendChild(commonSnipet.br());
   h2Element.appendChild(commonSnipet.span("Account-Bound NFT: "));
   h2Element.appendChild(
-    commonSnipet.eoa(ca, { link: "/tokens/" + ca, target: "" })
+    commonSnipet.eoa(ca, { link: "/tokens/" + ca, target: "", icon: "fa-copy" })
   );
 
   h2Element.appendChild(
@@ -304,13 +305,21 @@ export const tbaSendForm = (
   h2Element.appendChild(commonSnipet.br());
   h2Element.appendChild(commonSnipet.span("parent: "));
   h2Element.appendChild(
-    commonSnipet.eoa(parent, { link: "/assets/" + parent, target: "" })
+    commonSnipet.eoa(parent, {
+      link: "/assets/" + parent,
+      target: "",
+      icon: "fa-copy",
+    })
   );
 
   h2Element.appendChild(commonSnipet.br());
   h2Element.appendChild(commonSnipet.span("owner: "));
   h2Element.appendChild(
-    commonSnipet.eoa(owner, { link: "/assets/" + owner, target: "" })
+    commonSnipet.eoa(owner, {
+      link: "/assets/" + owner,
+      target: "",
+      icon: "fa-copy",
+    })
   );
 
   const makeElement = setElement.makeElement(
