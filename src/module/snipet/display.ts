@@ -652,10 +652,14 @@ const creatorDonateList = async (elm, eoa) => {
       utils.getUserByEoa(sendTo.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
           alert("DISP EOAUSER SUBDONATE");
+          discordUserCheckArea.classList.add("sendToUser");
+          discordUserCheckArea.appendChild(
+            commonSnipet.dispDiscordUser(eoaUser.discordUser)
+          );
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(eoaUser.discordUser)
+            commonSnipet.dispDiscordUser(eoaUser.discordUser)
           );
         }
       });

@@ -338,7 +338,7 @@ export const tbaSendForm = (
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(eoaUser.discordUser)
+            commonSnipet.dispDiscordUser(eoaUser.discordUser)
           );
         }
       });
@@ -411,7 +411,7 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(eoaUser.discordUser)
+            commonSnipet.dispDiscordUser(eoaUser.discordUser)
           );
         }
       });
@@ -550,7 +550,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.classList.add("sendToUser");
           discordUserCheckArea.appendChild(
-            commonSnipet.discordByEoa(eoaUser.discordUser)
+            commonSnipet.dispDiscordUser(eoaUser.discordUser)
           );
         }
       });

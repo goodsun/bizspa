@@ -244,7 +244,9 @@ export const checkMetamask = async () => {
     getUserByEoa(balanceData.eoa).then((eoaUser) => {
       //メタマスクでつなぐ場合TBAはない
       if (eoaUser.type == "discordConnect") {
-        discordArea.appendChild(commonSnipet.discordByEoa(eoaUser.discordUser));
+        discordArea.appendChild(
+          commonSnipet.dispDiscordUser(eoaUser.discordUser)
+        );
       }
     });
 

@@ -89,7 +89,7 @@ const eoa = (eoa, option = { link: "", target: "_self" }) => {
   return eoaElm;
 };
 
-const discordByEoa = (discordUser) => {
+const dispDiscordUser = (discordUser) => {
   return getDiscordUserByEoa(discordUser, "div", "walletDiscordElement");
 };
 
@@ -185,7 +185,7 @@ const commonSnipet = {
   link,
   linkCopy,
   eoa,
-  discordByEoa,
+  dispDiscordUser,
   getDiscordUserByEoa,
   span,
   br,
