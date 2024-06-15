@@ -84,7 +84,14 @@ const eoa = (eoa, option = { link: "", target: "_self", icon: "fa-copy" }) => {
 
   // アイコン要素を作成してボタンに追加
   const copyicon = document.createElement("i");
-  copyicon.classList.add("far", icon, "fa-fw");
+  switch (icon) {
+    case "bag":
+      copyicon.classList.add("fa-solid", "fa-shopping-bag");
+      break;
+    default:
+      copyicon.classList.add("fa", "fa-copy", "fa-fw");
+      break;
+  }
   copybtn.appendChild(copyicon);
 
   // ボタン要素をスパン要素に追加

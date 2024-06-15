@@ -40,6 +40,11 @@ const setContents = async () => {
 async function setDonate(params) {
   const creators = await getManagerConnect.getManager("creators");
   const checkBalance = await utils.checkBalance();
+
+  const calcElement = document.createElement("div");
+  calcElement.classList.add("calcratorArea");
+  mainContents.appendChild(calcElement);
+
   for (const key in creators) {
     if (creators[key][0] == checkBalance.eoa) {
       const creatorDonateElement = document.createElement("div");
@@ -203,7 +208,7 @@ const setOwner = async (eoa) => {
       commonSnipet.eoa(tbaOwner, {
         link: "/assets/" + tbaOwner,
         target: "",
-        icon: "fa-copy",
+        icon: "copy",
       })
     );
     await utils.getUserByEoa(tbaOwner).then((eoaUser) => {

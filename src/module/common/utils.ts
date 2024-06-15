@@ -272,7 +272,7 @@ export const checkMetamask = async () => {
       commonSnipet.eoa(balanceData.eoa, {
         link: "#",
         target: "",
-        icon: "fa-copy",
+        icon: "copy",
       })
     );
     connectWallet.appendChild(commonSnipet.span(" balance: "));
@@ -369,10 +369,29 @@ const getMaticPrice = async () => {
     console.error("価格データの取得中にエラーが発生しました:", error);
   }
 };
+const getMaticYen = async () => {
+  const url = "https://api.coingecko.com/api/v3/simple/price";
+  const params = new URLSearchParams({
+    ids: "matic-network",
+    vs_currencies: "jpy",
+  });
+  try {
+    const response = await fetch(`${url}?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const jpy = data["matic-network"].jpy;
+    return 1 / jpy;
+  } catch (error) {
+    console.error("価格データの取得中にエラーが発生しました:", error);
+  }
+};
 
 const utils = {
   isContract,
   getMaticPrice,
+  getMaticYen,
   containsBrowserName,
   checkMetamask,
   getLocalTime,

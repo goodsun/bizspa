@@ -121,7 +121,7 @@ export const getUI = async () => {
     utils.toggleModal();
   });
 
-  metaLoad.addEventListener("change", (event) => {
+  metaLoad.addEventListener("input", (event) => {
     loadMetadata(event);
   });
 
@@ -129,7 +129,7 @@ export const getUI = async () => {
     download();
   });
 
-  setNameForm.addEventListener("change", (event) => {
+  setNameForm.addEventListener("input", (event) => {
     const target = event.target as HTMLInputElement;
     console.log("NAME:", target.value);
     console.dir(metadata);
@@ -137,7 +137,7 @@ export const getUI = async () => {
     setTokenData();
   });
 
-  setDescriptionForm.addEventListener("change", (event) => {
+  setDescriptionForm.addEventListener("input", (event) => {
     const target = event.target as HTMLInputElement;
     console.log("DESC:", target.value);
     console.dir(metadata);
@@ -145,21 +145,21 @@ export const getUI = async () => {
     setTokenData();
   });
 
-  setImageForm.addEventListener("change", (event) => {
+  setImageForm.addEventListener("input", (event) => {
     const target = event.target as HTMLInputElement;
     console.log("IMG :", target.value);
     metadata.image = target.value;
     setTokenData();
   });
 
-  animationMovieForm.addEventListener("change", (event) => {
+  animationMovieForm.addEventListener("input", (event) => {
     const target = event.target as HTMLInputElement;
     console.log("IMG :", target.value);
     metadata.animation_url = target.value;
     setTokenData();
   });
 
-  extraFileForm.addEventListener("change", (event) => {
+  extraFileForm.addEventListener("input", (event) => {
     const target = event.target as HTMLInputElement;
     console.log("IMG :", target.value);
     metadata.external_url = target.value;

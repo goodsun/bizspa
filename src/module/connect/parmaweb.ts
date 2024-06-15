@@ -223,6 +223,7 @@ const setUI = (parent, eoa) => {
 };
 
 const parmaweb = {
+  checkPrice,
   getUI,
 };
 

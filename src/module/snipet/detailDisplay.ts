@@ -40,7 +40,7 @@ export const showToken = async (
       commonSnipet.eoa(owner, {
         link: "/assets/" + owner,
         target: "",
-        icon: "fa-copy",
+        icon: "copy",
       })
     );
 
@@ -64,7 +64,7 @@ export const showToken = async (
       commonSnipet.eoa(owner, {
         link: "/assets/" + owner,
         target: "",
-        icon: "fa-copy",
+        icon: "copy",
       })
     );
 
@@ -92,12 +92,12 @@ export const showToken = async (
   if (tokenBoundAccount) {
     const tbaOwner = await getTbaConnect.checkOwner(tokenBoundAccount);
     if (tbaOwner) {
-      pOwnerElement.appendChild(commonSnipet.span(" ｜ "));
+      pOwnerElement.appendChild(commonSnipet.span(" ｜ TBA "));
       pOwnerElement.appendChild(
         commonSnipet.eoa(tokenBoundAccount, {
           link: "/assets/" + tokenBoundAccount,
           target: "",
-          icon: "fa-copy",
+          icon: "bag",
         })
       );
     }
@@ -308,7 +308,7 @@ export const tbaSendForm = (
     commonSnipet.eoa(parent, {
       link: "/assets/" + parent,
       target: "",
-      icon: "fa-copy",
+      icon: "copy",
     })
   );
 
@@ -318,7 +318,7 @@ export const tbaSendForm = (
     commonSnipet.eoa(owner, {
       link: "/assets/" + owner,
       target: "",
-      icon: "fa-copy",
+      icon: "copy",
     })
   );
 
@@ -351,7 +351,7 @@ export const tbaSendForm = (
   makeSubmit.classList.add("w3p");
   divElement.appendChild(makeSubmit);
 
-  sendToInput.addEventListener("change", async (event) => {
+  sendToInput.addEventListener("input", async (event) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendToInput.value != "") {
@@ -434,7 +434,7 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   makeSubmit.classList.add("w3p");
   divElement.appendChild(makeSubmit);
 
-  sendToInput.addEventListener("change", async (event) => {
+  sendToInput.addEventListener("input", async (event) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendToInput.value != "") {
@@ -583,7 +583,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   previewElement.classList.add("previewArea");
   divElement.appendChild(previewElement);
 
-  eoaForm.addEventListener("change", async (event) => {
+  eoaForm.addEventListener("input", async (event) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (eoaForm.value != "") {
@@ -610,7 +610,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     }
   });
 
-  tokenUriForm.addEventListener("change", async (e) => {
+  tokenUriForm.addEventListener("input", async (e) => {
     utils
       .fetchData(tokenUriForm.value)
       .then(async (tokenInfos) => {

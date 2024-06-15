@@ -158,6 +158,13 @@ export const displayToken = async (
   spanSpace2.textContent = " #" + id;
   pElement.appendChild(spanSpace2);
 
+  var openseaLink = document.createElement("a");
+  openseaLink.classList.add("openseaLink");
+  openseaLink.href =
+    "https://opensea.io/assets/" + CONST.DEFAULT_SYMBOL + "/" + ca + "/" + id;
+  openseaLink.innerHTML = '<i class="opensea">';
+  pElement.appendChild(openseaLink);
+
   console.log(utils.getLocalTime() + " 遅延実行開始 " + tokenUri);
   utils.fetchData(tokenUri).then(async (result) => {
     await detailDisplay.showToken(
@@ -624,14 +631,14 @@ const creatorDonateList = async (elm, eoa) => {
   }
 
   const donate = setElement.makeInput("input", "sendTo", "BaseInput", "寄付額");
-  donate.classList.add("wfull");
+  donate.classList.add("w5p");
   const cashback = setElement.makeInput(
     "input",
     "sendTo",
     "BaseInput",
     "キャッシュバック額"
   );
-  cashback.classList.add("wfull");
+  cashback.classList.add("w5p");
   elm.appendChild(document.createElement("br"));
   const sendTo = setElement.makeInput("input", "sendTo", "BaseInput", "寄付者");
   sendTo.classList.add("wfull");
@@ -640,6 +647,12 @@ const creatorDonateList = async (elm, eoa) => {
   const sendNftFormArea = document.createElement("div");
   sendNftFormArea.classList.add("sendDonateFormArea");
   sendNftFormArea.appendChild(selectForm);
+
+  const priceConfirmArea = document.createElement("div");
+  priceConfirmArea.classList.add("priceConfirmArea");
+  priceConfirmArea.style.display = "none";
+  sendNftFormArea.appendChild(priceConfirmArea);
+
   sendNftFormArea.appendChild(donate);
   sendNftFormArea.appendChild(cashback);
 
@@ -666,7 +679,55 @@ const creatorDonateList = async (elm, eoa) => {
 
   elm.appendChild(sendDonateNftArea);
 
-  sendTo.addEventListener("change", async (event) => {
+  const checkPrice = async () => {
+    const maticPrice = await utils.getMaticYen();
+    if (maticPrice != undefined) {
+      priceConfirmArea.style.display = "block";
+      priceConfirmArea.innerHTML = "";
+      console.log(maticPrice);
+      const donateMatic = Number(donate.value) * Number(maticPrice);
+      const cashbackMatic = Number(cashback.value) * Number(maticPrice);
+      let disp =
+        "donation: <span class='chkprice'>" +
+        donateMatic.toFixed(4) +
+        "</span> " +
+        CONST.DEFAULT_SYMBOL +
+        " / cashback <span class='chkprice'>" +
+        cashbackMatic.toFixed(4) +
+        "</span> " +
+        CONST.DEFAULT_SYMBOL +
+        "<br />" +
+        " [ rate : <span class='chkprice'>" +
+        maticPrice.toFixed(4) +
+        "</span> " +
+        CONST.DEFAULT_SYMBOL +
+        "/JPY ]";
+
+      if (donateMatic / 2 <= cashbackMatic) {
+        disp = "キャッシュバック額が大きすぎます";
+        cashback.value = "";
+      }
+
+      priceConfirmArea.innerHTML = disp;
+    } else {
+      priceConfirmArea.style.display = "block";
+      priceConfirmArea.innerHTML =
+        "現在価格が取得できませんでした。しばらくお待ち下さい。";
+    }
+  };
+
+  donate.addEventListener("change", async (event) => {
+    if (Number(donate.value) > 0) {
+      checkPrice();
+    }
+  });
+  cashback.addEventListener("change", async (event) => {
+    if (Number(cashback.value) > 0) {
+      checkPrice();
+    }
+  });
+
+  sendTo.addEventListener("input", async (event) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendTo.value != "") {
@@ -711,13 +772,22 @@ const creatorDonateList = async (elm, eoa) => {
   creatorDonateHistory(elm);
 
   const sendSubDonate = async () => {
+    const maticPrice = await utils.getMaticYen();
+    if (maticPrice == undefined) {
+      alert("現在価格の取得に失敗しました。しばらくお待ち下さい。");
+      return;
+    }
+
+    const donateMatic = Number(donate.value) * Number(maticPrice);
+    const cashbackMatic = Number(cashback.value) * Number(maticPrice);
+
     const balance = await utils.checkBalance();
-    if (utils.waiToEth(balance.balance) < Number(donate.value)) {
+    if (utils.waiToEth(balance.balance) < Number(donateMatic)) {
       alert(CONST.DEFAULT_SYMBOL + " が足りません");
       return;
     }
-    if (parseInt(cashback.value) > parseInt(donate.value) / 2) {
-      alert("キャッシュバックが高すぎます");
+    if (donateMatic / 2 <= cashbackMatic) {
+      alert("キャッシュバック額が大きすぎます");
       return;
     }
     const mes =
@@ -728,31 +798,35 @@ const creatorDonateList = async (elm, eoa) => {
       "\nSEND TO:" +
       sendTo.value +
       "\nVALUE:" +
-      donate.value +
+      donateMatic +
       "\nCASHBACK:" +
-      cashback.value;
+      cashbackMatic;
     if (confirm(mes)) {
       console.log(mes);
       const ca = await getManagerConnect.getCA("donate");
-      const donationList = await donateConnect.donate("donate", ca, [
+      const donateResult = await donateConnect.donate("donate", ca, [
         sendTo.value,
-        String(utils.ethToWai(donate.value) + utils.ethToWai(cashback.value)),
+        String(utils.ethToWai(donateMatic) + utils.ethToWai(cashbackMatic)),
         "SEND TOKEN:" +
           hasNftList[selectForm.value].ca +
           "/" +
           hasNftList[selectForm.value].tokenId,
-        String(utils.ethToWai(cashback.value)),
+        String(utils.ethToWai(cashbackMatic)),
       ]);
-      console.dir(donationList);
-      alert(metaDataInfo[selectForm.value].name + " を送信します。");
-      const result = await setToken.send(
-        hasNftList[selectForm.value].ca,
-        sendTo.value,
-        hasNftList[selectForm.value].tokenId
-      );
-      alert(metaDataInfo[selectForm.value].name + " を送信しました。");
-      console.dir(donationList);
-      location.reload();
+      console.dir(donateResult);
+      if (donateResult != undefined) {
+        alert(metaDataInfo[selectForm.value].name + " を送信します。");
+        const sendResult = await setToken.send(
+          hasNftList[selectForm.value].ca,
+          sendTo.value,
+          hasNftList[selectForm.value].tokenId
+        );
+        if (sendResult != undefined) {
+          alert(metaDataInfo[selectForm.value].name + " を送信しました。");
+          console.dir(sendResult);
+          location.reload();
+        }
+      }
     }
   };
 
@@ -887,7 +961,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     }
   });
 
-  tokenUri.addEventListener("change", async (e) => {
+  tokenUri.addEventListener("input", async (e) => {
     utils
       .fetchData(tokenUri.value)
       .then(async (tokenInfos) => {

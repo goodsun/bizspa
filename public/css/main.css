@@ -812,3 +812,20 @@ i.tbamark {
   align-items: center;
   justify-content: center;
 }
+
+.openseaLink {
+  margin-left: 10px;
+}
+
+.priceConfirmArea {
+  font-size: 1.2em;
+  margin-top: 30px;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+}
+
+.chkprice {
+  color: #a7ff9c;
+  font-size: 1.4em;
+}
