@@ -114,11 +114,11 @@ const eoa = (eoa, option = { link: "", target: "_self", icon: "fa-copy" }) => {
 };
 
 const dispTbaOwner = (tbaInfo) => {
-  return getTbaOwnerSnipet(tbaInfo, "div", "walletDiscordElement");
+  return getTbaOwnerSnipet(tbaInfo, "div", "walletOwnerElement");
 };
 
 const dispDiscordUser = (discordUser) => {
-  return getDiscordUserSnipet(discordUser, "div", "walletDiscordElement");
+  return getDiscordUserSnipet(discordUser, "div", "walletOwnerElement");
 };
 
 const getTbaOwnerSnipet = (tbaInfo, elm, className) => {
@@ -126,7 +126,7 @@ const getTbaOwnerSnipet = (tbaInfo, elm, className) => {
   discordElem.classList.add(className);
   var newImage = document.createElement("img");
   newImage.src = tbaInfo.tokenInfo.image;
-  newImage.classList.add("walletDiscordIcon");
+  newImage.classList.add("walletOwnerIcon");
   discordElem.appendChild(newImage);
   const name = document.createElement("span");
   name.innerHTML =
@@ -148,7 +148,7 @@ const getDiscordUserSnipet = (discordUser, elm, className) => {
   discordElem.classList.add(className);
   var newImage = document.createElement("img");
   newImage.src = discordUser.Icon;
-  newImage.classList.add("walletDiscordIcon");
+  newImage.classList.add("walletOwnerIcon");
   discordElem.appendChild(newImage);
 
   const name = document.createElement("span");

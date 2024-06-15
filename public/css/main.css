@@ -334,7 +334,7 @@ a {
   border-radius: 6px;
   box-sizing: border-box;
   padding: 12px 16px;
-  margin: 30px 5px 0 0;
+  margin: 20px 5px 10px 0;
   transition: all 0.2s ease-in-out;
 }
 
@@ -486,16 +486,16 @@ a {
   color: #4d4a4a;
   font-size: 0.6em;
 }
-.walletDiscordArea {
+.walletOwnerArea {
   display: inline-block;
 }
-.walletDiscordElement {
+.walletOwnerElement {
   margin-right: 15px;
   img {
     border-radius: 15px;
   }
 }
-.walletDiscordIcon {
+.walletOwnerIcon {
   margin-right: 5px;
   width: 30px;
   vertical-align: middle;
@@ -718,7 +718,7 @@ p.carouselProfileName {
 }
 .sendDonateNftPreviewArea {
   width: 40%;
-  padding: 25px 25px 0 25px;
+  padding: 15px 25px 0 25px;
 }
 .sendDonateNftPreviewBg {
   width: 100%;
@@ -736,6 +736,7 @@ p.carouselProfileName {
 }
 
 .sendToUser {
+  display: flex;
   font-size: 2em;
   margin-top: 30px;
   padding-left: 10px;
@@ -828,4 +829,11 @@ i.tbamark {
 .chkprice {
   color: #a7ff9c;
   font-size: 1.4em;
+}
+.chkpricemini {
+  color: #b7b25c;
+}
+.labelspan {
+  margin-top: 65px;
+  margin-left: 10px;
 }

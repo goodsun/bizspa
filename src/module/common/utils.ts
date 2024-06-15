@@ -255,7 +255,7 @@ export const checkMetamask = async () => {
   } else if (balanceData.eoa != undefined) {
     connectWallet.innerHTML = "";
     var discordArea = document.createElement("div");
-    discordArea.classList.add("walletDiscordArea");
+    discordArea.classList.add("walletOwnerArea");
     connectWallet.appendChild(discordArea);
 
     getUserByEoa(balanceData.eoa).then((eoaUser) => {

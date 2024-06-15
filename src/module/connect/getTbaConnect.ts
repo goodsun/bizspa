@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
+import utils from "../../module/common/utils";
 import getManagerConnect from "../../module/connect/getManager";
 const rpc_url = CONST.RPC_URL;
 const provider = new ethers.JsonRpcProvider(rpc_url);
@@ -139,6 +140,24 @@ export const createAccount = async (ca: string, id: string) => {
   return result;
 };
 
+const sendToEoaCheck = async (sendTo, mine, loop) => {
+  if (loop > 10) {
+    console.log(sendTo + " is too deep layer" + loop);
+    return { result: false, reason: "TOO_DEEP_" + loop };
+  }
+  if (!(await utils.isContract(sendTo))) {
+    console.log(sendTo + " is eoa" + sendTo);
+    return { result: true, eoa: sendTo };
+  }
+  const chkToken = await checkToken(sendTo);
+  if (mine.ca == chkToken[1] && mine.tokenId == chkToken[2]) {
+    console.log(sendTo + " is my own");
+    return { result: false, reason: "SEND_TO_LOOP" };
+  }
+  const chkOwn = await checkOwner(sendTo);
+  return await sendToEoaCheck(chkOwn, mine, loop + 1);
+};
+
 const getTbaConnect = {
   getTbaInfo,
   getAddress,
@@ -146,6 +165,7 @@ const getTbaConnect = {
   checkOwner,
   checkToken,
   createAccount,
+  sendToEoaCheck,
 };
 
 export default getTbaConnect;

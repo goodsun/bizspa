@@ -354,13 +354,35 @@ export const tbaSendForm = (
   sendToInput.addEventListener("input", async (event) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
+
     if (sendToInput.value != "") {
       discordUserCheckArea.classList.add("sendToUser");
+      const checkSend = await getTbaConnect.sendToEoaCheck(
+        sendToInput.value,
+        { ca: ca, tokenId: id },
+        0
+      );
+      if (!checkSend.result) {
+        alert("このアドレスには送信できません : " + checkSend.reason);
+        return false;
+      }
+
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
           discordUserCheckArea.appendChild(
             commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
           );
+          utils.getUserByEoa(checkSend.eoa).then((eoaUser) => {
+            if (eoaUser.type == "discordConnect") {
+              discordUserCheckArea.appendChild(
+                commonSnipet.dispDiscordUser(eoaUser.discordUser)
+              );
+            } else if (eoaUser.type == "eoa") {
+              discordUserCheckArea.appendChild(
+                commonSnipet.scan(checkSend.eoa, "Final owner", "unknownCa")
+              );
+            }
+          });
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.appendChild(
             commonSnipet.dispDiscordUser(eoaUser.discordUser)
@@ -379,6 +401,15 @@ export const tbaSendForm = (
   });
 
   makeSubmit.addEventListener("click", async () => {
+    const checkSend = await getTbaConnect.sendToEoaCheck(
+      sendToInput.value,
+      { ca: ca, tokenId: id },
+      0
+    );
+    if (!checkSend.result) {
+      alert("このアドレスには送信できません : " + checkSend.reason);
+      return false;
+    }
     if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
       const args = [owner, sendToInput.value, id];
       const value = 0;
@@ -437,6 +468,20 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   sendToInput.addEventListener("input", async (event) => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
+
+    const params = router.params;
+
+    const checkSend = await getTbaConnect.sendToEoaCheck(
+      sendToInput.value,
+      { ca: params[2], tokenId: params[3] },
+      0
+    );
+
+    if (!checkSend.result) {
+      alert("このアドレスには送信できません : " + checkSend.reason);
+      return false;
+    }
+
     if (sendToInput.value != "") {
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
         discordUserCheckArea.classList.add("sendToUser");
@@ -462,9 +507,20 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
   });
 
   makeSubmit.addEventListener("click", async () => {
+    const params = router.params;
+
+    const checkSend = await getTbaConnect.sendToEoaCheck(
+      sendToInput.value,
+      { ca: params[2], tokenId: params[3] },
+      0
+    );
+
+    if (!checkSend.result) {
+      alert("このアドレスには送信できません : " + checkSend.reason);
+      return false;
+    }
+
     if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
-      const params = router.params;
-      console.dir(params);
       const result = await setToken.send(
         params[2],
         sendToInput.value,
@@ -527,7 +583,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
 
   const makeElement = setElement.makeElement(
     "p",
-    "TokenURIに有効なメタデータの格納先URLを入力してください",
+    "指定したtokenURIを利用しNFTをMINTします。",
     null,
     "createdPelemBySetElement"
   );
@@ -551,6 +607,11 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   );
   vaultSelect.classList.add("w3p");
   divElement.appendChild(vaultSelect);
+  const label = document.createElement("span");
+  label.innerHTML = " ※ メタデータが格納されているURLを指定してください。";
+  label.classList.add("labelspan");
+  divElement.appendChild(label);
+
   divElement.appendChild(commonSnipet.br());
 
   vaultSelect.addEventListener("click", async () => {

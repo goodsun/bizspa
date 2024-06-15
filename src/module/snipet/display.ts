@@ -684,24 +684,29 @@ const creatorDonateList = async (elm, eoa) => {
     if (maticPrice != undefined) {
       priceConfirmArea.style.display = "block";
       priceConfirmArea.innerHTML = "";
-      console.log(maticPrice);
       const donateMatic = Number(donate.value) * Number(maticPrice);
       const cashbackMatic = Number(cashback.value) * Number(maticPrice);
       let disp =
-        "donation: <span class='chkprice'>" +
+        "<i class='fa-solid fa-money-check-dollar'></i> <span class='chkprice'>" +
         donateMatic.toFixed(4) +
         "</span> " +
         CONST.DEFAULT_SYMBOL +
-        " / cashback <span class='chkprice'>" +
+        " <i class='fa-solid fa-circle-left'></i> <span class='chkprice'>" +
         cashbackMatic.toFixed(4) +
         "</span> " +
         CONST.DEFAULT_SYMBOL +
         "<br />" +
-        " [ rate : <span class='chkprice'>" +
+        "<i class='fa-solid fa-money-check-dollar'></i> <span class='chkpricemini'>" +
+        donate.value +
+        "</span> JPY " +
+        " <i class='fa-solid fa-circle-left'></i> <span class='chkpricemini'>" +
+        cashback.value +
+        "</span> JPY " +
+        " | <i class='fa-solid fa-calculator'></i> : <span class='chkpricemini'>" +
         maticPrice.toFixed(4) +
         "</span> " +
         CONST.DEFAULT_SYMBOL +
-        "/JPY ]";
+        "/JPY";
 
       if (donateMatic / 2 <= cashbackMatic) {
         disp = "キャッシュバック額が大きすぎます";
@@ -722,7 +727,7 @@ const creatorDonateList = async (elm, eoa) => {
     }
   });
   cashback.addEventListener("change", async (event) => {
-    if (Number(cashback.value) > 0) {
+    if (Number(cashback.value) >= 0) {
       checkPrice();
     }
   });
@@ -732,12 +737,37 @@ const creatorDonateList = async (elm, eoa) => {
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendTo.value != "") {
       discordUserCheckArea.classList.add("sendToUser");
-      utils.getUserByEoa(sendTo.value).then((eoaUser) => {
-        console.dir(eoaUser);
+      utils.getUserByEoa(sendTo.value).then(async (eoaUser) => {
         if (eoaUser.type == "tba") {
           discordUserCheckArea.appendChild(
             commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
           );
+
+          const checkSend = await getTbaConnect.sendToEoaCheck(
+            eoaUser.tbaInfo.eoa,
+            { ca: eoaUser.tbaInfo.ca, tokenId: eoaUser.tbaInfo.ca },
+            0
+          );
+
+          if (!checkSend.result) {
+            alert("このアドレスには送信できません : " + checkSend.reason);
+            sendTo.value = "";
+            discordUserCheckArea.innerHTML = "";
+            discordUserCheckArea.classList.remove("sendToUser");
+            return false;
+          }
+
+          utils.getUserByEoa(checkSend.eoa).then((eoaUser) => {
+            if (eoaUser.type == "discordConnect") {
+              discordUserCheckArea.appendChild(
+                commonSnipet.dispDiscordUser(eoaUser.discordUser)
+              );
+            } else if (eoaUser.type == "eoa") {
+              discordUserCheckArea.appendChild(
+                commonSnipet.scan(checkSend.eoa, "Final owner", "unknownCa")
+              );
+            }
+          });
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.appendChild(
             commonSnipet.dispDiscordUser(eoaUser.discordUser)
@@ -920,8 +950,14 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   tokenUri.classList.add("wfull");
   const mintableFormArea = document.createElement("div");
   mintableFormArea.classList.add("mintableFormArea");
+
   mintableFormArea.appendChild(selectForm);
   mintableFormArea.appendChild(tokenUri);
+  const label = document.createElement("span");
+  label.innerHTML = " ※ メタデータが格納されているURLを指定してください。";
+  label.classList.add("labelspan");
+  mintableFormArea.appendChild(label);
+
   const makeSubmit = setElement.makeInput(
     "submit",
     "submitID",
