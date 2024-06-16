@@ -15,14 +15,11 @@ export const getUI = async () => {
   mainContents.appendChild(makeDiscordDiv);
   const makeDiscordDisp = document.createElement("div");
   const makeDiscordCont = document.createElement("div");
-  const makeDiscordPrev = document.createElement("div");
   makeDiscordDiv.id = "meta-section";
   makeDiscordDisp.id = "meta-disp";
   makeDiscordCont.id = "meta-control";
-  makeDiscordPrev.id = "meta-preview";
   makeDiscordDiv.appendChild(makeDiscordDisp);
   makeDiscordDiv.appendChild(makeDiscordCont);
-  makeDiscordDiv.appendChild(makeDiscordPrev);
 
   //-- MAIN -------------------------------------
   const Title = document.createElement("H2");
@@ -51,8 +48,9 @@ export const getUI = async () => {
 
   setEoaRegist.addEventListener("click", async () => {
     const result = await sendRegist(params[2], setSecret.value);
-    alert("SetEoaRegist ID:" + result.message);
+    alert("check user result :" + result.message);
     console.dir(result);
+    location.reload();
   });
 };
 

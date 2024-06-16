@@ -11,21 +11,37 @@ import discordConnect from "./module/connect/discordConnect";
 import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
-import commonSnipet from "./module/snipet/common";
 import utils from "./module/common/utils";
 import displaySnipet from "./module/snipet/display";
+import commonSnipet from "./module/snipet/common";
+import accountSnipet from "./module/snipet/account";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
 const mainContents = document.getElementById("mainContents");
 
 async function discordRegist() {
+  const checkBalance = await utils.checkBalance();
+  if (checkBalance.eoa == undefined) {
+    displaySnipet.isNotConnect();
+    return;
+  }
   await discordConnect.getUI();
 }
 async function metabuilder() {
+  const checkBalance = await utils.checkBalance();
+  if (checkBalance.eoa == undefined) {
+    displaySnipet.isNotConnect();
+    return;
+  }
   await setMeta.getUI();
 }
 async function parmaweb() {
+  const checkBalance = await utils.checkBalance();
+  if (checkBalance.eoa == undefined) {
+    displaySnipet.isNotConnect();
+    return;
+  }
   await parmawebcon.getUI();
 }
 async function setArticle() {
@@ -159,100 +175,12 @@ const setOwner = async (eoa) => {
   const divOwnerElement = document.createElement("div");
   divOwnerElement.classList.add("ownerArea");
   mainContents.appendChild(divOwnerElement);
-
   const ownerTitle = document.createElement("h2");
   ownerTitle.textContent = "Owner Info";
   divOwnerElement.appendChild(ownerTitle);
 
-  const discordElm = document.createElement("p");
-  divOwnerElement.appendChild(discordElm);
+  accountSnipet.showAccount(eoa, divOwnerElement);
 
-  const tbaOwner = await getTbaConnect.checkOwner(eoa);
-  const tbaToken = await getTbaConnect.checkToken(eoa);
-
-  if (tbaOwner) {
-    const tokenUri = await getTokenConnect.getToken(
-      "tokenURI",
-      tbaToken[1],
-      tbaToken[2]
-    );
-    console.log(tokenUri);
-    const tokenInfo = await utils.fetchData(tokenUri);
-    console.dir(tokenInfo);
-
-    const image = document.createElement("img");
-    image.classList.add("ownerProfPictIcon");
-    image.src = "https://dao.bon-soleil.com/img/dummy.jpg";
-    image.src = tokenInfo.image;
-    discordElm.appendChild(image);
-    discordElm.appendChild(commonSnipet.br());
-    discordElm.appendChild(commonSnipet.span("TBA : "));
-    discordElm.appendChild(commonSnipet.eoa(eoa));
-    discordElm.appendChild(commonSnipet.br());
-
-    const tbaTokenElement = document.createElement("span");
-    tbaTokenElement.innerHTML =
-      "NFT : <a href='/tokens/" +
-      tbaToken[1] +
-      "/" +
-      tbaToken[2] +
-      "'>" +
-      tokenInfo.name +
-      "</a>";
-    discordElm.appendChild(tbaTokenElement);
-    discordElm.appendChild(commonSnipet.br());
-
-    const tbaOwnerElement = document.createElement("span");
-    tbaOwnerElement.appendChild(commonSnipet.span("NFT owner : "));
-    tbaOwnerElement.appendChild(
-      commonSnipet.eoa(tbaOwner, {
-        link: "/account/" + tbaOwner,
-        target: "",
-        icon: "copy",
-      })
-    );
-    await utils.getUserByEoa(tbaOwner).then((eoaUser) => {
-      if (eoaUser.type == "discordConnect") {
-        tbaOwnerElement.appendChild(
-          commonSnipet.getDiscordUserSnipet(
-            eoaUser.discordUser,
-            "span",
-            "discordNameDisp"
-          )
-        );
-      }
-    });
-    discordElm.appendChild(tbaOwnerElement);
-    discordElm.appendChild(commonSnipet.br());
-  } else {
-    utils.getUserByEoa(eoa).then(async (eoaUser) => {
-      if (eoaUser.type == "discordConnect") {
-        const image = document.createElement("img");
-        image.classList.add("ownerProfPictIcon");
-        image.src = eoaUser.discordUser.Icon;
-        discordElm.appendChild(image);
-        discordElm.appendChild(commonSnipet.br());
-        discordElm.appendChild(commonSnipet.span("EOA : "));
-        discordElm.appendChild(commonSnipet.eoa(eoa));
-        discordElm.appendChild(commonSnipet.br());
-        discordElm.appendChild(commonSnipet.span("Discord :"));
-        discordElm.appendChild(
-          commonSnipet.getDiscordUserSnipet(
-            eoaUser.discordUser,
-            "span",
-            "discordNameDisp"
-          )
-        );
-        discordElm.appendChild(commonSnipet.br());
-      } else {
-        discordElm.appendChild(commonSnipet.span("EOA : "));
-        discordElm.appendChild(commonSnipet.eoa(eoa));
-        discordElm.appendChild(commonSnipet.br());
-      }
-    });
-  }
-
-  //mainContents.appendChild();
   const mintableFormElm = document.createElement("div");
   mintableFormElm.classList.add("mintableArea");
   mintableFormElm.innerHTML =

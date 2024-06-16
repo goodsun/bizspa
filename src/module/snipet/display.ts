@@ -224,8 +224,68 @@ export const displayToken = async (
       ("</b>");
 
       askDiscord.appendChild(commonSnipet.linkCopy(ca + "/" + id));
-
       shopInfoArea.appendChild(askDiscord);
+    } else {
+      utils.getUserByEoa(balance.eoa).then((eoaUser) => {
+        if (eoaUser.type == "discordConnect") {
+          const userName = eoaUser.discordUser.Name;
+          const image = document.createElement("img");
+          image.classList.add("discordIconMini");
+          image.src = eoaUser.discordUser.Icon;
+
+          var askDiscord = document.createElement("p");
+          const password = setElement.makeInput(
+            "input",
+            "transfarRequest",
+            "miniInput",
+            "password"
+          );
+          const sendRequest = setElement.makeInput(
+            "submit",
+            "submitID",
+            "miniSubmit",
+            "REQUEST",
+            "REQUEST"
+          );
+          askDiscord.classList.add("askDiscordBot");
+          askDiscord.appendChild(image);
+          askDiscord.appendChild(
+            commonSnipet.span(userName + "は購入者ですか？ ")
+          );
+          askDiscord.appendChild(password);
+          askDiscord.appendChild(sendRequest);
+          shopInfoArea.appendChild(askDiscord);
+          sendRequest.addEventListener("click", async () => {
+            const secret = password.value;
+            const eoa = balance.eoa;
+            password.value = "";
+            const Url = CONST.BOT_API_URL + "transrequest";
+            const data = {
+              eoa: eoa,
+              secret: secret,
+              ca: ca,
+              id: id,
+            };
+            try {
+              const response = await fetch(Url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              });
+              const result = await response.json();
+              alert(result.message);
+              console.dir(result);
+            } catch (error) {
+              console.error(
+                "There was a problem with the fetch operation:",
+                error
+              );
+            }
+          });
+        }
+      });
     }
     pElement.appendChild(shopInfoArea);
   } catch (error) {
@@ -1026,6 +1086,11 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   mintableFormArea.appendChild(label);
   mintableFormArea.appendChild(commonSnipet.br());
 
+  const previewElement = document.createElement("div");
+  previewElement.style.display = "none";
+  previewElement.classList.add("previewArea");
+  mintableFormArea.appendChild(previewElement);
+
   const makeSubmit = setElement.makeInput(
     "submit",
     "submitID",
@@ -1049,10 +1114,6 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   vaultSelect.addEventListener("click", async () => {
     utils.toggleModal("parmawebList", ["jsonOnly"]);
   });
-
-  const previewElement = document.createElement("div");
-  previewElement.classList.add("previewArea");
-  elm.appendChild(previewElement);
 
   selectForm.addEventListener("change", async () => {
     const cainfo = mintableContract[selectForm.value];
@@ -1082,6 +1143,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     utils
       .fetchData(tokenUri.value)
       .then(async (tokenInfos) => {
+        previewElement.style.display = "block";
         previewElement.innerHTML = "";
         detailDisplay.showToken(
           "pc_normal",
@@ -1093,6 +1155,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
         );
       })
       .catch(() => {
+        previewElement.style.display = "none";
         alert(tokenUri.value + " は無効なtokenURIです。");
       });
   });
@@ -1114,7 +1177,17 @@ const createMintLinkElm = (ca, elm) => {
   });
 };
 
+export const isNotConnect = async () => {
+  const header = document.createElement("h2");
+  header.textContent = "ウォレットが接続されていません";
+  mainContents.appendChild(header);
+  const maincontent = document.createElement("p");
+  maincontent.innerHTML = "こちらのサイトはメタマスクを利用します。 ";
+  mainContents.appendChild(maincontent);
+};
+
 const displaySnipet = {
+  isNotConnect,
   creatorDonateList,
   creatorDonateHistory,
   displayMintUI,

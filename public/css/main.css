@@ -28,9 +28,10 @@ body {
   padding: 0 30px;
 }
 #langSelecter {
+  font-size: 1.5em;
   position: fixed;
   right: 30px;
-  bottom: 20px;
+  top: 30px;
 }
 .noview {
   color: #000;
@@ -754,6 +755,12 @@ img.ownerProfPictIcon {
   object-fit: cover;
   border-radius: 15px;
 }
+img.discordIconMini {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 15px;
+}
 
 .mintableArea {
   margin: 10px 30px;
@@ -850,6 +857,8 @@ i.tbamark {
     padding: 0px 0px 0px 0px;
   }
   .askDiscordBot {
+    display: flex;
+    align-items: center;
     margin: 5px 0 0 0;
     padding: 5px 10px;
     font-size: 0.6em;
@@ -887,4 +896,15 @@ i.tbamark {
       }
     }
   }
+}
+
+.accountElm {
+  display: flex;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #222;
+}
+.accountInfo {
+  font-size: 1.4em;
+  margin-left: 20px;
 }
