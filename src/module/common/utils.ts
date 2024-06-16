@@ -336,8 +336,8 @@ export const checkMetamask = async () => {
     );
     connectWallet.appendChild(commonSnipet.span(" " + balanceData.symbol));
 
-    (document.getElementById("assetLink") as HTMLLinkElement).href =
-      "/assets/" + balanceData.eoa;
+    (document.getElementById("accountLink") as HTMLLinkElement).href =
+      "/account/" + balanceData.eoa;
     if (balanceData.dpoint > 0) {
       connectWallet.appendChild(
         commonSnipet.span(" / " + balanceData.dpoint + " donationPoint")

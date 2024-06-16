@@ -206,7 +206,7 @@ const setOwner = async (eoa) => {
     tbaOwnerElement.appendChild(commonSnipet.span("NFT owner : "));
     tbaOwnerElement.appendChild(
       commonSnipet.eoa(tbaOwner, {
-        link: "/assets/" + tbaOwner,
+        link: "/account/" + tbaOwner,
         target: "",
         icon: "copy",
       })
@@ -403,9 +403,9 @@ const checkRoute = () => {
     setCreator();
   } else if (param1 === "admins") {
     setAdmins();
-  } else if (param1 === "assets" && param2) {
+  } else if (param1 === "account" && param2) {
     setOwner(param2);
-  } else if (param1 === "assets") {
+  } else if (param1 === "account") {
     setAssets((filter) => {
       return filter[3] == true;
     });

@@ -38,7 +38,7 @@ export const showToken = async (
     pOwnerElement.appendChild(commonSnipet.span("ca: "));
     pOwnerElement.appendChild(
       commonSnipet.eoa(owner, {
-        link: "/assets/" + owner,
+        link: "/account/" + owner,
         target: "",
         icon: "copy",
       })
@@ -46,7 +46,7 @@ export const showToken = async (
 
     const parentTag = document.createElement("span");
     parentTag.innerHTML +=
-      " <a class='parentTag' href='/assets/" + tbaOwner + "'> parent </a>";
+      " <a class='parentTag' href='/account/" + tbaOwner + "'> parent </a>";
     pOwnerElement.appendChild(parentTag);
 
     const tbaTag = document.createElement("span");
@@ -62,7 +62,7 @@ export const showToken = async (
     pOwnerElement.appendChild(commonSnipet.span("owner: "));
     pOwnerElement.appendChild(
       commonSnipet.eoa(owner, {
-        link: "/assets/" + owner,
+        link: "/account/" + owner,
         target: "",
         icon: "copy",
       })
@@ -95,7 +95,7 @@ export const showToken = async (
       pOwnerElement.appendChild(commonSnipet.span(" ｜ TBA "));
       pOwnerElement.appendChild(
         commonSnipet.eoa(tokenBoundAccount, {
-          link: "/assets/" + tokenBoundAccount,
+          link: "/account/" + tokenBoundAccount,
           target: "",
           icon: "bag",
         })
@@ -306,7 +306,7 @@ export const tbaSendForm = (
   h2Element.appendChild(commonSnipet.span("parent: "));
   h2Element.appendChild(
     commonSnipet.eoa(parent, {
-      link: "/assets/" + parent,
+      link: "/account/" + parent,
       target: "",
       icon: "copy",
     })
@@ -316,7 +316,7 @@ export const tbaSendForm = (
   h2Element.appendChild(commonSnipet.span("owner: "));
   h2Element.appendChild(
     commonSnipet.eoa(owner, {
-      link: "/assets/" + owner,
+      link: "/account/" + owner,
       target: "",
       icon: "copy",
     })
