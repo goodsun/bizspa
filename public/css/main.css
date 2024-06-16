@@ -434,6 +434,9 @@ a {
   color: #4d4a4a;
   font-size: 0.6em;
 }
+.wcDiscordArea {
+  display: inline-block;
+}
 .walletDiscordIcon {
   margin-right: 10px;
   width: 30px;

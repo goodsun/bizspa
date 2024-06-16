@@ -1,6 +1,6 @@
 export const CONST = {
   HEADER_TITLE: "TBA PLAY GROUND",
-  RPC_URL: "https://dao.bon-soleil.com:8080",
+  RPC_URL: "https://v1.bon-soleil.com:8080",
   BC_NETWORK_ID: "21201",
   MANAGER_CA: "0x7B3cBc2C68b68ABbDc0f0adC62E0FA7f27c26243",
   TBA_SALT: "1",

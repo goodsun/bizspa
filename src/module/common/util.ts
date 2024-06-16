@@ -183,21 +183,25 @@ export const checkMetamask = async () => {
   const balanceData = await checkBalance();
   if (balanceData.eoa != undefined) {
     connectWallet.innerHTML = "";
+    var discordArea = document.createElement("div");
+    discordArea.classList.add("wcDiscordArea");
+    connectWallet.appendChild(discordArea);
 
-    const discordUser = await discordConnect.getUserByEoa(balanceData.eoa);
-    if (discordUser.Eoa) {
-      var newImage = document.createElement("img");
-      newImage.src = discordUser.Icon;
-      newImage.classList.add("walletDiscordIcon");
-      connectWallet.appendChild(newImage);
-      connectWallet.appendChild(commonSnipet.span(discordUser.Name));
-      connectWallet.appendChild(
-        commonSnipet.eoa(discordUser.DiscordId, {
-          link: "#",
-          target: "",
-        })
-      );
-    }
+    discordConnect.getUserByEoa(balanceData.eoa).then((discordUser) => {
+      if (discordUser.Eoa) {
+        var newImage = document.createElement("img");
+        newImage.src = discordUser.Icon;
+        newImage.classList.add("walletDiscordIcon");
+        discordArea.appendChild(newImage);
+        discordArea.appendChild(commonSnipet.span(discordUser.Name));
+        discordArea.appendChild(
+          commonSnipet.eoa(discordUser.DiscordId, {
+            link: "#",
+            target: "",
+          })
+        );
+      }
+    });
 
     connectWallet.appendChild(commonSnipet.span("EOA: "));
     connectWallet.appendChild(
@@ -253,7 +257,9 @@ export async function checkBalance() {
       const ca = await getManagerConnect.getCA("donate");
       dpoint = await donate("balance", ca, []);
       window.ethereum.removeListener("accountsChanged", callCheckMetamask);
+      window.ethereum.removeListener("chainChanged", callCheckMetamask);
       window.ethereum.on("accountsChanged", callCheckMetamask);
+      window.ethereum.on("chainChanged", callCheckMetamask);
     } catch (error) {
       console.info("wallet not connected");
       console.error("Error details:", error);
