@@ -9,20 +9,16 @@ const linkCopy = (link, message?) => {
   const linkCopyElm = document.createElement("div");
   linkCopyElm.classList.add("linkCopyElm");
 
-  // コピー用のボタン要素を作成
   const copybtn = document.createElement("span");
   copybtn.id = link;
   copybtn.classList.add("linkCopy");
 
-  // アイコン要素を作成してボタンに追加
   const copyicon = document.createElement("i");
   copyicon.classList.add("far", "fa-copy", "fa-fw");
   copybtn.appendChild(copyicon);
 
-  // ボタン要素をスパン要素に追加
   linkCopyElm.appendChild(copybtn);
 
-  // クリックイベントを属性として追加
   copybtn.onclick = () => {
     const textToCopy = link;
     navigator.clipboard
@@ -31,7 +27,7 @@ const linkCopy = (link, message?) => {
         if (message) {
           alert(message);
         } else {
-          alert(`URLがクリップボードにコピーされました`);
+          alert(`クリップボードにコピーされました`);
         }
       })
       .catch((err) => {
@@ -44,9 +40,14 @@ const linkCopy = (link, message?) => {
 
 const scan = (eoa, label, labelClass) => {
   const eoaElm = document.createElement("span");
-  const front = eoa.substring(0, 6);
-  const end = eoa.substring(eoa.length - 4);
-  const replace = front + "..." + end;
+
+  let replace = eoa;
+  if (eoa.length > 13) {
+    const front = eoa.substring(0, 6);
+    const end = eoa.substring(eoa.length - 4);
+    replace = front + "..." + end;
+  }
+
   eoaElm.innerHTML =
     "<span class='" + labelClass + "'>" + label + "</span> " + replace + " ";
   const copybtn = document.createElement("a");
@@ -185,6 +186,23 @@ const getDiscordUserSnipet = (discordUser, elm, className) => {
   return discordElem;
 };
 
+export const labeledElm = (type: string, text: string, icon = []) => {
+  const child = document.createElement(type);
+  if (icon.length > 0) {
+    const iconElm = document.createElement("i");
+    iconElm.classList.add("labelIcon");
+    for (let key in icon) {
+      iconElm.classList.add(icon[key]);
+    }
+    child.appendChild(iconElm);
+  }
+  const span = document.createElement("span");
+  span.classList.add("labeledText");
+  span.innerHTML = text;
+  child.appendChild(span);
+  return child;
+};
+
 export const span = (text: string) => {
   const child = document.createElement("span");
   child.innerText = text;
@@ -240,6 +258,7 @@ const commonSnipet = {
   dispDiscordUser,
   getTbaOwnerSnipet,
   getDiscordUserSnipet,
+  labeledElm,
   span,
   br,
   copyAction,

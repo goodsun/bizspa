@@ -163,7 +163,74 @@ export const displayToken = async (
   openseaLink.href =
     "https://opensea.io/assets/" + CONST.DEFAULT_SYMBOL + "/" + ca + "/" + id;
   openseaLink.innerHTML = '<i class="opensea">';
+  openseaLink.target = "_blank";
   pElement.appendChild(openseaLink);
+
+  const Url = CONST.BOT_API_URL + "shop/eoa/" + owner;
+  try {
+    const response = await fetch(Url);
+    const shopJson = await response.json();
+    const shopinfo = JSON.parse(shopJson.Json)[router.lang];
+    var shopInfoArea = document.createElement("div");
+    shopInfoArea.classList.add("shopInfoArea");
+    var shopTitle = document.createElement("h2");
+    shopTitle.classList.add("shopTitle");
+    shopTitle.innerHTML = "shop info : " + shopinfo.name;
+    shopInfoArea.appendChild(shopTitle);
+
+    var shopMainArea = document.createElement("div");
+    shopMainArea.classList.add("shopMainArea");
+
+    var squareImg = document.createElement("div");
+    squareImg.classList.add("shopThumbSquare");
+    var shopImg = document.createElement("img");
+    shopImg.src = shopJson.Imgurl;
+    shopImg.classList.add("shopThumb");
+    squareImg.appendChild(shopImg);
+    var infoArea = document.createElement("div");
+    infoArea.classList.add("shopDetail");
+
+    infoArea.appendChild(
+      commonSnipet.labeledElm("p", " : " + shopinfo.workplace, [
+        "fa-solid",
+        "fa-shop",
+      ])
+    );
+
+    infoArea.appendChild(
+      commonSnipet.labeledElm("p", " : " + shopinfo.location, [
+        "fa-solid",
+        "fa-location-dot",
+      ])
+    );
+
+    infoArea.appendChild(
+      commonSnipet.labeledElm("p", " : " + shopinfo.station, [
+        "fa-solid",
+        "fa-train-subway",
+      ])
+    );
+
+    shopMainArea.appendChild(squareImg);
+    shopMainArea.appendChild(infoArea);
+    shopInfoArea.appendChild(shopMainArea);
+
+    if (owner == balance.eoa) {
+      var askDiscord = document.createElement("p");
+      askDiscord.classList.add("askDiscordBot");
+      askDiscord.innerHTML =
+        "ask to Discord Bot : <b>/getkey</b> nftinfo : <b>" +
+        utils.shortname(ca + "/" + id, 6, 6);
+      ("</b>");
+
+      askDiscord.appendChild(commonSnipet.linkCopy(ca + "/" + id));
+
+      shopInfoArea.appendChild(askDiscord);
+    }
+    pElement.appendChild(shopInfoArea);
+  } catch (error) {
+    console.error("There was a problem with the fetch operation:", error);
+  }
 
   console.log(utils.getLocalTime() + " 遅延実行開始 " + tokenUri);
   utils.fetchData(tokenUri).then(async (result) => {
@@ -957,6 +1024,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   label.innerHTML = " ※ メタデータが格納されているURLを指定してください。";
   label.classList.add("labelspan");
   mintableFormArea.appendChild(label);
+  mintableFormArea.appendChild(commonSnipet.br());
 
   const makeSubmit = setElement.makeInput(
     "submit",
@@ -965,9 +1033,22 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     "MINT",
     "MINT"
   );
-  makeSubmit.classList.add("wfull");
+  makeSubmit.classList.add("w7p");
   mintableFormArea.appendChild(makeSubmit);
   elm.appendChild(mintableFormArea);
+
+  const vaultSelect = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "OPEN VAULT",
+    "OPEN VAULT"
+  );
+  vaultSelect.classList.add("w3p");
+  mintableFormArea.appendChild(vaultSelect);
+  vaultSelect.addEventListener("click", async () => {
+    utils.toggleModal("parmawebList", ["jsonOnly"]);
+  });
 
   const previewElement = document.createElement("div");
   previewElement.classList.add("previewArea");

@@ -7,6 +7,7 @@ import orderConnect from "../../module/connect/order";
 import commonSnipet from "../snipet/common";
 import getTokenConnect from "../../module/connect/getToken";
 import getTbaConnect from "../../module/connect/getTbaConnect";
+import setElement from "../snipet/setElement";
 
 const connectWallet = document.getElementById("connectWallet");
 const modalbase = document.getElementById("modalbase");
@@ -50,7 +51,8 @@ const formatUnixTime = (unixTime) => {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
-const getParmawebList = async () => {
+const getParmawebList = async (data = []) => {
+  console.log("getParmawebList data:" + JSON.stringify(data));
   modalcontent.innerHTML = "<div class='spinner'></div>loading...";
 
   const orderCa = await getManagerConnect.getCA("order");
@@ -68,23 +70,36 @@ const getParmawebList = async () => {
 
   const assetList = assetListOrg.reverse();
   for (const key in assetList) {
-    console.dir(assetList[key]);
-    vaultListDiv.innerHTML +=
-      "<br />" +
-      "<span class='datetime'>" +
-      formatUnixTime(assetList[key].Date) +
-      "</span>" +
-      ' <a href="' +
-      assetList[key].Url +
-      '" target="_blank">' +
-      assetList[key].Filename +
-      "</a>";
-    addCopyButton(
-      vaultListDiv,
-      "COPYBUTTON_" + key,
-      "COPYBTN",
-      String(assetList[key].Url)
-    );
+    let dispcheck = true;
+    const filename = assetList[key].Filename as String;
+    if (data[0] == "jsonOnly") {
+      dispcheck = filename.includes(".json");
+    }
+    if (data[0] == "notJson") {
+      dispcheck = !filename.includes(".json");
+    }
+    if (assetList[key].Url == "upload_waiting") {
+      dispcheck = false;
+    }
+    if (dispcheck) {
+      console.dir(assetList[key]);
+      vaultListDiv.innerHTML +=
+        "<br />" +
+        "<span class='datetime'>" +
+        formatUnixTime(assetList[key].Date) +
+        "</span>" +
+        ' <a href="' +
+        assetList[key].Url +
+        '" target="_blank">' +
+        assetList[key].Filename +
+        "</a>";
+      addCopyButton(
+        vaultListDiv,
+        "COPYBUTTON_" + key,
+        "COPYBTN",
+        String(assetList[key].Url)
+      );
+    }
   }
   const COPYBTNS = document.querySelectorAll(".COPYBTN");
   COPYBTNS.forEach((element) => {
@@ -104,7 +119,7 @@ const getParmawebList = async () => {
   document
     .getElementById("vaultReload")
     .addEventListener("click", function (event) {
-      getParmawebList();
+      getParmawebList(data);
     });
 };
 
@@ -134,7 +149,8 @@ const addCopyButton = (
   });
 };
 
-const toggleModal = async () => {
+const toggleModal = async (mode = "parmawebList", data = []) => {
+  console.log(mode);
   if (dispmodal) {
     modalbase.classList.remove("active");
     dispmodal = false;
@@ -142,12 +158,51 @@ const toggleModal = async () => {
     modalbase.classList.add("active");
     dispmodal = true;
     const chk = await checkBalance();
-    if (chk.balance != undefined) {
-      utils.getParmawebList();
+    if (mode == "parmawebList" && chk.balance != undefined) {
+      utils.getParmawebList(data);
+    }
+    if (mode == "replaceValue") {
+      return getReplaceValue(data);
     }
   }
 };
 
+function getReplaceValue(data) {
+  console.dir(data);
+  modalcontent.innerHTML = "Replace Attrebute";
+  const inputElm = document.createElement("div");
+  const setAttrForm = setElement.makeInput(
+    "traittype",
+    "traittype",
+    "BaseInput",
+    "TRAIT TYPE"
+  );
+  setAttrForm.classList.add("w7p");
+  inputElm.appendChild(setAttrForm);
+  const attrSet = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "SET",
+    "SET"
+  );
+  attrSet.classList.add("w3p");
+  inputElm.appendChild(attrSet);
+  const setValForm = setElement.makeTextarea(
+    "attrvalue",
+    "BaseTextarea",
+    "VALUE",
+    ""
+  );
+  setValForm.classList.add("wfull");
+  inputElm.appendChild(setValForm);
+  modalcontent.appendChild(inputElm);
+  return {
+    setAttrForm,
+    attrSet,
+    setValForm,
+  };
+}
 function roundToDecimalPlace(num, decimalPlaces) {
   const factor = Math.pow(10, decimalPlaces);
   return Math.round(num * factor) / factor;
@@ -387,6 +442,11 @@ const getMaticYen = async () => {
     console.error("価格データの取得中にエラーが発生しました:", error);
   }
 };
+const shortname = (text: string, prenum, afternum) => {
+  const front = text.substring(0, prenum);
+  const end = text.substring(text.length - afternum);
+  return front + "..." + end;
+};
 
 const utils = {
   isContract,
@@ -407,6 +467,7 @@ const utils = {
   openInNativeBrowser,
   getUserByEoa,
   getTbaInfoByEoa,
+  shortname,
 };
 
 export default utils;

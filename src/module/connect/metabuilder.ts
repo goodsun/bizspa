@@ -118,7 +118,7 @@ export const getUI = async () => {
   makeMetaCont.appendChild(extraFileForm);
 
   vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal();
+    utils.toggleModal("parmawebList", ["notJson"]);
   });
 
   metaLoad.addEventListener("input", (event) => {
@@ -199,7 +199,9 @@ export const getUI = async () => {
   makeMetaCont.appendChild(setValForm);
 
   attrSet.addEventListener("click", () => {
-    setAttr("test");
+    setAttr();
+    setAttrForm.value = "";
+    setValForm.value = "";
   });
 };
 
@@ -231,7 +233,7 @@ export const setTokenData = async () => {
   });
 };
 
-export const setAttr = async (attrname: string) => {
+export const setAttr = async () => {
   const traitType = document.getElementById("traittype") as HTMLInputElement;
   const attrValue = document.getElementById("attrvalue") as HTMLInputElement;
   if (traitType.value != "" && attrValue.value != "") {
@@ -298,13 +300,19 @@ const download = () => {
 
 export const delAttr = async (key: number, mode: string) => {
   if (mode == "ed") {
-    const edit = prompt(
-      "EDIT: " + metadata.attributes[key].trait_type,
-      metadata.attributes[key].value
-    );
-    if (edit) {
-      metadata.attributes[key].value = edit;
-    }
+    const elms = await utils.toggleModal("replaceValue", [
+      key,
+      metadata.attributes[key].trait_type,
+      metadata.attributes[key].value,
+    ]);
+    elms.setValForm.value = metadata.attributes[key].value;
+    elms.setAttrForm.value = metadata.attributes[key].trait_type;
+    elms.attrSet.addEventListener("click", async () => {
+      metadata.attributes[key].trait_type = elms.setAttrForm.value;
+      metadata.attributes[key].value = elms.setValForm.value;
+      utils.toggleModal();
+      setTokenData();
+    });
   }
   if (mode == "up" && key != 0) {
     let me = metadata.attributes[key];

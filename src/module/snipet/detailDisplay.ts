@@ -615,7 +615,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   divElement.appendChild(commonSnipet.br());
 
   vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal();
+    utils.toggleModal("parmawebList", ["jsonOnly"]);
   });
 
   const discordUserCheckArea = document.createElement("div");
