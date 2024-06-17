@@ -860,6 +860,10 @@ const creatorDonateList = async (elm, eoa) => {
   });
 
   sendTo.addEventListener("input", async (event) => {
+    setUserName();
+  });
+
+  const setUserName = async () => {
     discordUserCheckArea.innerHTML = "";
     discordUserCheckArea.classList.remove("sendToUser");
     if (sendTo.value != "") {
@@ -910,9 +914,9 @@ const creatorDonateList = async (elm, eoa) => {
         }
       });
     }
-  });
+  };
 
-  selectForm.addEventListener("change", async (event) => {
+  const setSendNft = async () => {
     sendNftPreviewBg.innerHTML = "";
     if (metaDataInfo[selectForm.value]) {
       console.log("NFTを選択しました。" + selectForm.value);
@@ -924,11 +928,32 @@ const creatorDonateList = async (elm, eoa) => {
     } else {
       console.log("NFTを選択解除");
     }
+  };
+
+  selectForm.addEventListener("change", async (event) => {
+    setSendNft();
   });
 
+  if (router.params[2]) {
+    for (const key in hasNftList) {
+      if (
+        hasNftList[key].ca == router.params[3] &&
+        hasNftList[key].tokenId == router.params[4]
+      ) {
+        selectForm.value = key;
+        setSendNft();
+      }
+    }
+    sendTo.value = router.params[2];
+    setUserName();
+  }
   creatorDonateHistory(elm);
 
   const sendSubDonate = async () => {
+    if (donate.value == "") {
+      alert("寄付額を入力してください");
+      return;
+    }
     const maticPrice = await utils.getMaticYen();
     if (maticPrice == undefined) {
       alert("現在価格の取得に失敗しました。しばらくお待ち下さい。");

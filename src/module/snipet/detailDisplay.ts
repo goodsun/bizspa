@@ -107,6 +107,48 @@ export const showToken = async (
     divElement.appendChild(pOwnerElement);
   }
 
+  const nftImgDiv = document.createElement("div");
+  nftImgDiv.classList.add("nftImageArea");
+  divElement.appendChild(nftImgDiv);
+  const imgElement = document.createElement("img");
+  imgElement.classList.add("nftImage");
+  imgElement.src = metadata["image"];
+  nftImgDiv.appendChild(imgElement);
+
+  const movieArea = document.createElement("div");
+  movieArea.style.display = "none";
+  divElement.appendChild(movieArea);
+
+  if (metadata["animation_url"]) {
+    fetch(metadata["animation_url"]).then((response) => {
+      const contentType = response.headers.get("content-type");
+      if (contentType == "model/gltf-binary") {
+        const link = document.createElement("a");
+        link.href = "/modelviewer/?model-view-src=" + metadata["animation_url"];
+        nftImgDiv.appendChild(link);
+        var icon3d = document.createElement("i");
+        icon3d.classList.add("far", "fa-solid", "fa-cubes", "cubeMark");
+        link.appendChild(icon3d);
+      } else {
+        /*
+        var icon3d = document.createElement("i");
+        icon3d.classList.add("far", "fa-solid", "fa-video", "cubeMark");
+        nftImgDiv.appendChild(icon3d);
+        */
+
+        movieArea.style.display = "block";
+        const video = document.createElement("video");
+        video.classList.add("nftMedia");
+        video.controls = true;
+        video.autoplay = true;
+        video.src = metadata["animation_url"];
+        video.setAttribute("type", contentType);
+        movieArea.appendChild(video);
+      }
+    });
+  }
+
+  /*
   if (metadata["animation_url"]) {
     const linkurl =
       "https://fs.bon-soleil.com/modelviewer/?model-view-src=" +
@@ -162,6 +204,8 @@ export const showToken = async (
         console.error("Error:", error);
       });
   }
+  */
+
   if (metadata["external_url"]) {
     const externalArea = document.createElement("div");
     divElement.appendChild(externalArea);
@@ -191,11 +235,6 @@ export const showToken = async (
         console.error("Error:", error);
       });
   }
-
-  const imgElement = document.createElement("img");
-  imgElement.classList.add("nftImage");
-  imgElement.src = metadata["image"];
-  divElement.appendChild(imgElement);
 
   const attributes = metadata["attributes"];
   const attributeDivArea = document.createElement("div");
