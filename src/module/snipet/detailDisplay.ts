@@ -115,114 +115,62 @@ export const showToken = async (
   imgElement.src = metadata["image"];
   nftImgDiv.appendChild(imgElement);
 
-  const movieArea = document.createElement("div");
-  movieArea.style.display = "none";
-  divElement.appendChild(movieArea);
-
   if (metadata["animation_url"]) {
     fetch(metadata["animation_url"]).then((response) => {
       const contentType = response.headers.get("content-type");
       if (contentType == "model/gltf-binary") {
         const link = document.createElement("a");
+        link.target = "blank";
         link.href = "/modelviewer/?model-view-src=" + metadata["animation_url"];
         nftImgDiv.appendChild(link);
         var icon3d = document.createElement("i");
         icon3d.classList.add("far", "fa-solid", "fa-cubes", "cubeMark");
         link.appendChild(icon3d);
       } else {
-        /*
-        var icon3d = document.createElement("i");
-        icon3d.classList.add("far", "fa-solid", "fa-video", "cubeMark");
-        nftImgDiv.appendChild(icon3d);
-        */
-
-        movieArea.style.display = "block";
-        const video = document.createElement("video");
-        video.classList.add("nftMedia");
-        video.controls = true;
-        video.autoplay = true;
-        video.src = metadata["animation_url"];
-        video.setAttribute("type", contentType);
-        movieArea.appendChild(video);
+        const link = document.createElement("a");
+        link.target = "blank";
+        link.href =
+          "/viewer/?src=" + metadata["animation_url"] + "&type=" + contentType;
+        nftImgDiv.appendChild(link);
+        var iconVideo = document.createElement("i");
+        iconVideo.classList.add("far", "fa-solid", "fa-film", "cubeMark");
+        link.appendChild(iconVideo);
       }
     });
   }
 
-  /*
-  if (metadata["animation_url"]) {
-    const linkurl =
-      "https://fs.bon-soleil.com/modelviewer/?model-view-src=" +
-      metadata["animation_url"];
-    const movieArea = document.createElement("div");
-
-    divElement.appendChild(movieArea);
-    fetch(metadata["animation_url"])
-      .then((response) => {
-        const contentType = response.headers.get("content-type");
-        if (contentType == "model/gltf-binary") {
-          if (utils.containsBrowserName("MetaMaskMobile")) {
-            alert(
-              "このページには3D表示コンテンツが含まれています。\n3Dコンテンツの閲覧は ネイティブブラウザをご利用ください。"
-            );
-            const attention = document.createElement("p");
-            attention.innerHTML =
-              "<b>メタマスクでは３D表示ができません</b><br />左のリンクをクリックしネイティブブラウザで御覧ください。 ";
-            attention.appendChild(
-              commonSnipet.linkCopy(
-                linkurl,
-                "３D表示リンクがクリップボードにコピーされました。\nネイティブブラウザで御覧ください"
-              )
-            );
-            movieArea.appendChild(attention);
-          } else {
-            const objectElement = document.createElement("model-viewer");
-            objectElement.id = "model-view";
-            objectElement.classList.add("nft3DImage");
-            objectElement.setAttribute("auto-rotate", "true");
-            objectElement.setAttribute("autoplay", "true");
-            objectElement.setAttribute("camera-controls", "true");
-            objectElement.setAttribute("at-status", "not-presenting");
-            objectElement.setAttribute("src", metadata["animation_url"]);
-            movieArea.appendChild(objectElement);
-            var script = document.createElement("script");
-            script.src =
-              "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
-            script.type = "module";
-            headJsArea.appendChild(script);
-          }
-        } else if (contentType.startsWith("video/")) {
-          const video = document.createElement("video");
-          video.classList.add("nftMedia");
-          video.controls = true;
-          video.autoplay = true;
-          video.src = metadata["animation_url"];
-          video.setAttribute("type", contentType);
-          movieArea.appendChild(video);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-  */
-
+  const externalArea = document.createElement("div");
+  externalArea.classList.add("nftExternal");
+  externalArea.style.display = "none";
+  divElement.appendChild(externalArea);
   if (metadata["external_url"]) {
-    const externalArea = document.createElement("div");
-    divElement.appendChild(externalArea);
     fetch(metadata["external_url"])
       .then((response) => {
+        externalArea.style.display = "block";
         const contentType = response.headers.get("content-type");
         if (contentType.startsWith("application/")) {
+          /*
           const objectElement = document.createElement("object");
           objectElement.classList.add("nftObject");
           objectElement.setAttribute("type", contentType);
           objectElement.setAttribute("data", metadata["external_url"]);
           externalArea.appendChild(objectElement);
-          var script = document.createElement("script");
-          script.src =
-            "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
-          script.type = "module";
-          headJsArea.appendChild(script);
+          */
+          const link = document.createElement("a");
+          link.href = metadata["external_url"];
+          var iconExtra = document.createElement("i");
+          iconExtra.classList.add(
+            "far",
+            "fa-regular",
+            "fa-file-pdf",
+            "cubeMark"
+          );
+          if (metadata["animation_url"]) {
+            iconExtra.classList.add("cubeMark2");
+          }
+
+          link.appendChild(iconExtra);
+          nftImgDiv.appendChild(link);
         } else if (contentType.startsWith("image/")) {
           const image = document.createElement("img");
           image.classList.add("nftMedia");

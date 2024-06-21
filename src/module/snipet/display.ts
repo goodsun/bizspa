@@ -219,7 +219,7 @@ export const displayToken = async (
       var askDiscord = document.createElement("p");
       askDiscord.classList.add("askDiscordBot");
       askDiscord.innerHTML =
-        "ask to Discord Bot : <b>/getkey</b> nftinfo : <b>" +
+        "ask to Discord Bot : <b class='commandInline'>/getkey </b> nftinfo : <b class='commandInline'>" +
         utils.shortname(ca + "/" + id, 6, 6);
       ("</b>");
 

@@ -1,0 +1,63 @@
+<html>
+  <header>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        color: #ffffff;
+        background-color: #000000;
+      }
+      #viewer {
+        position: relative;
+        height: 100%;
+      }
+      #viewer p {
+        font-size: 30px;
+        position: absolute;
+        top: 50%;
+        margin: 20px;
+      }
+      #viewer {
+        width: 100%;
+        height: 100%;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+      }
+      object {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </header>
+  <body>
+    <div id="viewer">
+      <video id="media" controls autoplay></video>
+      <object id="object"></video>
+    </div>
+    <script>
+      const viewerElm = document.getElementById("viewer");
+      var userAgent = navigator.userAgent.toLowerCase();
+      document.getElementById("media").style.display = "none";
+      document.getElementById("object").style.display = "none";
+      if (userAgent.includes("metamask")) {
+        viewerElm.innerHTML =
+          "<p>Please open Default browser<br />右下の … より「ブラウザで開く」をクリックしてください。</p>";
+      }
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const srcfile = urlParams.get("src");
+      const type = urlParams.get("type");
+      if(type == 'application/pdf'){
+        document.getElementById("object").style.display = "block";
+        document.getElementById("object").data = srcfile;
+        document.getElementById("object").type = type;
+      }else{
+        document.getElementById("media").style.display = "block";
+        document.getElementById("media").src = srcfile;
+        document.getElementById("media").type = type;
+      }
+    </script>
+  </body>
+</html>

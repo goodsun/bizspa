@@ -10,6 +10,8 @@ body {
   font-weight: lighter;
   background-color: #111111;
   text-align: center;
+  white-space: nowrap;
+  overflow-x: auto;
 }
 .headerMenu a {
   margin-left: 0.5em;
@@ -914,9 +916,33 @@ i.tbamark {
   position: relative;
 }
 i.cubeMark {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
   position: absolute;
   top: 15px;
   left: 15px;
+  z-index: 10;
+  font-size: 60px;
+  width: 60px;
+  color: #707070;
+  background-color: #ffffff;
+  border-radius: 50%;
+  padding: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+i.cubeMark2 {
+  left: 140px;
+}
+
+i.extraMark {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+  position: absolute;
+  top: 15px;
+  right: 15px;
   z-index: 10;
   font-size: 40px;
   width: 40px;
@@ -928,4 +954,17 @@ i.cubeMark {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.nftExternal {
+  width: 100%;
+  min-height: 50px;
+}
+
+.commandInline {
+  background-color: #222;
+  margin: 0 5px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #fff;
 }
