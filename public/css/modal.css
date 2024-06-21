@@ -36,7 +36,7 @@
   position: absolute;
   top: -30px;
   right: 0;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   color: #fff;
   background: rgba(0, 0, 0, 60%);
   padding: 4px 15px;
@@ -52,16 +52,17 @@
   font-weight: bold;
   border-radius: 15px;
   p {
+    font-size: 1rem;
     margin: 0;
     color: #333;
-    font-size: 1.5em;
-    line-height: 1.5em;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
   }
   #closemodal {
     margin: 0;
     text-align: right;
     p {
-      font-size: 1em;
+      font-size: 1rem;
     }
   }
 }
@@ -69,7 +70,7 @@
 .modal-footer {
   margin-top: 15px;
   p {
-    font-size: 1em;
+    font-size: 1rem;
   }
   .pwu {
     color: #00bcd4;

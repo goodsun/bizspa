@@ -34,6 +34,7 @@ export const showToken = async (
   const tbaOwner = await getTbaConnect.checkOwner(owner);
   const tbaToken = await getTbaConnect.checkToken(owner);
   const pOwnerElement = document.createElement("p");
+  pOwnerElement.classList.add("tokenOwnerInfo");
   if (tbaOwner) {
     pOwnerElement.appendChild(commonSnipet.span("ca: "));
     pOwnerElement.appendChild(
@@ -58,7 +59,6 @@ export const showToken = async (
       "'> token </a>";
     pOwnerElement.appendChild(tbaTag);
   } else if (owner) {
-    console.log("OWNER:" + owner);
     pOwnerElement.appendChild(commonSnipet.span("owner: "));
     pOwnerElement.appendChild(
       commonSnipet.eoa(owner, {

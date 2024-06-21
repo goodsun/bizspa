@@ -2,11 +2,13 @@ body {
   background-color: #000000;
   padding: 0px;
   color: #888;
-  font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
 }
+html {
+  display: block;
+}
 .headerMenu {
-  font-size: 2em;
+  font-size: 2rem;
   font-weight: lighter;
   background-color: #111111;
   text-align: center;
@@ -14,24 +16,24 @@ body {
   overflow-x: auto;
 }
 .headerMenu a {
-  margin-left: 0.5em;
+  margin-left: 0.5rem;
 }
 .headerMenu a.home::before {
   color: #aaaaaa;
   content: "";
-  margin-right: 0.5em;
+  margin-right: 0.5rem;
 }
 .headerMenu a::before {
   color: #aaaaaa;
   content: "|";
-  margin-right: 0.5em;
+  margin-right: 0.5rem;
 }
 
 #headerTitle {
   padding: 0 30px;
 }
 #langSelecter {
-  font-size: 1.5em;
+  font-size: 2rem;
   position: fixed;
   right: 30px;
   top: 30px;
@@ -43,7 +45,7 @@ body {
   overflow: hidden;
 }
 h1 {
-  font-size: 2.2em;
+  font-size: 2.2rem;
   padding-left: 30px;
   color: #cccccc;
   span {
@@ -51,35 +53,32 @@ h1 {
   }
 }
 h2 {
-  font-size: 2.2em;
+  font-size: 2.2rem;
   color: #dddddd;
 }
 h3 {
-  font-size: 2em;
+  font-size: 2rem;
   color: #cccccc;
 }
 h4 {
-  font-size: 1.8em;
+  font-size: 1.8rem;
   color: #99bb99;
 }
 h4 {
-  font-size: 1.6em;
+  font-size: 1.6rem;
   color: #99bb99;
 }
 p {
   color: #cccccc;
   text-decoration: none;
-  font-size: 1.6em;
   line-height: 1.8;
   font-weight: normal;
 }
 span {
-  font-size: 1em;
   color: #bbbbbb;
   text-decoration: none;
 }
 a {
-  font-size: 1em;
   color: #9999bb;
   text-decoration: none;
 }
@@ -87,7 +86,7 @@ a {
   margin: 0 15px;
 }
 .list {
-  font-size: 5em;
+  font-size: 1.2rem;
   color: #ffffff;
   text-decoration: none;
   text-align: center;
@@ -96,7 +95,7 @@ a {
   margin: 20px 2px;
   padding: 20px;
   width: 48%;
-  font-size: 5em;
+  font-size: 1.5rem;
   color: #666666;
   background-color: #bbbbbb;
   border-radius: 20px;
@@ -105,7 +104,7 @@ a {
   margin: 20px 2px;
   padding: 20px;
   width: 32%;
-  font-size: 5em;
+  font-size: 1.5rem;
   background-color: #bbbbbb;
   border-radius: 20px;
 }
@@ -122,7 +121,6 @@ a {
   top: 15px;
   left: 20px;
   color: #aaaaaa;
-  font-size: 4em;
   font-weight: bold;
 }
 .menu-area {
@@ -130,7 +128,6 @@ a {
   top: 15px;
   right: 20px;
   color: #64a193;
-  font-size: 4em;
   font-weight: bold;
 }
 .main-content {
@@ -168,7 +165,7 @@ a {
   text-align: center;
   background-color: #111111;
   color: #64a193;
-  font-size: 5em;
+  font-size: 5rem;
   font-weight: bold;
 }
 #footerArea {
@@ -235,11 +232,14 @@ a {
   box-shadow: 0 5px 4px #274d7b3d;
   border-radius: 8px;
 }
+.childNftBg > a > h3 {
+  margin: 10px 5px 10px 5px;
+}
 .titleThumb {
-  font-size: 0.7em;
+  font-size: 1.2rem;
   font-weight: bold;
-  height: 2.8em;
-  line-height: 1.3em;
+  height: 2.8rem;
+  line-height: 1.5rem;
   overflow: scroll;
   margin: 10px 0;
   padding: 0 10px;
@@ -307,24 +307,24 @@ a {
 
 .nftContractArea > h3,
 .sbtContractArea > h3 {
-  font-size: 2.5em;
+  font-size: 2.5rem;
   padding: 0 30px;
   margin: 50px 0 0 0;
 }
 
 .creatorsLinkList {
-  font-size: 1.8em;
+  font-size: 1.8rem;
   margin: 0 30px;
 }
 .contractLinkList {
-  font-size: 1.8em;
+  font-size: 1.8rem;
   margin: 0;
   h3 {
     margin: 20px 30px 10px;
   }
 }
 .tokenBreadCrumb {
-  font-size: 1.8em;
+  font-size: 1.8rem;
   margin: 30px;
 }
 
@@ -333,7 +333,7 @@ a {
 }
 
 .BaseInput {
-  font-size: 2.2em;
+  font-size: 2.2rem;
   border: 1px solid #d1d1d1;
   border-radius: 6px;
   box-sizing: border-box;
@@ -343,19 +343,19 @@ a {
 }
 
 .BaseTextarea {
-  font-size: 2.2em;
+  font-size: 2.2rem;
   border: 1px solid #d1d1d1;
   border-radius: 6px;
   box-sizing: border-box;
   padding: 12px 16px;
   margin: 30px 5px 0 0;
-  height: 8em;
+  height: 8rem;
   resize: horizontal;
   transition: all 0.2s ease-in-out;
 }
 
 .BaseSubmit {
-  font-size: 2.2em;
+  font-size: 2.2rem;
   background: #3e3e3e;
   border: 0px solid #d1d1d1;
   border-radius: 8px;
@@ -371,18 +371,18 @@ a {
 }
 .litelink {
   margin-left: 10px;
-  font-size: 0.8em;
+  font-size: 1.5rem;
   font-weight: lighter;
 }
 .litelink::before {
   color: #aaaaaa;
   content: "[";
-  margin-right: 0.2em;
+  margin-right: 0.2rem;
 }
 .litelink::after {
   color: #aaaaaa;
   content: "]";
-  margin-left: 0.2em;
+  margin-left: 0.2rem;
 }
 
 .mintLink {
@@ -399,13 +399,8 @@ a {
 
 .copyLink {
   margin-left: 10px;
-  font-size: 0.8em;
+  font-size: 0.8rem;
   color: #1c559f;
-}
-
-.eoaCopy {
-  margin-left: 3px;
-  color: #8888bb;
 }
 
 .wfull {
@@ -488,7 +483,7 @@ a {
 }
 .datetime {
   color: #4d4a4a;
-  font-size: 0.6em;
+  font-size: 0.6rem;
 }
 .walletOwnerArea {
   display: inline-block;
@@ -522,7 +517,7 @@ a {
   display: inline-block;
 }
 .linkCopy {
-  font-size: 1.4em;
+  font-size: 1.4rem;
   color: #8888bb;
 }
 
@@ -558,12 +553,17 @@ a {
   margin: 0 30px;
   p {
     padding: 0 20px;
-    font-size: 1.2em;
+    font-size: 1em;
   }
 }
 
 #connectWallet {
-  font-size: 1.6em;
+  p,
+  a,
+  span {
+    margin-left: 5px;
+    font-size: 1.4rem;
+  }
 }
 
 .cardContractArea {
@@ -581,12 +581,12 @@ a {
     padding: 0 15px;
   }
   h2 {
-    font-size: 1.5em;
+    font-size: 1.5rem;
     margin: 2px 0 0 0;
     padding: 0;
   }
   p {
-    font-size: 1em;
+    font-size: 1rem;
     margin: 0;
     padding: 0;
   }
@@ -598,6 +598,7 @@ a {
     object-fit: cover;
   }
   span {
+    font-size: 1rem;
     color: #69b6b1;
   }
 }
@@ -617,7 +618,7 @@ a {
   color: #ffffff;
   .ac {
     margin-left: 3px;
-    font-size: 0.9em;
+    font-size: 0.9rem;
   }
 }
 .contentChildList {
@@ -630,6 +631,7 @@ a {
 
 .itemLeftDiv {
   p {
+    font-size: 1rem;
     margin: 0px;
     padding: 0;
   }
@@ -640,6 +642,7 @@ a {
   margin-left: 20px;
   width: 100%;
   p {
+    font-size: 1rem;
     margin: 0px;
     padding: 0px;
   }
@@ -647,7 +650,7 @@ a {
     text-align: center;
     vertical-align: baseline;
     width: 30px;
-    font-size: 0.8em;
+    font-size: 0.8rem;
     color: #ffffff;
     border: 1px solid #aaa;
     border-radius: 5px;
@@ -656,7 +659,6 @@ a {
 }
 .shopSiteLink {
   display: block;
-  font-size: 2em;
   margin-top: 20px;
   padding: 10px;
   width: 330px;
@@ -667,7 +669,7 @@ a {
 }
 .gallaryLink {
   display: block;
-  font-size: 2em;
+  font-size: 2rem;
   margin-top: 20px;
   padding: 10px;
   width: 330px;
@@ -686,11 +688,12 @@ a {
   overflow: scroll;
   max-height: 250px;
   p {
+    font-size: 1rem;
     padding: 10px 20px;
   }
 }
 p.carouselProfileName {
-  font-size: 2em;
+  font-size: 2rem;
   font-weight: bold;
   margin: 20px 0 0 20px;
   padding: 0px;
@@ -705,10 +708,12 @@ p.carouselProfileName {
   overflow: scroll;
   white-space: nowrap;
   p {
+    font-size: 1rem;
     margin: 2px 10px;
     padding: 0px;
   }
   p > span {
+    font-size: 1rem;
     margin-left: 15px;
   }
 }
@@ -741,7 +746,7 @@ p.carouselProfileName {
 
 .sendToUser {
   display: flex;
-  font-size: 2em;
+  font-size: 2rem;
   margin-top: 30px;
   padding-left: 10px;
 }
@@ -794,7 +799,7 @@ img.discordIconMini {
 }
 
 .ownTokenCaTitle {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   margin: 25px 30px 10px;
   padding: 0 0 0 0;
 }
@@ -829,7 +834,7 @@ i.tbamark {
 }
 
 .priceConfirmArea {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   margin-top: 30px;
   color: #fff;
   width: 100%;
@@ -838,12 +843,13 @@ i.tbamark {
 
 .chkprice {
   color: #a7ff9c;
-  font-size: 1.4em;
+  font-size: 1.4rem;
 }
 .chkpricemini {
   color: #b7b25c;
 }
 .labelspan {
+  font-size: 1rem;
   margin-top: 65px;
   margin-left: 10px;
 }
@@ -855,7 +861,7 @@ i.tbamark {
   border-radius: 20px;
   .shopTitle {
     width: 100%;
-    font-size: 0.8em;
+    font-size: 1.3rem;
     margin: 0px 0px 10px 0px;
     padding: 0px 0px 0px 0px;
   }
@@ -864,7 +870,7 @@ i.tbamark {
     align-items: center;
     margin: 5px 0 0 0;
     padding: 5px 10px;
-    font-size: 0.6em;
+    font-size: 1.3rem;
     border-radius: 10px;
     background-color: #111;
   }
@@ -892,7 +898,7 @@ i.tbamark {
     .shopDetail {
       margin-left: 20px;
       p {
-        font-size: 0.8em;
+        font-size: 1rem;
         font-weight: lighter;
         margin: 0 0 0 0;
         padding: 0 0 0 0;
@@ -908,7 +914,7 @@ i.tbamark {
   background-color: #222;
 }
 .accountInfo {
-  font-size: 1.4em;
+  font-size: 1.4rem;
   margin-left: 20px;
 }
 
@@ -967,4 +973,17 @@ i.extraMark {
   padding: 2px 5px;
   border-radius: 5px;
   color: #fff;
+}
+
+.tokenOwnerInfo {
+  p,
+  a,
+  span {
+    font-size: 1.5rem;
+  }
+}
+
+span.eoaCopy {
+  margin-left: 1px;
+  color: #8888bb;
 }

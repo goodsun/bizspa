@@ -60,12 +60,22 @@ const scan = (eoa, label, labelClass) => {
   return eoaElm;
 };
 
-const eoa = (eoa, option = { link: "", target: "_self", icon: "fa-copy" }) => {
+const eoa = (
+  eoa,
+  option = { link: "", target: "_self", icon: "fa-copy" },
+  labelType = "none"
+) => {
   const { link, target, icon } = option;
   const eoaElm = document.createElement("span");
   const front = eoa.substring(0, 6);
   const end = eoa.substring(eoa.length - 4);
   const replace = front + "..." + end;
+
+  if (labelType == "wallet") {
+    const label = document.createElement("i");
+    label.classList.add("fa-solid", "fa-wallet");
+    eoaElm.appendChild(label);
+  }
 
   if (link) {
     const aTag = document.createElement("a");

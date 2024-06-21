@@ -23,6 +23,7 @@ const isContract = async (address) => {
 
 function containsBrowserName(browserName) {
   var userAgent = navigator.userAgent.toLowerCase();
+  console.log(userAgent.toLowerCase());
   return userAgent.includes(browserName.toLowerCase());
 }
 
@@ -322,25 +323,34 @@ export const checkMetamask = async () => {
       }
     });
 
-    connectWallet.appendChild(commonSnipet.span("EOA: "));
     connectWallet.appendChild(
-      commonSnipet.eoa(balanceData.eoa, {
-        link: "#",
-        target: "",
-        icon: "copy",
-      })
+      commonSnipet.eoa(
+        balanceData.eoa,
+        {
+          link: "#",
+          target: "",
+          icon: "copy",
+        },
+        "wallet"
+      )
     );
-    connectWallet.appendChild(commonSnipet.span(" balance: "));
+
     connectWallet.appendChild(
-      commonSnipet.span(String(waiToEth(balanceData.balance)))
+      commonSnipet.labeledElm("span", String(waiToEth(balanceData.balance)), [
+        "fa-solid",
+        "fa-coins",
+      ])
     );
-    connectWallet.appendChild(commonSnipet.span(" " + balanceData.symbol));
 
     (document.getElementById("accountLink") as HTMLLinkElement).href =
       "/account/" + balanceData.eoa;
+
     if (balanceData.dpoint > 0) {
       connectWallet.appendChild(
-        commonSnipet.span(" / " + balanceData.dpoint + " donationPoint")
+        commonSnipet.labeledElm("span", String(balanceData.dpoint), [
+          "fa-solid",
+          "fa-circle-dollar-to-slot",
+        ])
       );
     }
   } else {

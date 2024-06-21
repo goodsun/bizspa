@@ -29,11 +29,13 @@ async function discordRegist() {
   await discordConnect.getUI();
 }
 async function metabuilder() {
+  /*
   const checkBalance = await utils.checkBalance();
   if (checkBalance.eoa == undefined) {
     displaySnipet.isNotConnect();
     return;
   }
+    */
   await setMeta.getUI();
 }
 async function parmaweb() {
@@ -356,15 +358,9 @@ const checkRoute = () => {
   }
 };
 
-const test = async () => {
-  console.log("TEST PLAY");
-  //const result1 = await getAkord.getStack();
-  //console.dir(result1);
-
-  const orderCa = await getManagerConnect.getCA("order");
-  const result2 = await orderConnect.getAsset(orderCa);
-  console.dir(result2);
-};
+if (utils.containsBrowserName("mobile")) {
+  document.querySelector("html").style.fontSize = "30px";
+}
 
 checkRoute();
 utils.checkMetamask();
