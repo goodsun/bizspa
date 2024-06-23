@@ -659,6 +659,7 @@ a {
 }
 .shopSiteLink {
   display: block;
+  font-size: 1.2em;
   margin-top: 20px;
   padding: 10px;
   width: 330px;
