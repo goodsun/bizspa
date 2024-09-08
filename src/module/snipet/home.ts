@@ -4,17 +4,17 @@ import getTokenConnect from "../connect/getToken";
 import utils from "../common/utils";
 import { router } from "../common/router";
 import articleSnipet from "../../module/snipet/article";
+import { LANGSET } from "../common/lang";
 const mainContents = document.getElementById("mainContents");
 
 const getHome = async () => {
   const divElem = document.createElement("div");
   divElem.classList.add("homeContents");
   const titleElement = document.createElement("h2");
-  titleElement.innerHTML = "BizenDAOロゴ";
+  titleElement.innerHTML = LANGSET("SITE_TITLE");
   divElem.appendChild(titleElement);
   const pElement = document.createElement("p");
-  pElement.innerHTML =
-    "BizenDAOは伝統工芸としての備前焼振興を目的とした非営利の地方創生コミュニティです。";
+  pElement.innerHTML = LANGSET("SITE_DESCRIPTION");
   divElem.appendChild(pElement);
   return divElem;
 };

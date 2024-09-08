@@ -1,6 +1,10 @@
 import getManagerConnect from "../connect/getManager";
 import getTokenConnect from "../connect/getToken";
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const getAllContracts = async (filter: Array<String>) => {
   let result = [];
   const allList = await getManagerConnect.getManager("contracts");
@@ -15,6 +19,7 @@ const getAllContracts = async (filter: Array<String>) => {
 };
 
 const getMintableContract = async (eoa) => {
+  await sleep(200);
   const contracts = await getAllContracts(["nft", "sbt"]);
   let result = [];
   for (const key in contracts) {

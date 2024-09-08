@@ -177,7 +177,7 @@ const setUI = (parent, eoa) => {
                 //==============================================
                 //アップロード成功でリスト追加
                 const setUrlResult = await orderConnect
-                  .setUrl(orderCa, orderResult, file.name, result.parmawebUrl)
+                  .setUrl(orderCa, orderResult, file.name, result.permawebUrl)
                   .then((response) => {
                     console.dir(response);
                     uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
@@ -186,8 +186,8 @@ const setUI = (parent, eoa) => {
                   })
                   .catch((error) => {
                     uploadingInfoArea.innerHTML =
-                      " Non Manage This File<br /> parmaweb url:" +
-                      result.parmawebUrl;
+                      " Non Manage This File<br /> permaweb url:" +
+                      result.permawebUrl;
                     uploadingInfoArea.classList.add("upload-success");
                     console.dir(error);
                   });
@@ -222,9 +222,9 @@ const setUI = (parent, eoa) => {
   });
 };
 
-const parmaweb = {
+const permaweb = {
   checkPrice,
   getUI,
 };
 
-export default parmaweb;
+export default permaweb;

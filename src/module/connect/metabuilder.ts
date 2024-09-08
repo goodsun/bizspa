@@ -2,6 +2,7 @@ import utils from "../common/utils";
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
+import { LANGSET } from "../common/lang";
 import setElement from "../snipet/setElement";
 import { nftMetaData, iVault } from "../../types/metadata";
 import detailDisplay from "../snipet/detailDisplay";
@@ -44,7 +45,7 @@ export const getUI = async () => {
     "input",
     "nameForm",
     "BaseInput",
-    "NAME"
+    LANGSET("METANAME")
   );
   setNameForm.classList.add("w7p");
   makeMetaCont.appendChild(setNameForm);
@@ -52,7 +53,7 @@ export const getUI = async () => {
   const metaLoad = setElement.makeFileSelect(
     "fileimput",
     "BaseSubmit",
-    "JSON LOAD",
+    LANGSET("JSONLOAD"),
     "w3p"
   );
   makeMetaCont.appendChild(metaLoad);
@@ -60,7 +61,7 @@ export const getUI = async () => {
   const setDescriptionForm = setElement.makeTextarea(
     "description",
     "BaseTextarea",
-    "DESCRIPTION",
+    LANGSET("DESCRIPTION"),
     ""
   );
   setDescriptionForm.classList.add("wfull");
@@ -70,8 +71,8 @@ export const getUI = async () => {
     "submit",
     "jsonDownload",
     "BaseSubmit",
-    "JSON DOWNLOAD",
-    "JSON DOWNLOAD"
+    LANGSET("JSONDOWNLOAD"),
+    LANGSET("JSONDOWNLOAD")
   );
   jsonDownload.classList.add("wfull");
   makeMetaCont.appendChild(jsonDownload);
@@ -85,7 +86,7 @@ export const getUI = async () => {
     "input",
     "imageUrl",
     "BaseInput",
-    "MAIN IMAGE"
+    LANGSET("MAINIMAGE")
   );
   setImageForm.classList.add("w7p");
   makeMetaCont.appendChild(setImageForm);
@@ -93,8 +94,8 @@ export const getUI = async () => {
     "submit",
     "submitID",
     "BaseSubmit",
-    "OPEN VAULT",
-    "OPEN VAULT"
+    LANGSET("OPENVAULT"),
+    LANGSET("OPENVAULT")
   );
   vaultSelect.classList.add("w3p");
   makeMetaCont.appendChild(vaultSelect);
@@ -103,7 +104,7 @@ export const getUI = async () => {
     "input",
     "animationUrl",
     "BaseInput",
-    "ANIMATION URL"
+    LANGSET("MOVURL")
   );
   animationMovieForm.classList.add("wfull");
   makeMetaCont.appendChild(animationMovieForm);
@@ -112,13 +113,35 @@ export const getUI = async () => {
     "input",
     "externalUrl",
     "BaseInput",
-    "EXTERNAL URL"
+    LANGSET("EXTURL")
   );
   extraFileForm.classList.add("wfull");
   makeMetaCont.appendChild(extraFileForm);
 
+  const mintLink = document.createElement("a");
+  mintLink.classList.add("litelink");
+  mintLink.classList.add("mintlink");
+  mintLink.href = "/pict/";
+  mintLink.innerHTML = LANGSET("PICTTOOL");
+  makeMetaCont.appendChild(mintLink);
+
+  const permaweb = document.createElement("a");
+  permaweb.classList.add("litelink");
+  permaweb.classList.add("mintlink");
+  permaweb.href = "/permaweb";
+  permaweb.innerHTML = LANGSET("PERMAWEB");
+  makeMetaCont.appendChild(permaweb);
+
+  const jsonsample = document.createElement("a");
+  jsonsample.classList.add("litelink");
+  jsonsample.classList.add("mintlink");
+  jsonsample.href = "/json/sample.json";
+  jsonsample.download = "sample.json";
+  jsonsample.innerHTML = LANGSET("JSONSAMPLE");
+  makeMetaCont.appendChild(jsonsample);
+
   vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal("parmawebList", ["notJson"]);
+    utils.toggleModal("permawebList", ["notJson"]);
   });
 
   metaLoad.addEventListener("input", (event) => {
@@ -169,14 +192,14 @@ export const getUI = async () => {
   //-- ATTR -------------------------------------
   const attrTitle = document.createElement("H3");
   attrTitle.classList.add("controlLavel");
-  attrTitle.innerHTML = "Attributes";
+  attrTitle.innerHTML = LANGSET("ATTRIBUTES");
   makeMetaCont.appendChild(attrTitle);
 
   const setAttrForm = setElement.makeInput(
     "traittype",
     "traittype",
     "BaseInput",
-    "TRAIT TYPE"
+    LANGSET("LABEL")
   );
   setAttrForm.classList.add("w7p");
   makeMetaCont.appendChild(setAttrForm);
@@ -192,7 +215,7 @@ export const getUI = async () => {
   const setValForm = setElement.makeTextarea(
     "attrvalue",
     "BaseTextarea",
-    "VALUE",
+    LANGSET("VALUE"),
     ""
   );
   setValForm.classList.add("wfull");

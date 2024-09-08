@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { LANGSET } from "../common/lang";
 import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donate";
 import getManagerConnect from "../../module/connect/getManager";
@@ -59,7 +60,7 @@ const getParmawebList = async (data = []) => {
   const orderCa = await getManagerConnect.getCA("order");
   const assetListOrg = await orderConnect.getAsset(orderCa);
 
-  modalcontent.innerHTML = "parmaweb assets";
+  modalcontent.innerHTML = "permaweb assets";
   const reload = document.createElement("span");
   reload.classList.add("litelink");
   reload.classList.add("reloadLink");
@@ -109,10 +110,10 @@ const getParmawebList = async (data = []) => {
       navigator.clipboard
         .writeText(copytext)
         .then(function () {
-          alert("URLがクリップボードにコピーされました");
+          alert("URL" + LANGSET("COPYED"));
         })
         .catch(function (error) {
-          alert("コピーに失敗しました: " + error);
+          alert(LANGSET("COPYFAILED") + error);
         });
     });
   });
@@ -150,7 +151,7 @@ const addCopyButton = (
   });
 };
 
-const toggleModal = async (mode = "parmawebList", data = []) => {
+const toggleModal = async (mode = "permawebList", data = []) => {
   console.log(mode);
   if (dispmodal) {
     modalbase.classList.remove("active");
@@ -159,7 +160,7 @@ const toggleModal = async (mode = "parmawebList", data = []) => {
     modalbase.classList.add("active");
     dispmodal = true;
     const chk = await checkBalance();
-    if (mode == "parmawebList" && chk.balance != undefined) {
+    if (mode == "permawebList" && chk.balance != undefined) {
       utils.getParmawebList(data);
     }
     if (mode == "replaceValue") {

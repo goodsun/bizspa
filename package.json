@@ -8,7 +8,9 @@
     "local": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; node server.js",
     "dev": "cp src/settings/const.dev src/module/common/const.ts;npx webpack; node server.js",
     "stg": "cp src/settings/const.stg src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/stgdao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/stgdao/",
-    "prd": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/dao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/dao/; cp src/settings/const.stg src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/stgdao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/stgdao/",
+    "bonsoleil": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/dao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/dao/; cp src/settings/const.stg src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/bon-soleil.com/stgdao/; scp ./public/.htaccess bonsoleil:web/bon-soleil.com/stgdao/",
+    "bizen": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; scp -r ./public/* bizendao:web/bizen/; scp ./public/.htaccess bizendao:web/bizen/",
+    "prd": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; scp -r ./public/* bizendao:web/bizen/; scp ./public/.htaccess bizendao:web/bizen/",
     "s3": "cp src/settings/const.prd src/module/common/const.ts;npx webpack; aws s3 sync ./public s3://bizendao"
   },
   "keywords": [],

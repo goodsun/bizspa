@@ -1,0 +1,8 @@
+{
+  "name": "TITLE 作品タイトル",
+  "description": "DESCRIPTION 概要を入れてくだだい",
+  "image": "https://arweave.net/Wi_IWXN2DzDf3jxFbxFWztdBy8BGgZ9gPA6GIgJDWUI",
+  "attributes": [
+    { "trait_type": "LABEL 追加情報", "value": "VALUE 追加情報本文" }
+  ]
+}

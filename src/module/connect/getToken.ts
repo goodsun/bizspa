@@ -102,7 +102,7 @@ export const getTokenInfo = async (ca: string) => {
       creator: await getToken("creator", ca),
       owner: await getToken("owner", ca),
       creatorOnly: await getToken("creatorOnly", ca),
-      needPoint: await getDonatePoint(ca), // 必要なdpoint
+      needPoint: await getDonatePoint(ca), // 必要なD-BIZ
     };
     return result;
   } catch (error) {

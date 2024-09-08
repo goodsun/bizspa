@@ -44,15 +44,19 @@ async function getBizNft(ownerAddress: string, contractAddress: string) {
     const lastTokenId = await contract._lastTokenId();
     let tokens = [];
     for (let i = lastTokenId; i > 0; i--) {
-      const tokenURI = await contract.tokenURI(i);
-      const owner = await contract.ownerOf(i);
-      if (utils.isAddressesEqual(owner, ownerAddress)) {
-        tokens.push({ tokenId: i, owner: owner, tokenURI });
+      try {
+        const tokenURI = await contract.tokenURI(i);
+        const owner = await contract.ownerOf(i);
+        if (utils.isAddressesEqual(owner, ownerAddress)) {
+          tokens.push({ tokenId: i, owner: owner, tokenURI });
+        }
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
       }
     }
     return tokens;
   } catch (error) {
-    console.error("Error occurred:", error);
+    console.error("Error_occurred:", error);
   }
 }
 

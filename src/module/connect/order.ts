@@ -44,7 +44,7 @@ export const setUrl = async (
       " url:" +
       url +
       "\nファイル管理が不要な場合このトランザクションをキャンセルすることが可能です。\n" +
-      "必ずparmawebURLを記録してください。。"
+      "必ずpermawebURLを記録してください。。"
   );
   const provider = new ethers.BrowserProvider(window.ethereum);
   const contract = await provider.getSigner().then((signer) => {

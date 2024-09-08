@@ -1,4 +1,5 @@
 import getTokenConnect from "../connect/getToken";
+import { LANGSET } from "../common/lang";
 import { getOwn } from "../connect/getOwn";
 import utils from "../common/utils";
 import { router } from "../common/router";
@@ -80,15 +81,13 @@ export const displayMintUI = async (targetElem, params) => {
     !utils.isAddressesEqual(mintableInfo.creator, balance.eoa) &&
     !utils.isAddressesEqual(mintableInfo.owner, balance.eoa)
   ) {
-    balanceElement.innerHTML += "このNFTのMINTは作家限定です";
+    balanceElement.innerHTML += LANGSET("CREATOR_ONLY");
     mintable = false;
   }
 
   if (balance.dpoint < mintableInfo.needPoint) {
     balanceElement.innerHTML +=
-      "このNFTのMINTには donationPointが " +
-      mintableInfo.needPoint +
-      " pt 必要です";
+      LANGSET("CREATOR_ONLY") + mintableInfo.needPoint + " pt";
     mintable = false;
   }
 
@@ -254,7 +253,7 @@ export const displayToken = async (
           askDiscord.classList.add("askDiscordBot");
           askDiscord.appendChild(image);
           askDiscord.appendChild(
-            commonSnipet.span(userName + "は購入者ですか？ ")
+            commonSnipet.span(userName + LANGSET("ARE_YOU_BUYER"))
           );
           askDiscord.appendChild(password);
           askDiscord.appendChild(sendRequest);
@@ -533,6 +532,7 @@ export const displayOwns = async (parentElement, result, eoa) => {
   parentElement.appendChild(sbtfloatClear);
 
   for (const key in result) {
+    await sleep(300);
     if (!result[key][3]) {
       console.log(utils.getLocalTime() + "非表示判定" + result[key]);
     } else if (result[key][2] === "nft") {
@@ -748,8 +748,7 @@ const creatorDonateList = async (elm, eoa) => {
   elm.appendChild(title);
   const subject = document.createElement("p");
   subject.classList.add("creatorDonatetitle");
-  subject.innerHTML =
-    "BizenDAO登録作家はこちらで購入者に代わって代理寄付が可能です。<br />またガス代としてキャッシュバックすることができます。";
+  subject.innerHTML = LANGSET("DONATEMESSAGE");
   elm.appendChild(subject);
 
   const hasNftList = await getTokenConnect.hasTokenList(eoa);
@@ -768,17 +767,27 @@ const creatorDonateList = async (elm, eoa) => {
     metaDataInfo.push(metadata);
   }
 
-  const donate = setElement.makeInput("input", "sendTo", "BaseInput", "寄付額");
+  const donate = setElement.makeInput(
+    "input",
+    "sendTo",
+    "BaseInput",
+    LANGSET("DONATEPRICE")
+  );
   donate.classList.add("w5p");
   const cashback = setElement.makeInput(
     "input",
     "sendTo",
     "BaseInput",
-    "キャッシュバック額"
+    LANGSET("CASHBACK")
   );
   cashback.classList.add("w5p");
   elm.appendChild(document.createElement("br"));
-  const sendTo = setElement.makeInput("input", "sendTo", "BaseInput", "寄付者");
+  const sendTo = setElement.makeInput(
+    "input",
+    "sendTo",
+    "BaseInput",
+    LANGSET("DONOR")
+  );
   sendTo.classList.add("wfull");
   const sendDonateNftArea = document.createElement("div");
   sendDonateNftArea.classList.add("sendDonateNftArea");
@@ -802,8 +811,8 @@ const creatorDonateList = async (elm, eoa) => {
     "submit",
     "submitID",
     "BaseSubmit",
-    "SUBSTITUTE DONATION",
-    "SUBSTITUTE DONATION"
+    LANGSET("SUBDONATE"),
+    LANGSET("SUBDONATE")
   );
   makeSubmit.classList.add("wfull");
   sendNftFormArea.appendChild(makeSubmit);
@@ -892,7 +901,7 @@ const creatorDonateList = async (elm, eoa) => {
           );
 
           if (!checkSend.result) {
-            alert("このアドレスには送信できません : " + checkSend.reason);
+            alert(LANGSET("CANTSEND") + " : " + checkSend.reason);
             sendTo.value = "";
             discordUserCheckArea.innerHTML = "";
             discordUserCheckArea.classList.remove("sendToUser");
@@ -930,14 +939,10 @@ const creatorDonateList = async (elm, eoa) => {
   const setSendNft = async () => {
     sendNftPreviewBg.innerHTML = "";
     if (metaDataInfo[selectForm.value]) {
-      console.log("NFTを選択しました。" + selectForm.value);
-      console.dir(metaDataInfo[selectForm.value].image);
       const nftimg = document.createElement("img");
       nftimg.classList.add("sendNftPreviewImg");
       nftimg.src = metaDataInfo[selectForm.value].image;
       sendNftPreviewBg.appendChild(nftimg);
-    } else {
-      console.log("NFTを選択解除");
     }
   };
 
@@ -962,12 +967,12 @@ const creatorDonateList = async (elm, eoa) => {
 
   const sendSubDonate = async () => {
     if (donate.value == "") {
-      alert("寄付額を入力してください");
+      alert(LANGSET("MES1"));
       return;
     }
     const maticPrice = await utils.getMaticYen();
     if (maticPrice == undefined) {
-      alert("現在価格の取得に失敗しました。しばらくお待ち下さい。");
+      alert(LANGSET("MES2"));
       return;
     }
 
@@ -976,11 +981,11 @@ const creatorDonateList = async (elm, eoa) => {
 
     const balance = await utils.checkBalance();
     if (utils.waiToEth(balance.balance) < Number(donateMatic)) {
-      alert(CONST.DEFAULT_SYMBOL + " が足りません");
+      alert(CONST.DEFAULT_SYMBOL + LANGSET("NOT_ENOUGH"));
       return;
     }
     if (donateMatic / 2 <= cashbackMatic) {
-      alert("キャッシュバック額が大きすぎます");
+      alert(LANGSET("MES3"));
       return;
     }
     const mes =
@@ -1008,14 +1013,14 @@ const creatorDonateList = async (elm, eoa) => {
       ]);
       console.dir(donateResult);
       if (donateResult != undefined) {
-        alert(metaDataInfo[selectForm.value].name + " を送信します。");
+        alert(metaDataInfo[selectForm.value].name + LANGSET("MES4"));
         const sendResult = await setToken.send(
           hasNftList[selectForm.value].ca,
           sendTo.value,
           hasNftList[selectForm.value].tokenId
         );
         if (sendResult != undefined) {
-          alert(metaDataInfo[selectForm.value].name + " を送信しました。");
+          alert(metaDataInfo[selectForm.value].name + LANGSET("MES5"));
           console.dir(sendResult);
           location.reload();
         }
@@ -1036,7 +1041,7 @@ const creatorDonateHistory = async (elm) => {
   const checkBalance = await utils.checkBalance();
   const subject = document.createElement("p");
   subject.classList.add("creatorDonatetitle");
-  subject.innerHTML = "代理寄付履歴";
+  subject.innerHTML = LANGSET("SUBDONAHIST");
   elm.appendChild(subject);
   const historyDiv = document.createElement("div");
   historyDiv.classList.add("creatorDonateHistory");
@@ -1117,7 +1122,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   mintableFormArea.appendChild(selectForm);
   mintableFormArea.appendChild(tokenUri);
   const label = document.createElement("span");
-  label.innerHTML = " ※ メタデータが格納されているURLを指定してください。";
+  label.innerHTML = LANGSET("REQUIRE_META_URL");
   label.classList.add("labelspan");
   mintableFormArea.appendChild(label);
   mintableFormArea.appendChild(commonSnipet.br());
@@ -1148,7 +1153,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   vaultSelect.classList.add("w3p");
   mintableFormArea.appendChild(vaultSelect);
   vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal("parmawebList", ["jsonOnly"]);
+    utils.toggleModal("permawebList", ["jsonOnly"]);
   });
 
   selectForm.addEventListener("change", async () => {
@@ -1156,8 +1161,8 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     const balance = await utils.checkBalance();
     console.dir(mintableContract[selectForm.value]);
     if (balance.dpoint < cainfo.needPoint) {
-      alert("Mintするのに必要なポイントが足りません。");
-      selectForm.value = "選択してください";
+      alert(LANGSET("NOT_ENOUGH_DBIZ"));
+      selectForm.value = LANGSET("SELECTMES");
     }
   });
 
@@ -1165,10 +1170,15 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     const contract = mintableContract[selectForm.value];
     console.dir(contract);
     let message =
-      sendTo + "宛に" + contract.name + " をMINTしようとしています\n";
+      LANGSET("TRYING_TO_MINT") +
+      "\n" +
+      "SEND TO : " +
+      sendTo +
+      "\n" +
+      "NFT : " +
+      contract.name;
     if (contract.needPoint > 0) {
-      message +=
-        "このNFTのmintはdonatePointを" + contract.needPoint + "pt消費します。";
+      message += LANGSET("REQUIRE_DBIZ") + " : " + contract.needPoint + "pt";
     }
     if (confirm(message)) {
       const result = await setToken.mint(contract.ca, sendTo, tokenUri.value);
@@ -1192,7 +1202,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
       })
       .catch(() => {
         previewElement.style.display = "none";
-        alert(tokenUri.value + " は無効なtokenURIです。");
+        alert(tokenUri.value + LANGSET("INVALID_TOKENURI"));
       });
   });
 };

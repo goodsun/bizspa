@@ -1,4 +1,5 @@
 import utils from "../common/utils";
+import { LANGSET } from "../common/lang";
 import { router } from "../../module/common/router";
 import getTbaConnect from "../../module/connect/getTbaConnect";
 import setElement from "./setElement";
@@ -311,7 +312,7 @@ export const tbaSendForm = (
 
   const makeElement = setElement.makeElement(
     "p",
-    "このNFTをTBAからEOAに送信します",
+    LANGSET("SENDTOEOA"),
     null,
     "createdPelemBySetElement"
   );
@@ -350,7 +351,7 @@ export const tbaSendForm = (
         0
       );
       if (!checkSend.result) {
-        alert("このアドレスには送信できません : " + checkSend.reason);
+        alert(LANGSET("CANTSEND") + " : " + checkSend.reason);
         return false;
       }
 
@@ -394,10 +395,12 @@ export const tbaSendForm = (
       0
     );
     if (!checkSend.result) {
-      alert("このアドレスには送信できません : " + checkSend.reason);
+      alert(LANGSET("CANTSEND") + " : " + checkSend.reason);
       return false;
     }
-    if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
+    if (
+      confirm(LANGSET("SENDNFTBEF") + sendToInput.value + LANGSET("SENDNFTAFT"))
+    ) {
       const args = [owner, sendToInput.value, id];
       const value = 0;
       const calldata = await getToken.getCallData(ca, "transferFrom", args);
@@ -409,7 +412,7 @@ export const tbaSendForm = (
         calldata
       );
       console.log(result);
-      alert("送信しました");
+      alert(LANGSET("SENDED"));
     }
   });
 };
@@ -425,7 +428,7 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
 
   const makeElement = setElement.makeElement(
     "p",
-    "このNFTをEOA宛に送信します",
+    LANGSET("SENDTOEOA"),
     null,
     "createdPelemBySetElement"
   );
@@ -465,7 +468,7 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
     );
 
     if (!checkSend.result) {
-      alert("このアドレスには送信できません : " + checkSend.reason);
+      alert(LANGSET("CANTSEND") + " : " + checkSend.reason);
       return false;
     }
 
@@ -503,17 +506,19 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
     );
 
     if (!checkSend.result) {
-      alert("このアドレスには送信できません : " + checkSend.reason);
+      alert(LANGSET("CANTSEND") + " : " + checkSend.reason);
       return false;
     }
 
-    if (confirm("本当にこのNFTを" + sendToInput.value + "に送信しますか")) {
+    if (
+      confirm(LANGSET("SENDNFTBEF") + sendToInput.value + LANGSET("SENDNFTAFT"))
+    ) {
       const result = await setToken.send(
         params[2],
         sendToInput.value,
         params[3]
       );
-      alert("送信しました");
+      alert(LANGSET("SENDED"));
     }
   });
   return divElement;
@@ -552,7 +557,7 @@ export const tbaRegist = (
   divElement.appendChild(makeSubmit);
 
   makeSubmit.addEventListener("click", async () => {
-    if (confirm("本当にTBAを発行しますか\nToken info\n" + ca + " #" + id)) {
+    if (confirm(LANGSET("ARE_YOU_TBA") + "\nToken info\n" + ca + " #" + id)) {
       const tbaOwner = await getTbaConnect.createAccount(ca, id);
       alert("registerd ： " + ca + " #" + id);
     }
@@ -570,7 +575,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
 
   const makeElement = setElement.makeElement(
     "p",
-    "指定したtokenURIを利用しNFTをMINTします。",
+    LANGSET("MINT_THE_TOKENURI"),
     null,
     "createdPelemBySetElement"
   );
@@ -595,14 +600,14 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   vaultSelect.classList.add("w3p");
   divElement.appendChild(vaultSelect);
   const label = document.createElement("span");
-  label.innerHTML = " ※ メタデータが格納されているURLを指定してください。";
+  label.innerHTML = LANGSET("REQUIRE_META_URL");
   label.classList.add("labelspan");
   divElement.appendChild(label);
 
   divElement.appendChild(commonSnipet.br());
 
   vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal("parmawebList", ["jsonOnly"]);
+    utils.toggleModal("permawebList", ["jsonOnly"]);
   });
 
   const discordUserCheckArea = document.createElement("div");
@@ -673,21 +678,19 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
         );
       })
       .catch(() => {
-        alert(tokenUriForm.value + " は無効なtokenURIです。");
+        alert(tokenUriForm.value + LANGSET("INVALID_TOKENURI"));
       });
   });
 
   makeSubmit.addEventListener("click", async () => {
     const params = router.params;
-    let message = tokenUriForm.value + " のメタデータでNFTを作成し\n";
-    message += eoaForm.value + " 宛に送信します。\n";
+    let message = "metaURI : " + tokenUriForm.value + "\n";
+    message += "SEND TO : " + eoaForm.value + "\n";
     const donatePoint = await setToken.donatePoint(params[2]);
-    console.log("donatePoint:" + donatePoint);
+    console.log("D-BIZ:" + donatePoint);
     if (donatePoint > 0) {
       message +=
-        "このNFTのmintはdonatePointを" +
-        utils.waiToEth(donatePoint) +
-        "pt消費します。";
+        LANGSET("REQUIRE_DBIZ") + " : " + utils.waiToEth(donatePoint) + " pt";
     }
     if (confirm(message)) {
       if (params[1] == "tokens") {

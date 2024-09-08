@@ -1,3 +1,4 @@
+import { LANGSET } from "../common/lang";
 export const makeElement = (
   type: string,
   text: string,
@@ -51,7 +52,7 @@ export const makeSelect = (inputId: string, setClass: string) => {
   child.classList.add(setClass);
   const option = document.createElement("option");
   option.value = null;
-  option.innerHTML = "選択してください";
+  option.innerHTML = LANGSET("SELECTMES");
   child.appendChild(option);
   return child;
 };

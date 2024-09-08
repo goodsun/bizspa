@@ -1,3 +1,4 @@
+import { LANGSET } from "../common/lang";
 const link = (text, link) => {
   const aTag = document.createElement("a");
   aTag.href = link;
@@ -27,11 +28,11 @@ const linkCopy = (link, message?) => {
         if (message) {
           alert(message);
         } else {
-          alert(`クリップボードにコピーされました`);
+          alert(`${textToCopy} ${LANGSET("COPYED")}`);
         }
       })
       .catch((err) => {
-        console.error("コピーに失敗しました: ", err);
+        console.error(LANGSET("COPYFAILED"), err);
       });
   };
   linkCopyElm.appendChild(copybtn);
@@ -114,10 +115,10 @@ const eoa = (
     navigator.clipboard
       .writeText(textToCopy)
       .then(() => {
-        alert(`${textToCopy} がクリップボードにコピーされました`);
+        alert(`${textToCopy} ${LANGSET("COPYED")}`);
       })
       .catch((err) => {
-        console.error("コピーに失敗しました: ", err);
+        console.error(LANGSET("COPYFAILED"), err);
       });
   };
   eoaElm.appendChild(copybtn);
@@ -186,10 +187,10 @@ const getDiscordUserSnipet = (discordUser, elm, className) => {
     navigator.clipboard
       .writeText(textToCopy)
       .then(() => {
-        alert(`DiscordId: ${textToCopy} がクリップボードにコピーされました`);
+        alert(`DiscordId: ${textToCopy} ${LANGSET("COPYED")}`);
       })
       .catch((err) => {
-        console.error("コピーに失敗しました: ", err);
+        console.error(LANGSET("COPYFAILED"), err);
       });
   };
   discordElem.appendChild(copybtn);
@@ -228,10 +229,10 @@ export const copyAction = (text) => {
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      console.log(`${text} がクリップボードにコピーされました`);
+      alert(`DiscordId: ${text} ${LANGSET("COPYED")}`);
     })
     .catch((err) => {
-      console.error("コピーに失敗しました: ", err);
+      console.error(LANGSET("COPYFAILED"), err);
     });
 };
 

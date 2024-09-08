@@ -22,7 +22,7 @@ const showAccount = async (eoa, parent) => {
       const tokenInfo = await utils.fetchData(tokenUri);
       const image = document.createElement("img");
       image.classList.add("ownerProfPictIcon");
-      image.src = "https://dao.bon-soleil.com/img/dummy.jpg";
+      image.src = "https://bizen.sbs/img/dummy.jpg";
       image.src = tokenInfo.image;
       accountElm.appendChild(image);
 

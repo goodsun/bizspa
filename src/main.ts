@@ -5,7 +5,7 @@ import getTbaConnect from "./module/connect/getTbaConnect";
 import { donate, getDonate } from "./module/connect/donate";
 import getManagerConnect from "./module/connect/getManager";
 import orderConnect from "./module/connect/order";
-import parmawebcon from "./module/connect/parmaweb";
+import permawebcon from "./module/connect/permaweb";
 import setMeta from "./module/connect/metabuilder";
 import discordConnect from "./module/connect/discordConnect";
 import homeSnipet from "./module/snipet/home";
@@ -38,13 +38,13 @@ async function metabuilder() {
     */
   await setMeta.getUI();
 }
-async function parmaweb() {
+async function permaweb() {
   const checkBalance = await utils.checkBalance();
   if (checkBalance.eoa == undefined) {
     displaySnipet.isNotConnect();
     return;
   }
-  await parmawebcon.getUI();
+  await permawebcon.getUI();
 }
 async function setArticle() {
   articleSnipet.getMdPath();
@@ -113,31 +113,25 @@ async function setDonate(params) {
 
     if (totaldonations > 0) {
       donateContents.innerHTML +=
-        "<p>Total donations : " + totaldonations + " donatePoint" + "</p>";
+        "<p>Total donations : " + totaldonations + " D-BIZ" + "</p>";
     }
     if (usedpoints > 0) {
       donateContents.innerHTML +=
-        "<p>Used points : " + usedpoints + " donatePoint" + "</p>";
+        "<p>Used points : " + usedpoints + " D-BIZ" + "</p>";
     }
     if (donateBalance > 0) {
       donateContents.innerHTML +=
-        "<p>Balance : " + donateBalance + " donatePoint" + "</p>";
+        "<p>Balance : " + donateBalance + " D-BIZ" + "</p>";
     }
   }
 
   if (allTotalDonation > 0) {
     donateContents.innerHTML +=
-      "<p>Total donation (All dao) : " +
-      allTotalDonation +
-      " donatePoint" +
-      "</p>";
+      "<p>Total donation (All dao) : " + allTotalDonation + " D-BIZ" + "</p>";
   }
   if (allTotalUsed > 0) {
     donateContents.innerHTML +=
-      "<p>Total used point (All dao) : " +
-      allTotalUsed +
-      " donatePoint" +
-      "</p>";
+      "<p>Total used point (All dao) : " + allTotalUsed + " D-BIZ" + "</p>";
   }
   divDonateElement.appendChild(donateContents);
 }
@@ -351,8 +345,8 @@ const checkRoute = () => {
     });
   } else if (param1 === "meta") {
     metabuilder();
-  } else if (param1 === "parmaweb") {
-    parmaweb();
+  } else if (param1 === "permaweb") {
+    permaweb();
   } else if (param1 === "regist") {
     discordRegist();
   }
