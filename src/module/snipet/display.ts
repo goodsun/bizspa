@@ -13,6 +13,10 @@ import donateConnect from "../connect/donate";
 import manageService from "../service/manageService";
 const mainContents = document.getElementById("mainContents");
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const getDiffTime = (date: string): string => {
   const targetDate = new Date(date);
   const now = new Date();
@@ -389,10 +393,6 @@ export const displayOwnTokens = async (
   });
 };
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export const displayTokens = async (tokensElement, ca, filter) => {
   console.log("filtering:", filter);
   var newArea = document.createElement("div");
@@ -409,48 +409,53 @@ export const displayTokens = async (tokensElement, ca, filter) => {
     var childNftDiv = document.createElement("div");
     childNftDiv.classList.add("childNft");
     childNftDiv.id = "token_" + ca + "_" + i;
-    //newArea.appendChild(childNftDiv);
     document.getElementById("child_nft_area_" + ca).appendChild(childNftDiv);
-
     getTokenConnect.getToken("tokenURI", ca, i).then(async (tokenUri) => {
-      const newLink = await utils.fetchData(tokenUri).then((nftinfo) => {
-        var newLink = document.createElement("a");
-        newLink.href = "/tokens/" + ca + "/" + i;
-        var newTitle = document.createElement("h3");
-        newTitle.classList.add("titleThumb");
-        newTitle.textContent = nftinfo["name"];
-        newLink.appendChild(newTitle);
-        var squareImg = document.createElement("div");
-        squareImg.classList.add("nftThumbSquare");
-        var newImage = document.createElement("img");
-        newImage.src = nftinfo["image"];
-        newImage.classList.add("nftThumb");
-        squareImg.appendChild(newImage);
+      if (tokenUri == undefined) {
+        console.log("undefined /tokens/" + ca + "/" + i);
+        document.getElementById("token_" + ca + "_" + i).remove();
+      } else {
+        const newLink = await utils.fetchData(tokenUri).then((nftinfo) => {
+          var newLink = document.createElement("a");
+          newLink.href = "/tokens/" + ca + "/" + i;
+          var newTitle = document.createElement("h3");
+          newTitle.classList.add("titleThumb");
+          newTitle.textContent = nftinfo["name"];
+          newLink.appendChild(newTitle);
+          var squareImg = document.createElement("div");
+          squareImg.classList.add("nftThumbSquare");
+          var newImage = document.createElement("img");
+          newImage.src = nftinfo["image"];
+          newImage.classList.add("nftThumb");
+          squareImg.appendChild(newImage);
 
-        getTbaConnect.getTbaInfo(ca, i).then((tba) => {
-          getTbaConnect.checkOwner(tba).then((response) => {
-            if (response) {
-              var tbamark = document.createElement("i");
-              tbamark.classList.add(
-                "far",
-                "fa-solid",
-                "fa-bag-shopping",
-                "tbamark"
-              );
-              squareImg.appendChild(tbamark);
-            }
+          getTbaConnect.getTbaInfo(ca, i).then((tba) => {
+            getTbaConnect.checkOwner(tba).then((response) => {
+              if (response) {
+                var tbamark = document.createElement("i");
+                tbamark.classList.add(
+                  "far",
+                  "fa-solid",
+                  "fa-bag-shopping",
+                  "tbamark"
+                );
+                squareImg.appendChild(tbamark);
+              }
+            });
           });
+
+          newLink.appendChild(squareImg);
+          return newLink;
         });
 
-        newLink.appendChild(squareImg);
-        return newLink;
-      });
+        var childNftBg = document.createElement("div");
+        childNftBg.classList.add("childNftBg");
+        childNftBg.appendChild(newLink);
 
-      var childNftBg = document.createElement("div");
-      childNftBg.classList.add("childNftBg");
-      childNftBg.appendChild(newLink);
-
-      document.getElementById("token_" + ca + "_" + i).appendChild(childNftBg);
+        document
+          .getElementById("token_" + ca + "_" + i)
+          .appendChild(childNftBg);
+      }
       console.log(utils.getLocalTime() + " 遅延実行完了" + tokenUri);
     });
   }
@@ -623,13 +628,14 @@ export const displayTokenContracts = async (result, filter) => {
 
         const mintLinkArea = document.createElement("span");
         contractTitle.appendChild(mintLinkArea);
-        createMintLinkElm(result[key][0], mintLinkArea);
+        // createMintLinkElm(result[key][0], mintLinkArea);
 
         displayTokens(sbtListElm, result[key][0], false);
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
       }
     });
+    await sleep(100);
   }
 };
 
