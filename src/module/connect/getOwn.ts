@@ -51,7 +51,7 @@ async function getBizNft(ownerAddress: string, contractAddress: string) {
           tokens.push({ tokenId: i, owner: owner, tokenURI });
         }
       } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+        console.error("Token BIZNFT List get error :", error);
       }
     }
     return tokens;
@@ -67,9 +67,13 @@ async function getERC721Tokens(ownerAddress: string, contractAddress: string) {
 
     let tokens = [];
     for (let i = 0; i < balance; i++) {
-      const tokenId = await contract.tokenOfOwnerByIndex(ownerAddress, i);
-      const tokenURI = await contract.tokenURI(tokenId);
-      tokens.push({ tokenId: tokenId.toString(), tokenURI });
+      try {
+        const tokenId = await contract.tokenOfOwnerByIndex(ownerAddress, i);
+        const tokenURI = await contract.tokenURI(tokenId);
+        tokens.push({ tokenId: tokenId.toString(), tokenURI });
+      } catch (error) {
+        console.error("Token 721 List get error :", error);
+      }
     }
     return tokens;
   } catch (error) {
@@ -84,12 +88,16 @@ async function getERC1155Tokens(ownerAddress, contractAddress, tokenIds) {
   for (let tokenId of tokenIds) {
     const balance = await contract.balanceOf(ownerAddress, tokenId);
     if (balance > 0) {
-      const tokenURI = await contract.uri(tokenId);
-      tokens.push({
-        tokenId: tokenId.toString(),
-        balance: balance.toString(),
-        tokenURI,
-      });
+      try {
+        const tokenURI = await contract.uri(tokenId);
+        tokens.push({
+          tokenId: tokenId.toString(),
+          balance: balance.toString(),
+          tokenURI,
+        });
+      } catch (error) {
+        console.error("Token 1155 List get error :", error);
+      }
     }
   }
   return tokens;
