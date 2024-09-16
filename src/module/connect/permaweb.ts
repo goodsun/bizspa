@@ -173,11 +173,15 @@ const setUI = (parent, eoa) => {
               if (response.ok) {
                 const result = await response.json();
                 console.log("File upload successfully:", result);
+                console.log("order ca", orderCa);
+                console.log("order result", orderResult);
+                console.log("filename", file.name);
+                console.log("parmawebUrl", result.parmawebUrl);
 
                 //==============================================
                 //アップロード成功でリスト追加
                 const setUrlResult = await orderConnect
-                  .setUrl(orderCa, orderResult, file.name, result.permawebUrl)
+                  .setUrl(orderCa, orderResult, file.name, result.parmawebUrl)
                   .then((response) => {
                     console.dir(response);
                     uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
@@ -191,7 +195,7 @@ const setUI = (parent, eoa) => {
                     uploadingInfoArea.classList.add("upload-success");
                     console.dir(error);
                   });
-                console.log(setUrlResult);
+                console.log("SetUrlResult" + setUrlResult);
               } else {
                 console.error("Failed to upload file:", response.statusText);
                 uploadingInfoArea.innerHTML = "Failed to Upload file";

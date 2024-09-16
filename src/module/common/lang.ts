@@ -1,9 +1,6 @@
 import { router } from "../../module/common/router";
 export const LANG = {
   en: {
-    SITE_TITLE: "BIZEN DAO | Japan traditional crafts",
-    SITE_DESCRIPTION:
-      "BizenDAO is a non-profit regional revitalization community whose purpose is to promote Bizen ware as a traditional craft.",
     HOME: "home",
     CREATORS: "creators",
     TOKENS: "tokens",
@@ -57,9 +54,6 @@ export const LANG = {
     MINT_THE_TOKENURI: "mint the NFT using the specified tokenURI.",
   },
   ja: {
-    SITE_TITLE: "BIZEN DAO | 備前焼振興 WEB３ コミュニティ",
-    SITE_DESCRIPTION:
-      "BizenDAOは伝統工芸としての備前焼振興を目的とした非営利の地方創生コミュニティです。",
     HOME: "ホーム",
     CREATORS: "作家",
     TOKENS: "NFT",

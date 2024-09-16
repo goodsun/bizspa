@@ -163,8 +163,7 @@ export const displayToken = async (
 
   var openseaLink = document.createElement("a");
   openseaLink.classList.add("openseaLink");
-  openseaLink.href =
-    "https://opensea.io/assets/" + CONST.DEFAULT_SYMBOL + "/" + ca + "/" + id;
+  openseaLink.href = "https://opensea.io/assets/matic/" + ca + "/" + id;
   openseaLink.innerHTML = '<i class="opensea">';
   openseaLink.target = "_blank";
   pElement.appendChild(openseaLink);

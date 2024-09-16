@@ -1,8 +1,1 @@
-{
-  "name": "TITLE 作品タイトル",
-  "description": "DESCRIPTION 概要を入れてくだだい",
-  "image": "https://arweave.net/Wi_IWXN2DzDf3jxFbxFWztdBy8BGgZ9gPA6GIgJDWUI",
-  "attributes": [
-    { "trait_type": "LABEL 追加情報", "value": "VALUE 追加情報本文" }
-  ]
-}
+{"name":"英語タイトル　日本語タイトル","description":"英語訳での概要（日本語概要をgoogle翻訳やchatGPTなどで訳してコピペする）\n\n日本語での概要","image":"","external_url":"","":"https://arweave.net/8UyKTX1SjyusQbQqjH3BZwchw1TL8vKBAIJ6vMlw-u0","animation_url":"","attributes":[{"trait_type":"Story","value":"概要とは別に書きたいことがあればここへ。なければDELで削除。\n英語Story\n日本語Story"},{"trait_type":"Photo from directly above","value":"真上からの写真を入れたい場合はここにパーマウェブのURL\nない場合はDELで削除\n真横からの写真を入れたい時は上のタイトルをPhoto from the sideに変更してからここにデータのURL"}]}

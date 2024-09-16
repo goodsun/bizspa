@@ -10,12 +10,6 @@ const mainContents = document.getElementById("mainContents");
 const getHome = async () => {
   const divElem = document.createElement("div");
   divElem.classList.add("homeContents");
-  const titleElement = document.createElement("h2");
-  titleElement.innerHTML = LANGSET("SITE_TITLE");
-  divElem.appendChild(titleElement);
-  const pElement = document.createElement("p");
-  pElement.innerHTML = LANGSET("SITE_DESCRIPTION");
-  divElem.appendChild(pElement);
   return divElem;
 };
 
@@ -105,9 +99,7 @@ const getItems = async () => {
         var openseaLink = document.createElement("a");
         openseaLink.classList.add("shopSiteLink");
         openseaLink.href =
-          "https://opensea.io/assets/" +
-          CONST.DEFAULT_SYMBOL +
-          "/" +
+          "https://opensea.io/assets/matic/" +
           results[key].Contract +
           "/" +
           results[key].TokenId;
