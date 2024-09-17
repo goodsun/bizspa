@@ -228,6 +228,7 @@ export const fetchData = async (Url) => {
   console.log(getLocalTime() + " fetchData:" + Url);
   try {
     const response = await fetch(Url);
+    console.dir(response);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }

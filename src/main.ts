@@ -8,6 +8,8 @@ import orderConnect from "./module/connect/order";
 import permawebcon from "./module/connect/permaweb";
 import setMeta from "./module/connect/metabuilder";
 import discordConnect from "./module/connect/discordConnect";
+import editorConnect from "./module/connect/editorConnect";
+import memberSbtConnect from "./module/connect/memberSbtConnect";
 import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
@@ -20,6 +22,22 @@ document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
 const mainContents = document.getElementById("mainContents");
 
+async function memberSbt() {
+  const checkBalance = await utils.checkBalance();
+  if (checkBalance.eoa == undefined) {
+    displaySnipet.isNotConnect();
+    return;
+  }
+  await memberSbtConnect.getUI();
+}
+async function editorLink() {
+  const checkBalance = await utils.checkBalance();
+  if (checkBalance.eoa == undefined) {
+    displaySnipet.isNotConnect();
+    return;
+  }
+  await editorConnect.getUI();
+}
 async function discordRegist() {
   const checkBalance = await utils.checkBalance();
   if (checkBalance.eoa == undefined) {
@@ -156,8 +174,8 @@ const setCreators = async () => {
 const setCreator = async () => {
   const PATH = router.lang + "/creator/" + router.params[2];
   const mdPath = CONST.BOT_API_URL + "contents/get/" + PATH;
-  const original = `${CONST.ARTICLE_REPO_URL}${PATH}.md`;
-  articleSnipet.parseMdPage(mdPath, original);
+  const path = `${PATH}.md`;
+  articleSnipet.parseMdPage(mdPath, path);
   setOwnTokenContracts((filter) => {
     return filter[3] == true;
   });
@@ -174,16 +192,20 @@ const setOwner = async (eoa) => {
   const ownerTitle = document.createElement("h2");
   ownerTitle.textContent = "Owner Info";
   divOwnerElement.appendChild(ownerTitle);
+  const tbaOwner = await getTbaConnect.checkOwner(eoa);
 
-  accountSnipet.showAccount(eoa, divOwnerElement);
+  accountSnipet.showAccount(eoa, tbaOwner, divOwnerElement);
 
-  const mintableFormElm = document.createElement("div");
-  mintableFormElm.classList.add("mintableArea");
-  mintableFormElm.innerHTML =
-    "<span><div class='minispinner'></div>mintable contract loading...</span>";
-  mintableFormElm.style.display = "none";
-  mainContents.appendChild(mintableFormElm);
-  displaySnipet.setMintableForm(mintableFormElm, eoa);
+  if (tbaOwner) {
+    const mintableFormElm = document.createElement("div");
+    mintableFormElm.classList.add("mintableArea");
+    mintableFormElm.innerHTML =
+      "<span><div class='minispinner'></div>mintable contract loading...</span>";
+    mintableFormElm.style.display = "none";
+    mainContents.appendChild(mintableFormElm);
+    displaySnipet.setMintableForm(mintableFormElm, eoa);
+  }
+
   setOwns(eoa);
 };
 
@@ -349,6 +371,10 @@ const checkRoute = () => {
     permaweb();
   } else if (param1 === "regist") {
     discordRegist();
+  } else if (param1 === "editor") {
+    editorLink();
+  } else if (param1 === "membersbt") {
+    memberSbt();
   }
 };
 

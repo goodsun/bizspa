@@ -20,7 +20,7 @@ const getAllContracts = async (filter: Array<String>) => {
 
 const getMintableContract = async (eoa) => {
   await sleep(200);
-  const contracts = await getAllContracts(["nft", "sbt"]);
+  const contracts = await getAllContracts(["sbt"]);
   let result = [];
   for (const key in contracts) {
     console.log(

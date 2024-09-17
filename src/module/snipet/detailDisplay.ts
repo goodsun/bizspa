@@ -15,7 +15,8 @@ export const showToken = async (
   owner,
   tokenUri,
   divElement: HTMLParagraphElement,
-  tokenBoundAccount
+  tokenBoundAccount,
+  caSymbol
 ) => {
   console.log("select type: " + type);
   console.dir(metadata);
@@ -260,7 +261,15 @@ export const showToken = async (
   if (tbaOwner) {
     const balance = await utils.checkBalance();
     if (utils.isAddressesEqual(tbaOwner, balance.eoa)) {
-      detailDisplay.tbaSendForm(tbaOwner, owner, divElement);
+      if (caSymbol != "SBT") {
+        if (caSymbol.includes("SBT")) {
+          alert(
+            "このNFTはSBTの可能性があります。送信できない可能性があります。"
+          );
+        }
+        detailDisplay.tbaSendForm(tbaOwner, owner, divElement);
+      }
+      detailDisplay.tbaBurnForm(tbaOwner, owner, divElement);
     }
   }
 };
@@ -417,6 +426,43 @@ export const tbaSendForm = (
   });
 };
 
+export const tbaBurnForm = (
+  parent,
+  owner,
+  divElement: HTMLParagraphElement
+) => {
+  const params = router.params;
+
+  const ca = params[2];
+  const id = params[3];
+
+  const burnSubmit = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "BURN",
+    "BURN"
+  );
+  burnSubmit.classList.add("wfull");
+  divElement.appendChild(burnSubmit);
+
+  burnSubmit.addEventListener("click", async () => {
+    if (confirm(LANGSET("BURNNFT"))) {
+      const args = [id];
+      const value = 0;
+      const calldata = await getToken.getCallData(ca, "burn", args);
+      const result = await getTbaConnect.executeCall(
+        owner,
+        ca,
+        value,
+        calldata
+      );
+      console.log(result);
+      alert(LANGSET("BURNED"));
+    }
+  });
+};
+
 export const sendForm = (divElement: HTMLParagraphElement) => {
   setElement.setChild(
     divElement,
@@ -498,13 +544,11 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
 
   makeSubmit.addEventListener("click", async () => {
     const params = router.params;
-
     const checkSend = await getTbaConnect.sendToEoaCheck(
       sendToInput.value,
       { ca: params[2], tokenId: params[3] },
       0
     );
-
     if (!checkSend.result) {
       alert(LANGSET("CANTSEND") + " : " + checkSend.reason);
       return false;
@@ -519,6 +563,30 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
         params[3]
       );
       alert(LANGSET("SENDED"));
+      console.dir(result);
+    }
+  });
+
+  return divElement;
+};
+
+export const burnForm = (divElement: HTMLParagraphElement) => {
+  const burnSubmit = setElement.makeInput(
+    "submit",
+    "submitID",
+    "BaseSubmit",
+    "BURN",
+    "BURN"
+  );
+  burnSubmit.classList.add("wfull");
+  divElement.appendChild(burnSubmit);
+
+  burnSubmit.addEventListener("click", async () => {
+    const params = router.params;
+    if (confirm(LANGSET("BURNNFT"))) {
+      const result = await setToken.burn(params[2], params[3]);
+      alert(LANGSET("BURNED"));
+      console.dir(result);
     }
   });
   return divElement;
@@ -674,6 +742,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
           "",
           tokenUriForm.value,
           previewElement,
+          "",
           ""
         );
       })
@@ -782,7 +851,9 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
 const detailDisplay = {
   showToken,
   sendForm,
+  burnForm,
   tbaSendForm,
+  tbaBurnForm,
   mintForm,
   tbaRegist,
   makeForm,

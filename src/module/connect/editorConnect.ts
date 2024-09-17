@@ -1,17 +1,16 @@
 import { router } from "../common/router";
-import utils from "../common/utils";
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
-import { ABIS } from "./abi";
 import setElement from "../snipet/setElement";
-import detailDisplay from "../snipet/detailDisplay";
+import utils from "../common/utils";
 
 const mainContents = document.getElementById("mainContents");
 
 export const getUI = async () => {
+  const balance = await utils.checkBalance();
   const params = router.params;
   const makeDiscordDiv = document.createElement("div");
-  makeDiscordDiv.classList.add("metadatabuilder");
+  makeDiscordDiv.classList.add("editorLink");
   mainContents.appendChild(makeDiscordDiv);
   const makeDiscordDisp = document.createElement("div");
   const makeDiscordCont = document.createElement("div");
@@ -24,7 +23,7 @@ export const getUI = async () => {
   //-- MAIN -------------------------------------
   const Title = document.createElement("H2");
   Title.classList.add("controlLavel");
-  Title.innerHTML = "Regist EOA";
+  Title.innerHTML = "Editor regist";
   makeDiscordCont.appendChild(Title);
 
   const setSecret = setElement.makeInput(
@@ -42,30 +41,27 @@ export const getUI = async () => {
     "submit",
     "submitID",
     "BaseSubmit",
-    "REGIST",
-    "REGIST"
+    "LOGIN",
+    "LOGIN"
   );
   setEoaRegist.classList.add("w3p");
   makeDiscordCont.appendChild(setEoaRegist);
 
   setEoaRegist.addEventListener("click", async () => {
     const result = await sendRegist(params[2], setSecret.value);
-    alert("check user result :" + result.message);
-    console.dir(result);
     if (result.result) {
-      window.location.href = "/";
+      console.log("id" + params[2]);
+      console.log("eoa" + balance.eoa);
+      console.log("secret" + setSecret.value);
+      postAndRedirect("https://article.bizen.sbs/login.php", {
+        id: params[2],
+        eoa: balance.eoa,
+        secret: setSecret.value,
+      });
+    } else {
+      alert("check user result :" + result.message);
     }
   });
-};
-
-const getUserByEoa = async (eoa) => {
-  const Url = CONST.BOT_API_URL + "member/" + eoa;
-  try {
-    const response = await fetch(Url);
-    return await response.json();
-  } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
-  }
 };
 
 const sendRegist = async (discordId, secret) => {
@@ -92,9 +88,26 @@ const sendRegist = async (discordId, secret) => {
   }
 };
 
-const discordConnect = {
+function postAndRedirect(url, data) {
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = url;
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = key;
+      input.value = data[key];
+      form.appendChild(input);
+    }
+  }
+  document.body.appendChild(form);
+  form.submit(); // POSTリクエストを実行してリダイレクト
+}
+
+const editorConnect = {
   getUI,
-  getUserByEoa,
 };
 
-export default discordConnect;
+export default editorConnect;

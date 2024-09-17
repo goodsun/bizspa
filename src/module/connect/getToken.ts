@@ -24,6 +24,11 @@ export const getToken = async (
         return response;
       });
       return result;
+    } else if (method == "symbol") {
+      const result = await contract.symbol().then((response) => {
+        return response;
+      });
+      return result;
     } else if (method == "creatorOnly") {
       const result = await contract._creatorOnly().then((response) => {
         return response;

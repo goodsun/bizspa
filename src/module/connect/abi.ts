@@ -1287,6 +1287,25 @@ export const ABIS = {
     {
       inputs: [
         {
+          internalType: "uint256",
+          name: "tokenId",
+          type: "uint256",
+        },
+      ],
+      name: "burnable",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
           internalType: "address payable",
           name: "donateManageAddress",
           type: "address",

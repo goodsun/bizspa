@@ -3,10 +3,12 @@ export const CONST = {
   RPC_URL: "https://v1.bon-soleil.com:8080/",
   BC_NETWORK_NAME: "PRIVATE",
   BC_NETWORK_ID: "21201",
-  MANAGER_CA: "0x7B3cBc2C68b68ABbDc0f0adC62E0FA7f27c26243",
+  MANAGER_CA: "0x5613721A5658c62d1962095527aebE0129f37019",
+  MEMBERSCARD_CA: "0xb68F8CEB90752e09fa7c1CEf4c0bF83CB045AdA8",
   TBA_SALT: "1",
   DEFAULT_SYMBOL: "bizen",
-  ARTICLE_REPO_URL: "https://github.com/goodsun/bizen-article/tree/public/md/",
+  ARTICLE_REPO: "https://article.bizen.sbs/",
+  ARTICLE_REPO_URL: "https://article.bizen.sbs/bizen-article/md/",
   BOT_API_URL: "https://ehfm6q914a.execute-api.ap-northeast-1.amazonaws.com/",
   AKORD_API_URL: "https://permaweb.bon-soleil.com/api/akord/"
 };

@@ -35,6 +35,8 @@ export const LANG = {
     SENDTOEOA: "Send this NFT to EOA",
     SENDNFTBEF: "Do you really want to send this NFT to ",
     SENDNFTAFT: "？",
+    BURNNFT: "Do you really want to burn this NFT?",
+    BURNED: "NFT Burned",
     SENDED: "Sent NFT",
     CANTSEND: "Cannot send to this EOA",
     ARE_YOU_BUYER: ", Are you the one who purchased this product?　",
@@ -88,6 +90,9 @@ export const LANG = {
     SENDTOEOA: "このNFTをEOA宛に送信します",
     SENDNFTBEF: "本当にこのNFTを",
     SENDNFTAFT: "に送信しますか？",
+    BURNNFT:
+      "NFTを完全に削除します。\nこの操作は取り消すことができません。\n本当にこのNFTをBURNしますか？",
+    BURNED: "BURNしました。",
     SENDED: "送信しました",
     CANTSEND: "このアドレスには送信できません",
     ARE_YOU_BUYER: " あなたはこちらの商品の購入者ですか？　",

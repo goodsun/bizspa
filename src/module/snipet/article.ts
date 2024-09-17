@@ -104,16 +104,18 @@ const getMdDir = async (dirname) => {
 
 const getMdPath = async () => {
   const baseUrl = CONST.BOT_API_URL;
-  const path = router.getParams();
+  const PATH = router.getParams();
   const lang = router.lang;
-  const mdpath = `${baseUrl}contents/get/${lang}/${path}`;
-  const original = `${CONST.ARTICLE_REPO_URL}${lang}/${path}.md`;
-  parseMdPage(mdpath, original);
+  const mdpath = `${baseUrl}contents/get/${lang}/${PATH}`;
+  const path = `${lang}/${PATH}.md`;
+  parseMdPage(mdpath, path);
 };
 
 const getMdContents = async (mdpath) => {
   try {
-    const response = await fetch(mdpath);
+    const url = mdpath + "?test=" + Date.now();
+    console.log("GET MD CONTENTS:" + url);
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -140,7 +142,8 @@ const getMdContents = async (mdpath) => {
   }
 };
 
-const parseMdPage = async (mdpath, orgurl) => {
+const parseMdPage = async (mdpath, path) => {
+  const editor = `${CONST.ARTICLE_REPO}edit.php?file=${path}`;
   const sectionElement = document.createElement("section");
   sectionElement.classList.add("articleSection");
   mainContents.appendChild(sectionElement);
@@ -156,12 +159,12 @@ const parseMdPage = async (mdpath, orgurl) => {
   const originalElement = document.createElement("div");
   originalElement.classList.add("articleArea");
 
-  var githubLink = document.createElement("a");
-  githubLink.classList.add("githubMdLink");
-  githubLink.href = orgurl;
-  githubLink.innerHTML =
-    "<i class='fab fa-github'></i> <span>ORIGINAL MD FILE</span>";
-  originalElement.appendChild(githubLink);
+  var editorLink = document.createElement("a");
+  editorLink.classList.add("editorLink");
+  editorLink.href = editor;
+  editorLink.innerHTML =
+    "<i class='fa-solid fa-pen-to-square'></i> <span>EDIT MD FILE</span>";
+  originalElement.appendChild(editorLink);
   sectionElement.appendChild(originalElement);
 };
 

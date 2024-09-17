@@ -87,7 +87,7 @@ export const displayMintUI = async (targetElem, params) => {
 
   if (balance.dpoint < mintableInfo.needPoint) {
     balanceElement.innerHTML +=
-      LANGSET("CREATOR_ONLY") + mintableInfo.needPoint + " pt";
+      LANGSET("NOT_ENOUGH_DBIZ") + mintableInfo.needPoint + " pt";
     mintable = false;
   }
 
@@ -117,7 +117,10 @@ export const displayToken = async (
   const divElement = document.createElement("div");
   const tokenUri = await getTokenConnect.getToken("tokenURI", ca, id);
   const caName = await getTokenConnect.getToken("name", ca, id);
+  const caSymbol = await getTokenConnect.getToken("symbol", ca, id);
   const owner = await getTokenConnect.getToken("ownerOf", ca, id);
+  const burnable = await setToken.burnable(ca, id);
+
   divElement.classList.add("tokenUri_" + tokenUri);
   displayTokenElement.appendChild(divElement);
 
@@ -302,7 +305,8 @@ export const displayToken = async (
       owner,
       tokenUri,
       divElement,
-      tokenBoundAccount
+      tokenBoundAccount,
+      caSymbol
     );
     console.log(utils.getLocalTime() + " 遅延実行完了 " + tokenUri);
 
@@ -310,7 +314,17 @@ export const displayToken = async (
       balance.balance != undefined &&
       utils.isAddressesEqual(owner, balance.eoa)
     ) {
-      detailDisplay.sendForm(divElement);
+      if (caSymbol != "SBT") {
+        if (caSymbol.includes("SBT")) {
+          alert(
+            "このNFTはSBTの可能性があります。送信できない可能性があります。"
+          );
+        }
+        detailDisplay.sendForm(divElement);
+      }
+    }
+    if (burnable) {
+      detailDisplay.burnForm(divElement);
     }
   });
 };
@@ -497,6 +511,28 @@ export const displayManagedData = async (type, title, filter) => {
 
 export const displayOwns = async (parentElement, result, eoa) => {
   console.log(utils.getLocalTime() + " DisplayOwns:開始");
+
+  const mcArea = document.createElement("div");
+  mcArea.classList.add("nftContractArea");
+  mcArea.style.display = "block";
+  const mcListElm = document.createElement("div");
+  mcListElm.style.display = "block";
+  mcListElm.classList.add("contractLinkList");
+  mcArea.appendChild(mcListElm);
+  parentElement.appendChild(mcArea);
+
+  const titleElm = document.createElement("h2");
+  titleElm.classList.add("ownTokenCaTitle");
+  titleElm.style.display = "none";
+  const link = document.createElement("a");
+  link.href = "/tokens/" + CONST.MEMBERSCARD_CA;
+  link.textContent = "MEMBERS CARD";
+  titleElm.appendChild(link);
+  mcListElm.appendChild(titleElm);
+  displayOwnTokens(CONST.MEMBERSCARD_CA, eoa, mcArea, mcListElm, titleElm);
+  const floatClear = document.createElement("div");
+  floatClear.classList.add("floatClear");
+
   const nftArea = document.createElement("div");
   nftArea.classList.add("nftContractArea");
   nftArea.style.display = "none";
@@ -1196,6 +1232,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
           "",
           tokenUri.value,
           previewElement,
+          "",
           ""
         );
       })

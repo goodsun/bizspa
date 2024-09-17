@@ -3,16 +3,14 @@ import getTokenConnect from "../connect/getToken";
 import utils from "../common/utils";
 import commonSnipet from "../snipet/common";
 
-const showAccount = async (eoa, parent) => {
+const showAccount = async (eoa, tbaOwner, parent) => {
   {
     const accountElm = document.createElement("div");
     accountElm.classList.add("accountElm");
     parent.appendChild(accountElm);
 
-    const tbaOwner = await getTbaConnect.checkOwner(eoa);
-    const tbaToken = await getTbaConnect.checkToken(eoa);
-
     if (tbaOwner) {
+      const tbaToken = await getTbaConnect.checkToken(eoa);
       const tokenUri = await getTokenConnect.getToken(
         "tokenURI",
         tbaToken[1],

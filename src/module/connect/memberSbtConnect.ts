@@ -1,17 +1,16 @@
 import { router } from "../common/router";
-import utils from "../common/utils";
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
-import { ABIS } from "./abi";
 import setElement from "../snipet/setElement";
-import detailDisplay from "../snipet/detailDisplay";
-
+import setToken from "../connect/setToken";
+import utils from "../common/utils";
 const mainContents = document.getElementById("mainContents");
 
 export const getUI = async () => {
+  const balance = await utils.checkBalance();
   const params = router.params;
   const makeDiscordDiv = document.createElement("div");
-  makeDiscordDiv.classList.add("metadatabuilder");
+  makeDiscordDiv.classList.add("memberSbtLink");
   mainContents.appendChild(makeDiscordDiv);
   const makeDiscordDisp = document.createElement("div");
   const makeDiscordCont = document.createElement("div");
@@ -24,8 +23,11 @@ export const getUI = async () => {
   //-- MAIN -------------------------------------
   const Title = document.createElement("H2");
   Title.classList.add("controlLavel");
-  Title.innerHTML = "Regist EOA";
+  Title.innerHTML = "Mint Member SBT";
   makeDiscordCont.appendChild(Title);
+  const main = document.createElement("p");
+  main.innerHTML = CONST.MEMBERSCARD_CA;
+  makeDiscordCont.appendChild(main);
 
   const setSecret = setElement.makeInput(
     "input",
@@ -42,30 +44,33 @@ export const getUI = async () => {
     "submit",
     "submitID",
     "BaseSubmit",
-    "REGIST",
-    "REGIST"
+    "LOGIN",
+    "LOGIN"
   );
   setEoaRegist.classList.add("w3p");
   makeDiscordCont.appendChild(setEoaRegist);
 
   setEoaRegist.addEventListener("click", async () => {
     const result = await sendRegist(params[2], setSecret.value);
-    alert("check user result :" + result.message);
-    console.dir(result);
     if (result.result) {
-      window.location.href = "/";
+      console.dir(result.role);
+      if (result.role.includes("Holder &Fan")) {
+        alert("メンバーSBTを発行します。");
+        const result = await setToken.mint(
+          CONST.MEMBERSCARD_CA, // CA
+          balance.eoa, // EOA
+          params[2] // DISCORD_ID
+        );
+        if (result == undefined) {
+          alert("会員証SBT発行不可 すでに発行済みの可能性があります。");
+        }
+      } else {
+        alert("必要な権限がありません");
+      }
+    } else {
+      alert("check user result :" + result.message);
     }
   });
-};
-
-const getUserByEoa = async (eoa) => {
-  const Url = CONST.BOT_API_URL + "member/" + eoa;
-  try {
-    const response = await fetch(Url);
-    return await response.json();
-  } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
-  }
 };
 
 const sendRegist = async (discordId, secret) => {
@@ -92,9 +97,8 @@ const sendRegist = async (discordId, secret) => {
   }
 };
 
-const discordConnect = {
+const memberSbtConnect = {
   getUI,
-  getUserByEoa,
 };
 
-export default discordConnect;
+export default memberSbtConnect;

@@ -71,6 +71,24 @@ export const burn = async (contractAddress: string, id: string) => {
   return result;
 };
 
+export const burnable = async (contractAddress: string, id: string) => {
+  const abi = ABIS.nft;
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const contract = await provider.getSigner().then((signer) => {
+    return new ethers.Contract(contractAddress, abi, signer);
+  });
+  const result = await contract
+    .burnable(id)
+    .then((response) => {
+      return response;
+    })
+    .catch((e) => {
+      console.dir(e);
+      return false;
+    });
+  return result;
+};
+
 export const donatePoint = async (contractAddress: string) => {
   console.log("DONTATIONS!!!");
   const abi = ABIS.nft;
@@ -121,6 +139,7 @@ const setToken = {
   send,
   donatePoint,
   burn,
+  burnable,
   getSupportIf,
 };
 

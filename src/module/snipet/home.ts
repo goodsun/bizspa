@@ -16,8 +16,8 @@ const getHome = async () => {
 const getHomeContents = async () => {
   const PATH = router.lang + "/common/home";
   const mdPath = CONST.BOT_API_URL + "contents/get/" + PATH;
-  const original = `${CONST.ARTICLE_REPO_URL}${PATH}.md`;
-  articleSnipet.parseMdPage(mdPath, original);
+  const path = `${PATH}.md`;
+  articleSnipet.parseMdPage(mdPath, path);
 };
 
 const getItems = async () => {
