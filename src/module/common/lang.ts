@@ -41,7 +41,8 @@ export const LANG = {
     CANTSEND: "Cannot send to this EOA",
     ARE_YOU_BUYER: ", Are you the one who purchased this product?　",
     REQUIRE_META_URL: "*Please specify the URL where the metadata is stored.",
-    TRYING_TO_MINT: "Trying to mint ",
+    TRYING_TO_MINT:
+      "Bizen DAO SBT is a contract that is tied to the soul of the work, so if a completely unrelated SBT is created, it may be deleted by the Admin.\nPlease note that these rules are intended to prevent mischief and abuse.",
     REQUIRE_DBIZ: "require D-BIZ",
     INVALID_TOKENURI: " is an invalid tokenURI",
     CREATOR_ONLY: "This NFT MINT is limited to the artist",
@@ -97,7 +98,8 @@ export const LANG = {
     CANTSEND: "このアドレスには送信できません",
     ARE_YOU_BUYER: " あなたはこちらの商品の購入者ですか？　",
     REQUIRE_META_URL: "※ メタデータが格納されているURLを指定してください。",
-    TRYING_TO_MINT: "NFTをミントしようとしています",
+    TRYING_TO_MINT:
+      "Bizen DAO SBTは作品の魂に紐付けるためのコントラクトですので、全く関連性のないSBTが作成された場合、Adminによって削除される事があります。\n悪戯と乱用を防ぐ為のルールですので、ご了承の上、ご利用ください。",
     REQUIRE_DBIZ: "必要なD-BIZ",
     INVALID_TOKENURI: " は無効なtokenURIです。",
     CREATOR_ONLY: "このNFTのMINTは作家限定です。",

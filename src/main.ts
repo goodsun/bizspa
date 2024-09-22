@@ -197,15 +197,24 @@ const setOwner = async (eoa) => {
   accountSnipet.showAccount(eoa, tbaOwner, divOwnerElement);
 
   if (tbaOwner) {
-    const mintableFormElm = document.createElement("div");
-    mintableFormElm.classList.add("mintableArea");
-    mintableFormElm.innerHTML =
-      "<span><div class='minispinner'></div>mintable contract loading...</span>";
-    mintableFormElm.style.display = "none";
-    mainContents.appendChild(mintableFormElm);
-    displaySnipet.setMintableForm(mintableFormElm, eoa);
+    const checkBalance = await utils.checkBalance();
+    const minter = checkBalance.eoa;
+    //自身の持つTBAの場合のみSBTミント可能
+    // TODO サポーターの場合、他人のTBAにもミントできるようにする
+    if (minter == tbaOwner) {
+      ownerTitle.textContent = "SBT Mint for TBA";
+      console.log("This tba ca:" + eoa);
+      console.log("this tba owner:" + tbaOwner);
+      console.log("minter eoa:" + minter);
+      const mintableFormElm = document.createElement("div");
+      mintableFormElm.classList.add("mintableArea");
+      mintableFormElm.innerHTML =
+        "<span><div class='minispinner'></div>mintable contract loading...</span>";
+      mintableFormElm.style.display = "none";
+      mainContents.appendChild(mintableFormElm);
+      displaySnipet.setMintableForm(mintableFormElm, eoa);
+    }
   }
-
   setOwns(eoa);
 };
 
