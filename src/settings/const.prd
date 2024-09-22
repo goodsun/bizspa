@@ -1,5 +1,5 @@
 export const CONST = {
-  HEADER_TITLE: "BIZEN DAO",
+  HEADER_TITLE: "BizenDAO",
   RPC_URL: "https://polygon-rpc.com",
   BC_NETWORK_NAME: "POLYGON",
   BC_NETWORK_ID: "137",

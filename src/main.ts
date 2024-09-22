@@ -196,24 +196,26 @@ const setOwner = async (eoa) => {
 
   accountSnipet.showAccount(eoa, tbaOwner, divOwnerElement);
 
-  if (tbaOwner) {
-    const checkBalance = await utils.checkBalance();
-    const minter = checkBalance.eoa;
-    //自身の持つTBAの場合のみSBTミント可能
-    // TODO サポーターの場合、他人のTBAにもミントできるようにする
-    if (minter == tbaOwner) {
-      ownerTitle.textContent = "SBT Mint for TBA";
-      console.log("This tba ca:" + eoa);
-      console.log("this tba owner:" + tbaOwner);
-      console.log("minter eoa:" + minter);
-      const mintableFormElm = document.createElement("div");
-      mintableFormElm.classList.add("mintableArea");
-      mintableFormElm.innerHTML =
-        "<span><div class='minispinner'></div>mintable contract loading...</span>";
-      mintableFormElm.style.display = "none";
-      mainContents.appendChild(mintableFormElm);
-      displaySnipet.setMintableForm(mintableFormElm, eoa);
-    }
+  const checkBalance = await utils.checkBalance();
+  const minter = checkBalance.eoa;
+  const discordUser = await utils.getUserByEoa(minter);
+  console.log("Roles Checkers");
+  console.dir(discordUser.discordUser.Roles);
+  if (
+    minter == tbaOwner ||
+    discordUser.discordUser.Roles.includes("Soul Binder")
+  ) {
+    ownerTitle.textContent = "SBT Mint for TBA";
+    console.log("This tba ca:" + eoa);
+    console.log("this tba owner:" + tbaOwner);
+    console.log("minter eoa:" + minter);
+    const mintableFormElm = document.createElement("div");
+    mintableFormElm.classList.add("mintableArea");
+    mintableFormElm.innerHTML =
+      "<span><div class='minispinner'></div>mintable contract loading...</span>";
+    mintableFormElm.style.display = "none";
+    mainContents.appendChild(mintableFormElm);
+    displaySnipet.setMintableForm(mintableFormElm, eoa);
   }
   setOwns(eoa);
 };
@@ -314,10 +316,19 @@ const setTokens = async () => {
   );
   pElement.appendChild(tokenName);
 
-  const mintLinkArea = document.createElement("span");
-  pElement.appendChild(mintLinkArea);
-  displaySnipet.createMintLinkElm(router.params[2], mintLinkArea);
-  // ----------------------------------------
+  // SBTの場合ミントリンクエリア非表示
+  const symbol = await getTokenConnect.getToken("symbol", router.params[2], "");
+  // TODO サポーターの場合、他人のTBAにもミントできるようにする
+  const checkBalance = await utils.checkBalance();
+  const discordUser = await utils.getUserByEoa(checkBalance.eoa);
+  if (
+    symbol != "SBT" ||
+    discordUser.discordUser.Roles.includes("Soul Binder")
+  ) {
+    const mintLinkArea = document.createElement("span");
+    pElement.appendChild(mintLinkArea);
+    displaySnipet.createMintLinkElm(router.params[2], mintLinkArea);
+  }
 
   displaySnipet.displayTokens(divTokensElement, router.params[2], false);
 };

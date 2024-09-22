@@ -37,6 +37,7 @@ export const LANG = {
     SENDNFTAFT: "？",
     BURNNFT: "Do you really want to burn this NFT?",
     BURNED: "NFT Burned",
+    BURN_STOP: "Burn transaction has aborted.",
     SENDED: "Sent NFT",
     CANTSEND: "Cannot send to this EOA",
     ARE_YOU_BUYER: ", Are you the one who purchased this product?　",
@@ -54,7 +55,19 @@ export const LANG = {
     MES4: " : Are you sure you want to send it?",
     MES5: " sent",
     ARE_YOU_TBA: "Do you really want to issue a TBA?",
+    TBA_MAKE: "Issue TZA to this NFT.",
     MINT_THE_TOKENURI: "mint the NFT using the specified tokenURI.",
+    MINT_TX_SEND: "MINT transaction has been issued.",
+    MINT_TX_STOP: "MINT transaction was aborted.",
+    WAIT_MINT_TX: "Please wait while the transaction completes",
+    MEMBER_SBT_EXIST:
+      "Membership card SBT cannot be issued. It may have already been issued.",
+    MEMBER_NOT_PARMITTED:
+      "Membership card SBT cannot be issued. It may not be allowed.",
+    TBA_ISSUE_SUCCESS: "Issued TBA issue transaction",
+    TBA_ISSUE_ABORT: "TBA issue transaction aborted",
+    POINT_NOT_EXIST:
+      "D-BIZ of 1point or more is required to issue a member SBT",
   },
   ja: {
     HOME: "ホーム",
@@ -94,6 +107,7 @@ export const LANG = {
     BURNNFT:
       "NFTを完全に削除します。\nこの操作は取り消すことができません。\n本当にこのNFTをBURNしますか？",
     BURNED: "BURNしました。",
+    BURN_STOP: "BURN操作を中断しました。",
     SENDED: "送信しました",
     CANTSEND: "このアドレスには送信できません",
     ARE_YOU_BUYER: " あなたはこちらの商品の購入者ですか？　",
@@ -111,7 +125,17 @@ export const LANG = {
     MES4: "を送信してもよろしいですか？",
     MES5: "を送信しました。",
     ARE_YOU_TBA: "本当にTBAを発行しますか？",
+    TBA_MAKE: "このNFTにTBAを発行します。",
     MINT_THE_TOKENURI: "指定したtokenURIを利用しNFTをMINTします。",
+    MINT_TX_SEND: "MINTのトランザクションを発行しました。",
+    MINT_TX_STOP: "MINTのトランザクションを中断しました。",
+    WAIT_MINT_TX:
+      "トランザクションの実行が完了するまでしばらくお待ちください。",
+    MEMBER_SBT_EXIST: "会員証SBT発行不可 すでに発行済みの可能性があります。",
+    MEMBER_NOT_PARMITTED: "会員証SBT発行権限がありません。",
+    TBA_ISSUE_SUCCESS: "TBA発行トランザクションを発行しました。",
+    TBA_ISSUE_ABORT: "TBA発行を中断しました。",
+    POINT_NOT_EXIST: "メンバーズカード発行には1p以上のD-BIZが必要です。",
   },
 };
 

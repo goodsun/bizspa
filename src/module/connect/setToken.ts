@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
+import { LANGSET } from "../common/lang";
 
 export const mint = async (
   contractAddress: string,
@@ -20,9 +21,11 @@ export const mint = async (
     const result = await contract
       .mint(eoa, tokenUri)
       .then(() => {
-        return "txWaitMes";
+        alert(LANGSET("WAIT_MINT_TX"));
+        return "success";
       })
       .catch((e) => {
+        alert(LANGSET("MINT_TX_STOP"));
         console.dir(e);
         throw new Error("txCancelMes");
       });

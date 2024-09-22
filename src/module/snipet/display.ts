@@ -1217,6 +1217,11 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     }
     if (confirm(message)) {
       const result = await setToken.mint(contract.ca, sendTo, tokenUri.value);
+      console.log("setTokens" + result);
+      if (result == "success") {
+        alert(LANGSET("WAIT_MINT_TX"));
+        window.location.href = "/tokens/" + contract.ca;
+      }
     }
   });
 

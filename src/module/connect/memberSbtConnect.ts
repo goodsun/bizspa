@@ -4,6 +4,7 @@ import { CONST } from "../common/const";
 import setElement from "../snipet/setElement";
 import setToken from "../connect/setToken";
 import utils from "../common/utils";
+import { LANGSET } from "../common/lang";
 const mainContents = document.getElementById("mainContents");
 
 export const getUI = async () => {
@@ -29,48 +30,57 @@ export const getUI = async () => {
   main.innerHTML = CONST.MEMBERSCARD_CA;
   makeDiscordCont.appendChild(main);
 
-  const setSecret = setElement.makeInput(
-    "input",
-    "nameForm",
-    "BaseInput",
-    "SECRET"
-  );
-  console.log("PARAM SET" + params[3]);
-  setSecret.value = params[3];
-  setSecret.classList.add("w7p");
-  makeDiscordCont.appendChild(setSecret);
+  if (balance.dpoint >= 1) {
+    const setSecret = setElement.makeInput(
+      "input",
+      "nameForm",
+      "BaseInput",
+      "SECRET"
+    );
+    console.log("PARAM SET" + params[3]);
+    setSecret.value = params[3];
+    setSecret.classList.add("w7p");
+    makeDiscordCont.appendChild(setSecret);
+    const setEoaRegist = setElement.makeInput(
+      "submit",
+      "submitID",
+      "BaseSubmit",
+      "LOGIN",
+      "LOGIN"
+    );
+    setEoaRegist.classList.add("w3p");
+    makeDiscordCont.appendChild(setEoaRegist);
 
-  const setEoaRegist = setElement.makeInput(
-    "submit",
-    "submitID",
-    "BaseSubmit",
-    "LOGIN",
-    "LOGIN"
-  );
-  setEoaRegist.classList.add("w3p");
-  makeDiscordCont.appendChild(setEoaRegist);
-
-  setEoaRegist.addEventListener("click", async () => {
-    const result = await sendRegist(params[2], setSecret.value);
-    if (result.result) {
-      console.dir(result.role);
-      if (result.role.includes("Holder &Fan")) {
-        alert("メンバーSBTを発行します。");
-        const result = await setToken.mint(
-          CONST.MEMBERSCARD_CA, // CA
-          balance.eoa, // EOA
-          params[2] // DISCORD_ID
-        );
-        if (result == undefined) {
-          alert("会員証SBT発行不可 すでに発行済みの可能性があります。");
+    setEoaRegist.addEventListener("click", async () => {
+      const result = await sendRegist(params[2], setSecret.value);
+      if (result.result) {
+        console.dir(result.role);
+        if (result.role.includes("Holder &Fan")) {
+          alert("メンバーSBTを発行します。");
+          const result = await setToken.mint(
+            CONST.MEMBERSCARD_CA, // CA
+            balance.eoa, // EOA
+            params[2] // DISCORD_ID
+          );
+          if (result == "success") {
+            alert(LANGSET("WAIT_MINT_TX"));
+            window.location.href = "/account/" + balance.eoa;
+          } else if (result == undefined) {
+            alert(LANGSET("MEMBER_SBT_EXIST"));
+            window.location.href = "/account/" + balance.eoa;
+          }
+        } else {
+          alert("MEMBER_NOT_PARMITTED");
         }
       } else {
-        alert("必要な権限がありません");
+        alert("check user result :" + result.message);
       }
-    } else {
-      alert("check user result :" + result.message);
-    }
-  });
+    });
+  } else {
+    const pointNotExist = document.createElement("p");
+    pointNotExist.innerHTML = LANGSET("POINT_NOT_EXIST");
+    makeDiscordCont.appendChild(pointNotExist);
+  }
 };
 
 const sendRegist = async (discordId, secret) => {

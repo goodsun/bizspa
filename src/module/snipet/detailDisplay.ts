@@ -269,7 +269,6 @@ export const showToken = async (
         }
         detailDisplay.tbaSendForm(tbaOwner, owner, divElement);
       }
-      detailDisplay.tbaBurnForm(tbaOwner, owner, divElement);
     }
   }
 };
@@ -426,43 +425,6 @@ export const tbaSendForm = (
   });
 };
 
-export const tbaBurnForm = (
-  parent,
-  owner,
-  divElement: HTMLParagraphElement
-) => {
-  const params = router.params;
-
-  const ca = params[2];
-  const id = params[3];
-
-  const burnSubmit = setElement.makeInput(
-    "submit",
-    "submitID",
-    "BaseSubmit",
-    "BURN",
-    "BURN"
-  );
-  burnSubmit.classList.add("wfull");
-  divElement.appendChild(burnSubmit);
-
-  burnSubmit.addEventListener("click", async () => {
-    if (confirm(LANGSET("BURNNFT"))) {
-      const args = [id];
-      const value = 0;
-      const calldata = await getToken.getCallData(ca, "burn", args);
-      const result = await getTbaConnect.executeCall(
-        owner,
-        ca,
-        value,
-        calldata
-      );
-      console.log(result);
-      alert(LANGSET("BURNED"));
-    }
-  });
-};
-
 export const sendForm = (divElement: HTMLParagraphElement) => {
   setElement.setChild(
     divElement,
@@ -584,8 +546,14 @@ export const burnForm = (divElement: HTMLParagraphElement) => {
   burnSubmit.addEventListener("click", async () => {
     const params = router.params;
     if (confirm(LANGSET("BURNNFT"))) {
-      const result = await setToken.burn(params[2], params[3]);
-      alert(LANGSET("BURNED"));
+      const result = await setToken
+        .burn(params[2], params[3])
+        .then(() => {
+          alert(LANGSET("BURNED"));
+        })
+        .catch(() => {
+          alert(LANGSET("BURN_STOP"));
+        });
       console.dir(result);
     }
   });
@@ -608,7 +576,7 @@ export const tbaRegist = (
 
   const makeElement = setElement.makeElement(
     "p",
-    "このNFTにTBAを発行します",
+    LANGSET("TBA_MAKE"),
     null,
     "createdPelemBySetElement"
   );
@@ -626,8 +594,18 @@ export const tbaRegist = (
 
   makeSubmit.addEventListener("click", async () => {
     if (confirm(LANGSET("ARE_YOU_TBA") + "\nToken info\n" + ca + " #" + id)) {
-      const tbaOwner = await getTbaConnect.createAccount(ca, id);
-      alert("registerd ： " + ca + " #" + id);
+      const result = await getTbaConnect
+        .createAccount(ca, id)
+        .then(() => {
+          alert(LANGSET("TBA_ISSUE_SUCCESS"));
+          return "success";
+        })
+        .catch((e) => {
+          console.dir(e);
+          alert(LANGSET("TBA_ISSUE_ABORT"));
+          throw new Error("txCancelMes");
+        });
+      window.location.href = "/tokens/" + ca + "/" + id;
     }
   });
 };
@@ -770,6 +748,10 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
           tokenUriForm.value
         );
         console.log("setTokens" + result);
+        if (result == "success") {
+          alert(LANGSET("MINT_TX_SEND"));
+          window.location.href = "/tokens/" + params[2];
+        }
       }
     }
   });
@@ -853,7 +835,6 @@ const detailDisplay = {
   sendForm,
   burnForm,
   tbaSendForm,
-  tbaBurnForm,
   mintForm,
   tbaRegist,
   makeForm,
