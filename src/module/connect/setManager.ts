@@ -20,63 +20,74 @@ export const setManager = async (mode: string, input?: any) => {
         return response;
       });
       return arrayPivot(result);
-    } else if (mode == "getadmins") {
+    } else if (mode == "getAdmins") {
       const result = await contract.getAdmins().then((response) => {
         return response;
       });
       return arrayCheck(result);
-    } else if (mode == "setadmin") {
+    } else if (mode == "setAdmin") {
       const result = await contract.setAdmin(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "deladmin") {
+    } else if (mode == "delAdmin") {
       const result = await contract.delAdmin(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "checkuser") {
+      return result;
+    } else if (mode == "checkUser") {
       const result = await contract.checkUser().then((response) => {
         return response;
       });
       return result;
-    } else if (mode == "hiddencreator") {
+    } else if (mode == "hiddenCreator") {
       const result = await contract.hiddenCreator(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "publiccreator") {
+    } else if (mode == "publicCreator") {
       const result = await contract.publicCreator(input[0]).then((response) => {
         return response;
       });
-    } else if (mode == "setcreator") {
+    } else if (mode == "setCreator") {
       const result = await contract
         .setCreator(input[0], input[1], input[2])
         .then((response) => {
           return response;
         });
-    } else if (mode == "setcreatorinfo") {
+    } else if (mode == "delCreator") {
+      const result = await contract.delCreator(input[0]).then((response) => {
+        return response;
+      });
+    } else if (mode == "setCreatorInfo") {
       const result = await contract
         .setCreatorInfo(input[0], input[1], input[2])
         .then((response) => {
           return response;
         });
-    } else if (mode == "hiddencontract") {
+    } else if (mode == "hiddenContract") {
       const result = await contract
         .hiddenContract(input[0])
         .then((response) => {
           return response;
         });
-    } else if (mode == "publiccontract") {
+    } else if (mode == "publicContract") {
       const result = await contract
         .publicContract(input[0])
         .then((response) => {
           return response;
         });
-    } else if (mode == "setcontract") {
+    } else if (mode == "setContract") {
       const result = await contract
         .setContract(input[0], input[1], input[2])
         .then((response) => {
           return response;
         });
-    } else if (mode == "setcontractinfo") {
+    } else if (mode == "deleteContract") {
+      const result = await contract
+        .deleteContract(input[0])
+        .then((response) => {
+          return response;
+        });
+    } else if (mode == "setContractInfo") {
       const result = await contract
         .setContractInfo(input[0], input[1], input[2])
         .then((response) => {
@@ -103,3 +114,9 @@ const arrayPivot = (input) => {
   }
   return result;
 };
+
+const setManagerConnect = {
+  setManager,
+};
+
+export default setManagerConnect;

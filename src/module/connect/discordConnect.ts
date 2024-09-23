@@ -1,10 +1,7 @@
 import { router } from "../common/router";
-import utils from "../common/utils";
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
-import { ABIS } from "./abi";
 import setElement from "../snipet/setElement";
-import detailDisplay from "../snipet/detailDisplay";
 
 const mainContents = document.getElementById("mainContents");
 
@@ -58,16 +55,6 @@ export const getUI = async () => {
   });
 };
 
-const getUserByEoa = async (eoa) => {
-  const Url = CONST.BOT_API_URL + "member/" + eoa;
-  try {
-    const response = await fetch(Url);
-    return await response.json();
-  } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
-  }
-};
-
 const sendRegist = async (discordId, secret) => {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
@@ -88,13 +75,12 @@ const sendRegist = async (discordId, secret) => {
     });
     return await response.json();
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
+    console.warn("There was a problem with the fetch operation:", error);
   }
 };
 
 const discordConnect = {
   getUI,
-  getUserByEoa,
 };
 
 export default discordConnect;

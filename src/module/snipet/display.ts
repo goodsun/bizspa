@@ -4,7 +4,7 @@ import { getOwn } from "../connect/getOwn";
 import utils from "../common/utils";
 import { router } from "../common/router";
 import detailDisplay from "./detailDisplay";
-import commonSnipet from "../snipet/common";
+import cSnip from "../snipet/common";
 import setElement from "./setElement";
 import { CONST } from "../common/const";
 import getManagerConnect from "../connect/getManager";
@@ -12,7 +12,9 @@ import getTbaConnect from "../connect/getTbaConnect";
 import setToken from "../connect/setToken";
 import donateConnect from "../connect/donate";
 import manageService from "../service/manageService";
+import setManagerConnect from "../connect/setManager";
 const mainContents = document.getElementById("mainContents");
+const usertype = await setManagerConnect.setManager("checkUser");
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -176,125 +178,128 @@ export const displayToken = async (
     const response = await fetch(Url);
     const shopJson = await response.json();
     const shopinfo = JSON.parse(shopJson.Json)[router.lang];
-    var shopInfoArea = document.createElement("div");
-    shopInfoArea.classList.add("shopInfoArea");
-    var shopTitle = document.createElement("h2");
-    shopTitle.classList.add("shopTitle");
-    shopTitle.innerHTML = "shop info : " + shopinfo.name;
-    shopInfoArea.appendChild(shopTitle);
+    console.dir(shopJson);
+    if (shopJson.Status == 1) {
+      var shopInfoArea = document.createElement("div");
+      shopInfoArea.classList.add("shopInfoArea");
+      var shopTitle = document.createElement("h2");
+      shopTitle.classList.add("shopTitle");
+      shopTitle.innerHTML = shopJson.Type + " info : " + shopinfo.name;
+      shopInfoArea.appendChild(shopTitle);
 
-    var shopMainArea = document.createElement("div");
-    shopMainArea.classList.add("shopMainArea");
+      var shopMainArea = document.createElement("div");
+      shopMainArea.classList.add("shopMainArea");
 
-    var squareImg = document.createElement("div");
-    squareImg.classList.add("shopThumbSquare");
-    var shopImg = document.createElement("img");
-    shopImg.src = shopJson.Imgurl;
-    shopImg.classList.add("shopThumb");
-    squareImg.appendChild(shopImg);
-    var infoArea = document.createElement("div");
-    infoArea.classList.add("shopDetail");
+      var squareImg = document.createElement("div");
+      squareImg.classList.add("shopThumbSquare");
+      var shopImg = document.createElement("img");
+      shopImg.src = shopJson.Imgurl;
+      shopImg.classList.add("shopThumb");
+      squareImg.appendChild(shopImg);
+      var infoArea = document.createElement("div");
+      infoArea.classList.add("shopDetail");
 
-    infoArea.appendChild(
-      commonSnipet.labeledElm("p", " : " + shopinfo.workplace, [
-        "fa-solid",
-        "fa-shop",
-      ])
-    );
+      infoArea.appendChild(
+        cSnip.labeledElm("p", " : " + shopinfo.workplace, [
+          "fa-solid",
+          "fa-shop",
+        ])
+      );
 
-    infoArea.appendChild(
-      commonSnipet.labeledElm("p", " : " + shopinfo.location, [
-        "fa-solid",
-        "fa-location-dot",
-      ])
-    );
+      infoArea.appendChild(
+        cSnip.labeledElm("p", " : " + shopinfo.location, [
+          "fa-solid",
+          "fa-location-dot",
+        ])
+      );
 
-    infoArea.appendChild(
-      commonSnipet.labeledElm("p", " : " + shopinfo.station, [
-        "fa-solid",
-        "fa-train-subway",
-      ])
-    );
+      infoArea.appendChild(
+        cSnip.labeledElm("p", " : " + shopinfo.station, [
+          "fa-solid",
+          "fa-train-subway",
+        ])
+      );
 
-    shopMainArea.appendChild(squareImg);
-    shopMainArea.appendChild(infoArea);
-    shopInfoArea.appendChild(shopMainArea);
+      shopMainArea.appendChild(squareImg);
+      shopMainArea.appendChild(infoArea);
+      shopInfoArea.appendChild(shopMainArea);
 
-    if (owner == balance.eoa) {
-      var askDiscord = document.createElement("p");
-      askDiscord.classList.add("askDiscordBot");
-      askDiscord.innerHTML =
-        "ask to Discord Bot : <b class='commandInline'>/getkey </b> nftinfo : <b class='commandInline'>" +
-        utils.shortname(ca + "/" + id, 6, 6);
-      ("</b>");
+      if (owner == balance.eoa) {
+        var askDiscord = document.createElement("p");
+        askDiscord.classList.add("askDiscordBot");
+        askDiscord.innerHTML =
+          "ask to Discord Bot : <b class='commandInline'>/getkey </b> nftinfo : <b class='commandInline'>" +
+          utils.shortname(ca + "/" + id, 6, 6);
+        ("</b>");
 
-      askDiscord.appendChild(commonSnipet.linkCopy(ca + "/" + id));
-      shopInfoArea.appendChild(askDiscord);
-    } else {
-      utils.getUserByEoa(balance.eoa).then((eoaUser) => {
-        if (eoaUser.type == "discordConnect") {
-          const userName = eoaUser.discordUser.Name;
-          const image = document.createElement("img");
-          image.classList.add("discordIconMini");
-          image.src = eoaUser.discordUser.Icon;
+        askDiscord.appendChild(cSnip.linkCopy(ca + "/" + id));
+        shopInfoArea.appendChild(askDiscord);
+      } else {
+        utils.getUserByEoa(balance.eoa).then((eoaUser) => {
+          if (eoaUser.type == "discordConnect") {
+            const userName = eoaUser.discordUser.Name;
+            const image = document.createElement("img");
+            image.classList.add("discordIconMini");
+            image.src = eoaUser.discordUser.Icon;
 
-          var askDiscord = document.createElement("p");
-          const password = setElement.makeInput(
-            "input",
-            "transfarRequest",
-            "miniInput",
-            "password"
-          );
-          const sendRequest = setElement.makeInput(
-            "submit",
-            "submitID",
-            "miniSubmit",
-            "REQUEST",
-            "REQUEST"
-          );
-          askDiscord.classList.add("askDiscordBot");
-          askDiscord.appendChild(image);
-          askDiscord.appendChild(
-            commonSnipet.span(userName + LANGSET("ARE_YOU_BUYER"))
-          );
-          askDiscord.appendChild(password);
-          askDiscord.appendChild(sendRequest);
-          shopInfoArea.appendChild(askDiscord);
-          sendRequest.addEventListener("click", async () => {
-            const secret = password.value;
-            const eoa = balance.eoa;
-            password.value = "";
-            const Url = CONST.BOT_API_URL + "transrequest";
-            const data = {
-              eoa: eoa,
-              secret: secret,
-              ca: ca,
-              id: id,
-            };
-            try {
-              const response = await fetch(Url, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-              });
-              const result = await response.json();
-              alert(result.message);
-              console.dir(result);
-            } catch (error) {
-              console.error(
-                "There was a problem with the fetch operation:",
-                error
-              );
-            }
-          });
-        }
-      });
+            var askDiscord = document.createElement("p");
+            const password = setElement.makeInput(
+              "input",
+              "transfarRequest",
+              "miniInput",
+              "password"
+            );
+            const sendRequest = setElement.makeInput(
+              "submit",
+              "submitID",
+              "miniSubmit",
+              "REQUEST",
+              "REQUEST"
+            );
+            askDiscord.classList.add("askDiscordBot");
+            askDiscord.appendChild(image);
+            askDiscord.appendChild(
+              cSnip.span(userName + LANGSET("ARE_YOU_BUYER"))
+            );
+            askDiscord.appendChild(password);
+            askDiscord.appendChild(sendRequest);
+            shopInfoArea.appendChild(askDiscord);
+            sendRequest.addEventListener("click", async () => {
+              const secret = password.value;
+              const eoa = balance.eoa;
+              password.value = "";
+              const Url = CONST.BOT_API_URL + "transrequest";
+              const data = {
+                eoa: eoa,
+                secret: secret,
+                ca: ca,
+                id: id,
+              };
+              try {
+                const response = await fetch(Url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(data),
+                });
+                const result = await response.json();
+                alert(result.message);
+                console.dir(result);
+              } catch (error) {
+                console.error(
+                  "There was a problem with the fetch operation:",
+                  error
+                );
+              }
+            });
+          }
+        });
+      }
+      pElement.appendChild(shopInfoArea);
     }
-    pElement.appendChild(shopInfoArea);
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
+    console.warn("There was a problem with the fetch operation:", error);
   }
 
   console.log(utils.getLocalTime() + " 遅延実行開始 " + tokenUri);
@@ -323,7 +328,7 @@ export const displayToken = async (
         detailDisplay.sendForm(divElement);
       }
     }
-    if (burnable) {
+    if (burnable || usertype != "user") {
       detailDisplay.burnForm(divElement);
     }
   });
@@ -925,9 +930,7 @@ const creatorDonateList = async (elm, eoa) => {
       discordUserCheckArea.classList.add("sendToUser");
       utils.getUserByEoa(sendTo.value).then(async (eoaUser) => {
         if (eoaUser.type == "tba") {
-          discordUserCheckArea.appendChild(
-            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
-          );
+          discordUserCheckArea.appendChild(cSnip.dispTbaOwner(eoaUser.tbaInfo));
 
           const checkSend = await getTbaConnect.sendToEoaCheck(
             eoaUser.tbaInfo.eoa,
@@ -946,25 +949,25 @@ const creatorDonateList = async (elm, eoa) => {
           utils.getUserByEoa(checkSend.eoa).then((eoaUser) => {
             if (eoaUser.type == "discordConnect") {
               discordUserCheckArea.appendChild(
-                commonSnipet.dispDiscordUser(eoaUser.discordUser)
+                cSnip.dispDiscordUser(eoaUser.discordUser)
               );
             } else if (eoaUser.type == "eoa") {
               discordUserCheckArea.appendChild(
-                commonSnipet.scan(checkSend.eoa, "Final owner", "unknownCa")
+                cSnip.scan(checkSend.eoa, "Final owner", "unknownCa")
               );
             }
           });
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.appendChild(
-            commonSnipet.dispDiscordUser(eoaUser.discordUser)
+            cSnip.dispDiscordUser(eoaUser.discordUser)
           );
         } else if (eoaUser.type == "eoa") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
           );
         } else if (eoaUser.type == "ca") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });
@@ -1090,21 +1093,17 @@ const creatorDonateHistory = async (elm) => {
   for (let key = subDonationList.length - 1; key >= 0; key--) {
     const val = subDonationList[key];
     const log = document.createElement("p");
-    log.appendChild(commonSnipet.span(utils.formatUnixTime(val[2])));
-    log.appendChild(commonSnipet.donateDetail(val[3]));
-    log.appendChild(commonSnipet.eoa(val[1]));
+    log.appendChild(cSnip.span(utils.formatUnixTime(val[2])));
+    log.appendChild(cSnip.donateDetail(val[3]));
+    log.appendChild(cSnip.eoa(val[1]));
     await utils.getUserByEoa(val[1]).then((eoaUser) => {
       if (eoaUser.type == "tba") {
         log.appendChild(
-          commonSnipet.getTbaOwnerSnipet(
-            eoaUser.tbaInfo,
-            "span",
-            "discordNameDisp"
-          )
+          cSnip.getTbaOwnerSnipet(eoaUser.tbaInfo, "span", "discordNameDisp")
         );
       } else if (eoaUser.type == "discordConnect") {
         log.appendChild(
-          commonSnipet.getDiscordUserSnipet(
+          cSnip.getDiscordUserSnipet(
             eoaUser.discordUser,
             "span",
             "discordNameDisp"
@@ -1113,7 +1112,7 @@ const creatorDonateHistory = async (elm) => {
       }
     });
     log.appendChild(
-      commonSnipet.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
+      cSnip.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
     );
     historyDiv.appendChild(log);
   }
@@ -1160,7 +1159,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   label.innerHTML = LANGSET("REQUIRE_META_URL");
   label.classList.add("labelspan");
   mintableFormArea.appendChild(label);
-  mintableFormArea.appendChild(commonSnipet.br());
+  mintableFormArea.appendChild(cSnip.br());
 
   const previewElement = document.createElement("div");
   previewElement.style.display = "none";

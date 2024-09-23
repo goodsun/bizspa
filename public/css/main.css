@@ -358,8 +358,8 @@ a {
   box-sizing: border-box;
   padding: 12px 16px;
   margin: 30px 5px 0 0;
-  height: 8rem;
-  resize: horizontal;
+  height: 16rem;
+  resize: vertical;
   transition: all 0.2s ease-in-out;
 }
 
@@ -377,6 +377,27 @@ a {
   line-height: 1;
   text-align: center;
   transition: opacity 0.2s ease-in-out;
+}
+
+.adminSettings {
+  .BaseInput {
+    font-size: 1rem;
+    padding: 5px 8px;
+    margin: 5px 5px 5px 0;
+  }
+
+  .BaseTextarea {
+    font-size: 0.8em;
+    padding: 5px 8px;
+    margin: 5px 5px 5px 0;
+    height: 6em;
+  }
+
+  .BaseSubmit {
+    font-size: 1rem;
+    padding: 8px 8px;
+    margin: 5px 5px 5px 0;
+  }
 }
 .litelink {
   margin-left: 10px;
@@ -411,9 +432,16 @@ a {
   font-size: 0.8rem;
   color: #1c559f;
 }
-
+.wInline {
+  font-size: 1.2em;
+  display: inline-block;
+  text-align: center;
+}
 .wfull {
   width: 99%;
+}
+.w9p {
+  width: 89%;
 }
 .w8p {
   width: 79%;
@@ -424,6 +452,15 @@ a {
 .w5p {
   width: 49%;
 }
+.w45p {
+  width: 45%;
+}
+.w4p {
+  width: 39%;
+}
+.w3p {
+  width: 29%;
+}
 .w35p {
   width: 34%;
 }
@@ -432,6 +469,9 @@ a {
 }
 .w2p {
   width: 19%;
+}
+.w1p {
+  width: 8%;
 }
 .controlLavel {
   margin-top: 15px;
@@ -507,6 +547,13 @@ a {
   margin-right: 5px;
   width: 30px;
   vertical-align: middle;
+}
+
+.discordOwnerElement {
+  margin: 0 8px;
+  img {
+    border-radius: 15px;
+  }
 }
 
 #meta-control {
@@ -996,4 +1043,29 @@ i.extraMark {
 span.eoaCopy {
   margin-left: 1px;
   color: #8888bb;
+}
+
+.settingMenuDir {
+  margin: 10px 10px;
+  a {
+    margin: 0 10px;
+  }
+}
+
+.itemTag {
+  margin: 2px 3px;
+  padding: 3px 5px;
+}
+
+.button_unselected {
+  background-color: #666;
+  border: none;
+  border-radius: 8px;
+  margin: 2px 2px 2px 2px;
+}
+.button_selected {
+  background-color: #ccc;
+  border: none;
+  border-radius: 8px;
+  margin: 2px 2px 2px 2px;
 }

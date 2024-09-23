@@ -6,6 +6,28 @@ import getManagerConnect from "../../module/connect/getManager";
 import utils from "../common/utils";
 
 const mainContents = document.getElementById("mainContents");
+const agree_ext_list = [
+  "jpg",
+  "jpeg",
+  "png",
+  "gif",
+  "pdf",
+  "glb",
+  "zip",
+  "mp4",
+  "mov",
+  "avi",
+  "webm",
+  "flv",
+  "mp3",
+  "aac",
+  "csv",
+  "xml",
+  "json",
+  "docx",
+  "pptx",
+  "xlsx",
+];
 
 const checkPrice = async () => {
   const maticPrice = await utils.getMaticPrice();
@@ -65,6 +87,16 @@ const setUI = (parent, eoa) => {
     const Price = await checkPrice();
     const fileInput = document.getElementById("updateFile") as HTMLInputElement;
     const file = fileInput.files[0];
+
+    const ext = file.name.split(".").pop().toLocaleLowerCase();
+    console.log("file extention:" + ext);
+    if (!agree_ext_list.includes(ext)) {
+      alert(
+        file.name +
+          "\n不明な拡張子のファイルをアップロードしようとしています。\nこちらのファイルは正しく閲覧できない可能性があります。\nファイルの内容が正しいかご確認ください。"
+      );
+    }
+
     const price = Price.vaultPriceByByte * file.size;
     console.log(price);
     uploadingInfoArea.innerHTML =

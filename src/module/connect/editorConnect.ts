@@ -84,7 +84,7 @@ const sendRegist = async (discordId, secret) => {
     });
     return await response.json();
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
+    console.warn("There was a problem with the fetch operation:", error);
   }
 };
 

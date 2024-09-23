@@ -1,7 +1,7 @@
 import getTbaConnect from "../connect/getTbaConnect";
 import getTokenConnect from "../connect/getToken";
 import utils from "../common/utils";
-import commonSnipet from "../snipet/common";
+import cSnip from "../snipet/common";
 
 const showAccount = async (eoa, tbaOwner, parent) => {
   {
@@ -20,16 +20,21 @@ const showAccount = async (eoa, tbaOwner, parent) => {
       const tokenInfo = await utils.fetchData(tokenUri);
       const image = document.createElement("img");
       image.classList.add("ownerProfPictIcon");
-      image.src = "https://bizen.sbs/img/dummy.jpg";
       image.src = tokenInfo.image;
+      if (
+        image.src ==
+        "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
+      ) {
+        image.src = "https://bizen.sbs/img/alt.jpg";
+      }
       accountElm.appendChild(image);
 
       const accountInfo = document.createElement("div");
       accountInfo.classList.add("accountInfo");
       parent.appendChild(accountElm);
-      accountInfo.appendChild(commonSnipet.span("TBA : "));
-      accountInfo.appendChild(commonSnipet.eoa(eoa));
-      accountInfo.appendChild(commonSnipet.br());
+      accountInfo.appendChild(cSnip.span("TBA : "));
+      accountInfo.appendChild(cSnip.eoa(eoa));
+      accountInfo.appendChild(cSnip.br());
 
       const tbaTokenElement = document.createElement("span");
       tbaTokenElement.innerHTML =
@@ -41,11 +46,11 @@ const showAccount = async (eoa, tbaOwner, parent) => {
         tokenInfo.name +
         "</a>";
       accountInfo.appendChild(tbaTokenElement);
-      accountInfo.appendChild(commonSnipet.br());
+      accountInfo.appendChild(cSnip.br());
       const tbaOwnerElement = document.createElement("span");
-      tbaOwnerElement.appendChild(commonSnipet.span("NFT owner : "));
+      tbaOwnerElement.appendChild(cSnip.span("NFT owner : "));
       tbaOwnerElement.appendChild(
-        commonSnipet.eoa(tbaOwner, {
+        cSnip.eoa(tbaOwner, {
           link: "/account/" + tbaOwner,
           target: "",
           icon: "copy",
@@ -54,7 +59,7 @@ const showAccount = async (eoa, tbaOwner, parent) => {
       await utils.getUserByEoa(tbaOwner).then((eoaUser) => {
         if (eoaUser.type == "discordConnect") {
           tbaOwnerElement.appendChild(
-            commonSnipet.getDiscordUserSnipet(
+            cSnip.getDiscordUserSnipet(
               eoaUser.discordUser,
               "span",
               "discordNameDisp"
@@ -70,28 +75,34 @@ const showAccount = async (eoa, tbaOwner, parent) => {
           const image = document.createElement("img");
           image.classList.add("ownerProfPictIcon");
           image.src = eoaUser.discordUser.Icon;
+          if (
+            image.src ==
+            "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
+          ) {
+            image.src = "https://bizen.sbs/img/alt.jpg";
+          }
           accountElm.appendChild(image);
           const accountInfo = document.createElement("div");
           accountInfo.classList.add("accountInfo");
-          accountInfo.appendChild(commonSnipet.span("EOA : "));
-          accountInfo.appendChild(commonSnipet.eoa(eoa));
-          accountInfo.appendChild(commonSnipet.br());
-          accountInfo.appendChild(commonSnipet.span("Discord :"));
+          accountInfo.appendChild(cSnip.span("EOA : "));
+          accountInfo.appendChild(cSnip.eoa(eoa));
+          accountInfo.appendChild(cSnip.br());
+          accountInfo.appendChild(cSnip.span("Discord :"));
           accountInfo.appendChild(
-            commonSnipet.getDiscordUserSnipet(
+            cSnip.getDiscordUserSnipet(
               eoaUser.discordUser,
               "span",
               "discordNameDisp"
             )
           );
-          accountInfo.appendChild(commonSnipet.br());
+          accountInfo.appendChild(cSnip.br());
           accountElm.appendChild(accountInfo);
         } else {
           const accountInfo = document.createElement("div");
           accountInfo.classList.add("accountInfo");
-          accountInfo.appendChild(commonSnipet.span("EOA : "));
-          accountInfo.appendChild(commonSnipet.eoa(eoa));
-          accountInfo.appendChild(commonSnipet.br());
+          accountInfo.appendChild(cSnip.span("EOA : "));
+          accountInfo.appendChild(cSnip.eoa(eoa));
+          accountInfo.appendChild(cSnip.br());
           accountElm.appendChild(accountInfo);
         }
       });

@@ -28,6 +28,11 @@ const getItems = async () => {
     const results = await response.json();
 
     for (const key in results) {
+      console.log("表示Items" + results[key].Status);
+      if (results[key].Status == 0) {
+        continue;
+      }
+
       const itemInfo = JSON.parse(results[key].Json)[router.lang];
       console.log(results[key].Contract + " #" + results[key].TokenId);
       const tokenUri = await getTokenConnect.getToken(
@@ -80,12 +85,16 @@ const getItems = async () => {
       imgdiv.appendChild(image);
       contentLeftDiv.appendChild(imgdiv);
 
-      var shopLink = document.createElement("a");
-      shopLink.classList.add("shopSiteLink");
-      shopLink.href = results[key].Link;
-      shopLink.target = "_blank";
-      shopLink.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> BUY NOW';
-      contentLeftDiv.appendChild(shopLink);
+      console.dir(results[key]);
+      if (results[key].Status == 1) {
+        var shopLink = document.createElement("a");
+        shopLink.classList.add("shopSiteLink");
+        shopLink.href = results[key].Link;
+        shopLink.target = "_blank";
+        shopLink.innerHTML =
+          '<i class="fa-solid fa-cart-shopping"></i> BUY NOW';
+        contentLeftDiv.appendChild(shopLink);
+      }
 
       if (nftInfo != undefined) {
         var nftLink = document.createElement("a");
@@ -170,7 +179,7 @@ const getItems = async () => {
 
     return caroucel.setCaroucel("New Arrival", slides);
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
+    console.warn("There was a problem with the fetch operation:", error);
   }
 };
 
@@ -253,7 +262,7 @@ const getGallarys = async () => {
 
     return caroucel.setCaroucel("Gallary", slides);
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
+    console.warn("There was a problem with the fetch operation:", error);
   }
 };
 

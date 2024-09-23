@@ -4,24 +4,30 @@ import getTokenConnect from "./module/connect/getToken";
 import getTbaConnect from "./module/connect/getTbaConnect";
 import { donate, getDonate } from "./module/connect/donate";
 import getManagerConnect from "./module/connect/getManager";
+import setManagerConnect from "./module/connect/setManager";
 import orderConnect from "./module/connect/order";
 import permawebcon from "./module/connect/permaweb";
 import setMeta from "./module/connect/metabuilder";
 import discordConnect from "./module/connect/discordConnect";
 import editorConnect from "./module/connect/editorConnect";
+import eoaDisconnect from "./module/connect/eoaDisconnect";
 import memberSbtConnect from "./module/connect/memberSbtConnect";
 import homeSnipet from "./module/snipet/home";
 import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
 import utils from "./module/common/utils";
 import displaySnipet from "./module/snipet/display";
-import commonSnipet from "./module/snipet/common";
+import cSnip from "./module/snipet/common";
 import accountSnipet from "./module/snipet/account";
+import adminSettings from "./module/admin/settings";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
 const mainContents = document.getElementById("mainContents");
 
+async function adminSetting() {
+  await adminSettings.getUI();
+}
 async function memberSbt() {
   const checkBalance = await utils.checkBalance();
   if (checkBalance.eoa == undefined) {
@@ -29,6 +35,15 @@ async function memberSbt() {
     return;
   }
   await memberSbtConnect.getUI();
+}
+
+async function disconnect() {
+  const checkBalance = await utils.checkBalance();
+  if (checkBalance.eoa == undefined) {
+    displaySnipet.isNotConnect();
+    return;
+  }
+  await eoaDisconnect.getUI();
 }
 async function editorLink() {
   const checkBalance = await utils.checkBalance();
@@ -98,8 +113,8 @@ async function setDonate(params) {
   const ca = await getManagerConnect.getCA("donate");
   const donateTitle = document.createElement("h2");
   donateTitle.innerHTML = "Donation";
-  donateTitle.appendChild(commonSnipet.span(" CA: "));
-  donateTitle.appendChild(commonSnipet.eoa(ca));
+  donateTitle.appendChild(cSnip.span(" CA: "));
+  donateTitle.appendChild(cSnip.eoa(ca));
   divDonateElement.appendChild(donateTitle);
 
   const historyDiv = document.createElement("div");
@@ -110,10 +125,10 @@ async function setDonate(params) {
   for (let key = donationList.length - 1; key >= 0; key--) {
     const val = donationList[key];
     const log = document.createElement("p");
-    log.appendChild(commonSnipet.span(utils.formatUnixTime(val[1])));
-    log.appendChild(commonSnipet.donateDetail(val[2]));
+    log.appendChild(cSnip.span(utils.formatUnixTime(val[1])));
+    log.appendChild(cSnip.donateDetail(val[2]));
     log.appendChild(
-      commonSnipet.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
+      cSnip.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
     );
     historyDiv.appendChild(log);
   }
@@ -193,19 +208,32 @@ const setOwner = async (eoa) => {
   ownerTitle.textContent = "Owner Info";
   divOwnerElement.appendChild(ownerTitle);
   const tbaOwner = await getTbaConnect.checkOwner(eoa);
+  const usertype = await setManagerConnect.setManager("checkUser");
+  const checkBalance = await utils.checkBalance();
+  const minter = checkBalance.eoa;
+
+  if (
+    (usertype == "admin" || usertype == "creator") &&
+    Number(eoa) == Number(checkBalance.eoa)
+  ) {
+    var link = document.createElement("a");
+    link.classList.add("litelink");
+    link.href = "/setting/";
+    link.textContent = "  setting";
+    ownerTitle.appendChild(link);
+  }
 
   accountSnipet.showAccount(eoa, tbaOwner, divOwnerElement);
 
-  const checkBalance = await utils.checkBalance();
-  const minter = checkBalance.eoa;
   const discordUser = await utils.getUserByEoa(minter);
   console.log("Roles Checkers");
   console.dir(discordUser.discordUser.Roles);
   if (
     minter == tbaOwner ||
-    discordUser.discordUser.Roles.includes("Soul Binder")
+    (discordUser.discordUser.Roles &&
+      discordUser.discordUser.Roles.includes("Soul Binder"))
   ) {
-    ownerTitle.textContent = "SBT Mint for TBA";
+    // ownerTitle.textContent = "SBT Mint for TBA";
     console.log("This tba ca:" + eoa);
     console.log("this tba owner:" + tbaOwner);
     console.log("minter eoa:" + minter);
@@ -230,6 +258,10 @@ const setOwns = async (eoa) => {
 };
 
 const setAssets = async (filter) => {
+  const checkBalance = await utils.checkBalance();
+  if (checkBalance.eoa == undefined) {
+    window.location.href = "/tokens";
+  }
   const result = await getManagerConnect.getManager("contracts");
   displaySnipet.displayAssets(result, filter);
 };
@@ -393,8 +425,12 @@ const checkRoute = () => {
     discordRegist();
   } else if (param1 === "editor") {
     editorLink();
+  } else if (param1 === "disconnect") {
+    disconnect();
   } else if (param1 === "membersbt") {
     memberSbt();
+  } else if (param1 === "setting") {
+    adminSetting();
   }
 };
 

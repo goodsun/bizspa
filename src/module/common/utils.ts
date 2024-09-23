@@ -3,9 +3,9 @@ import { LANGSET } from "../common/lang";
 import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donate";
 import getManagerConnect from "../../module/connect/getManager";
-import discordConnect from "../../module/connect/discordConnect";
+import dynamoConnect from "../../module/connect/dynamoConnect";
 import orderConnect from "../../module/connect/order";
-import commonSnipet from "../snipet/common";
+import cSnip from "../snipet/common";
 import getTokenConnect from "../../module/connect/getToken";
 import getTbaConnect from "../../module/connect/getTbaConnect";
 import setElement from "../snipet/setElement";
@@ -234,7 +234,7 @@ export const fetchData = async (Url) => {
     }
     return await response.json();
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
+    console.warn("There was a problem with the fetch operation:", error);
   }
 };
 
@@ -287,7 +287,7 @@ const getTbaInfoByEoa = async (eoa) => {
 const getUserByEoa = async (eoa) => {
   let type = "none";
   const tbaInfo = await getTbaInfoByEoa(eoa);
-  const discordUser = await discordConnect.getUserByEoa(eoa);
+  const discordUser = await dynamoConnect.getUserByEoa(eoa);
   if (tbaInfo.tokenUri) {
     type = "tba";
     console.dir(tbaInfo);
@@ -319,14 +319,12 @@ export const checkMetamask = async () => {
     getUserByEoa(balanceData.eoa).then((eoaUser) => {
       //メタマスクでつなぐ場合TBAはない
       if (eoaUser.type == "discordConnect") {
-        discordArea.appendChild(
-          commonSnipet.dispDiscordUser(eoaUser.discordUser)
-        );
+        discordArea.appendChild(cSnip.dispDiscordUser(eoaUser.discordUser));
       }
     });
 
     connectWallet.appendChild(
-      commonSnipet.eoa(
+      cSnip.eoa(
         balanceData.eoa,
         {
           link: "#",
@@ -338,7 +336,7 @@ export const checkMetamask = async () => {
     );
 
     connectWallet.appendChild(
-      commonSnipet.labeledElm("span", String(waiToEth(balanceData.balance)), [
+      cSnip.labeledElm("span", String(waiToEth(balanceData.balance)), [
         "fa-solid",
         "fa-coins",
       ])
@@ -349,7 +347,7 @@ export const checkMetamask = async () => {
 
     if (balanceData.dpoint > 0) {
       connectWallet.appendChild(
-        commonSnipet.labeledElm("span", String(balanceData.dpoint), [
+        cSnip.labeledElm("span", String(balanceData.dpoint), [
           "fa-solid",
           "fa-circle-dollar-to-slot",
         ])
@@ -397,7 +395,6 @@ export async function checkBalance() {
       window.ethereum.on("chainChanged", callCheckMetamask);
     } catch (error) {
       console.info("wallet not connected");
-      console.error("Error details:", error);
     }
   }
   return {

@@ -5,7 +5,7 @@ import getTbaConnect from "../../module/connect/getTbaConnect";
 import setElement from "./setElement";
 import setToken from "../connect/setToken";
 import getToken from "../connect/getToken";
-import commonSnipet from "../snipet/common";
+import cSnip from "../snipet/common";
 const headJsArea = document.getElementById("pageHeader");
 const footJsArea = document.getElementById("pageFooter");
 
@@ -38,9 +38,9 @@ export const showToken = async (
   const pOwnerElement = document.createElement("p");
   pOwnerElement.classList.add("tokenOwnerInfo");
   if (tbaOwner) {
-    pOwnerElement.appendChild(commonSnipet.span("ca: "));
+    pOwnerElement.appendChild(cSnip.span("ca: "));
     pOwnerElement.appendChild(
-      commonSnipet.eoa(owner, {
+      cSnip.eoa(owner, {
         link: "/account/" + owner,
         target: "",
         icon: "copy",
@@ -61,9 +61,9 @@ export const showToken = async (
       "'> token </a>";
     pOwnerElement.appendChild(tbaTag);
   } else if (owner) {
-    pOwnerElement.appendChild(commonSnipet.span("owner: "));
+    pOwnerElement.appendChild(cSnip.span("owner: "));
     pOwnerElement.appendChild(
-      commonSnipet.eoa(owner, {
+      cSnip.eoa(owner, {
         link: "/account/" + owner,
         target: "",
         icon: "copy",
@@ -73,15 +73,11 @@ export const showToken = async (
     await utils.getUserByEoa(owner).then((eoaUser) => {
       if (eoaUser.type == "tba") {
         pOwnerElement.appendChild(
-          commonSnipet.getTbaOwnerSnipet(
-            eoaUser.tbaInfo,
-            "span",
-            "discordNameDisp"
-          )
+          cSnip.getTbaOwnerSnipet(eoaUser.tbaInfo, "span", "discordNameDisp")
         );
       } else if (eoaUser.type == "discordConnect") {
         pOwnerElement.appendChild(
-          commonSnipet.getDiscordUserSnipet(
+          cSnip.getDiscordUserSnipet(
             eoaUser.discordUser,
             "span",
             "discordNameDisp"
@@ -94,9 +90,9 @@ export const showToken = async (
   if (tokenBoundAccount) {
     const tbaOwner = await getTbaConnect.checkOwner(tokenBoundAccount);
     if (tbaOwner) {
-      pOwnerElement.appendChild(commonSnipet.span(" ｜ TBA "));
+      pOwnerElement.appendChild(cSnip.span(" ｜ TBA "));
       pOwnerElement.appendChild(
-        commonSnipet.eoa(tokenBoundAccount, {
+        cSnip.eoa(tokenBoundAccount, {
           link: "/account/" + tokenBoundAccount,
           target: "",
           icon: "bag",
@@ -288,30 +284,28 @@ export const tbaSendForm = (
   divElement.appendChild(h2Element);
 
   h2Element.innerHTML = "TBA CONTROL";
-  h2Element.appendChild(commonSnipet.br());
-  h2Element.appendChild(commonSnipet.span("Account-Bound NFT: "));
+  h2Element.appendChild(cSnip.br());
+  h2Element.appendChild(cSnip.span("Account-Bound NFT: "));
   h2Element.appendChild(
-    commonSnipet.eoa(ca, { link: "/tokens/" + ca, target: "", icon: "fa-copy" })
+    cSnip.eoa(ca, { link: "/tokens/" + ca, target: "", icon: "fa-copy" })
   );
 
-  h2Element.appendChild(
-    commonSnipet.link(" #" + id, "/tokens/" + ca + "/" + id)
-  );
+  h2Element.appendChild(cSnip.link(" #" + id, "/tokens/" + ca + "/" + id));
 
-  h2Element.appendChild(commonSnipet.br());
-  h2Element.appendChild(commonSnipet.span("parent: "));
+  h2Element.appendChild(cSnip.br());
+  h2Element.appendChild(cSnip.span("parent: "));
   h2Element.appendChild(
-    commonSnipet.eoa(parent, {
+    cSnip.eoa(parent, {
       link: "/account/" + parent,
       target: "",
       icon: "copy",
     })
   );
 
-  h2Element.appendChild(commonSnipet.br());
-  h2Element.appendChild(commonSnipet.span("owner: "));
+  h2Element.appendChild(cSnip.br());
+  h2Element.appendChild(cSnip.span("owner: "));
   h2Element.appendChild(
-    commonSnipet.eoa(owner, {
+    cSnip.eoa(owner, {
       link: "/account/" + owner,
       target: "",
       icon: "copy",
@@ -365,31 +359,29 @@ export const tbaSendForm = (
 
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
         if (eoaUser.type == "tba") {
-          discordUserCheckArea.appendChild(
-            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
-          );
+          discordUserCheckArea.appendChild(cSnip.dispTbaOwner(eoaUser.tbaInfo));
           utils.getUserByEoa(checkSend.eoa).then((eoaUser) => {
             if (eoaUser.type == "discordConnect") {
               discordUserCheckArea.appendChild(
-                commonSnipet.dispDiscordUser(eoaUser.discordUser)
+                cSnip.dispDiscordUser(eoaUser.discordUser)
               );
             } else if (eoaUser.type == "eoa") {
               discordUserCheckArea.appendChild(
-                commonSnipet.scan(checkSend.eoa, "Final owner", "unknownCa")
+                cSnip.scan(checkSend.eoa, "Final owner", "unknownCa")
               );
             }
           });
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.appendChild(
-            commonSnipet.dispDiscordUser(eoaUser.discordUser)
+            cSnip.dispDiscordUser(eoaUser.discordUser)
           );
         } else if (eoaUser.type == "eoa") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
           );
         } else if (eoaUser.type == "ca") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });
@@ -484,20 +476,18 @@ export const sendForm = (divElement: HTMLParagraphElement) => {
       utils.getUserByEoa(sendToInput.value).then((eoaUser) => {
         discordUserCheckArea.classList.add("sendToUser");
         if (eoaUser.type == "tba") {
-          discordUserCheckArea.appendChild(
-            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
-          );
+          discordUserCheckArea.appendChild(cSnip.dispTbaOwner(eoaUser.tbaInfo));
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.appendChild(
-            commonSnipet.dispDiscordUser(eoaUser.discordUser)
+            cSnip.dispDiscordUser(eoaUser.discordUser)
           );
         } else if (eoaUser.type == "eoa") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
           );
         } else if (eoaUser.type == "ca") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });
@@ -650,7 +640,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   label.classList.add("labelspan");
   divElement.appendChild(label);
 
-  divElement.appendChild(commonSnipet.br());
+  divElement.appendChild(cSnip.br());
 
   vaultSelect.addEventListener("click", async () => {
     utils.toggleModal("permawebList", ["jsonOnly"]);
@@ -689,20 +679,18 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
       utils.getUserByEoa(eoaForm.value).then((eoaUser) => {
         discordUserCheckArea.classList.add("sendToUser");
         if (eoaUser.type == "tba") {
-          discordUserCheckArea.appendChild(
-            commonSnipet.dispTbaOwner(eoaUser.tbaInfo)
-          );
+          discordUserCheckArea.appendChild(cSnip.dispTbaOwner(eoaUser.tbaInfo));
         } else if (eoaUser.type == "discordConnect") {
           discordUserCheckArea.appendChild(
-            commonSnipet.dispDiscordUser(eoaUser.discordUser)
+            cSnip.dispDiscordUser(eoaUser.discordUser)
           );
         } else if (eoaUser.type == "eoa") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa")
           );
         } else if (eoaUser.type == "ca") {
           discordUserCheckArea.appendChild(
-            commonSnipet.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
+            cSnip.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa")
           );
         }
       });
@@ -782,7 +770,7 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
   );
   makeInput.classList.add("wfull");
   divElement.appendChild(makeInput);
-  divElement.appendChild(commonSnipet.br());
+  divElement.appendChild(cSnip.br());
 
   const makeInput2 = setElement.makeInput(
     "input",
@@ -800,7 +788,7 @@ export const makeForm = (divElement: HTMLParagraphElement) => {
   );
   makeInput3.classList.add("w5p");
   divElement.appendChild(makeInput3);
-  divElement.appendChild(commonSnipet.br());
+  divElement.appendChild(cSnip.br());
 
   const makeInput4 = setElement.makeInput(
     "input",

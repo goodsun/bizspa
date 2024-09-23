@@ -1,5 +1,6 @@
 import { marked } from "marked";
 import { CONST } from "../../module/common/const";
+import { LANGSET } from "../common/lang";
 import { router } from "../../module/common/router";
 import { displayArticleCard } from "../snipet/display";
 import { uuidV4 } from "ethers";
@@ -38,26 +39,28 @@ const getMdSiteMap = async () => {
       }
       console.dir(sitemap);
       for (const key in sitemap) {
-        var dirTitle = document.createElement("h2");
-        dirTitle.classList.add("contentDirTitle");
-        var dirLink = document.createElement("a");
-        dirLink.href = "/contents/" + key;
-        dirLink.textContent = key;
-        dirTitle.appendChild(dirLink);
-        contentsDirArea.appendChild(dirTitle);
-        var dirList = document.createElement("div");
-        dirList.classList.add("contentChildList");
-        contentsDirArea.appendChild(dirList);
-        for (const dir in sitemap[key].slice(0, 5)) {
-          console.dir(sitemap[key][dir]);
-          var childLink = document.createElement("a");
-          childLink.href = "/contents/" + sitemap[key][dir].Path.substring(3);
-          childLink.innerHTML =
-            sitemap[key][dir].Title +
-            "<span class='ac'>(" +
-            sitemap[key][dir].AccessCount +
-            ")<span>";
-          dirList.appendChild(childLink);
+        if (key != "common") {
+          var dirTitle = document.createElement("h2");
+          dirTitle.classList.add("contentDirTitle");
+          var dirLink = document.createElement("a");
+          dirLink.href = "/contents/" + key;
+          dirLink.textContent = LANGSET(key);
+          dirTitle.appendChild(dirLink);
+          contentsDirArea.appendChild(dirTitle);
+          var dirList = document.createElement("div");
+          dirList.classList.add("contentChildList");
+          contentsDirArea.appendChild(dirList);
+          for (const dir in sitemap[key].slice(0, 5)) {
+            console.dir(sitemap[key][dir]);
+            var childLink = document.createElement("a");
+            childLink.href = "/contents/" + sitemap[key][dir].Path.substring(3);
+            childLink.innerHTML =
+              sitemap[key][dir].Title +
+              "<span class='ac'>(" +
+              sitemap[key][dir].AccessCount +
+              ")<span>";
+            dirList.appendChild(childLink);
+          }
         }
       }
     })
@@ -82,7 +85,7 @@ const getMdDir = async (dirname) => {
 
   var dirTitle = document.createElement("h2");
   dirTitle.classList.add("contentDirTitle");
-  dirTitle.textContent = dirname;
+  dirTitle.textContent = LANGSET(dirname);
   contentsDirArea.appendChild(dirTitle);
 
   fetch(apiUrl)
@@ -144,6 +147,7 @@ const getMdContents = async (mdpath) => {
 
 const parseMdPage = async (mdpath, path) => {
   const editor = `${CONST.ARTICLE_REPO}edit.php?file=${path}`;
+  const viewer = `${CONST.ARTICLE_REPO}bizen-article/md/${path}`;
   const sectionElement = document.createElement("section");
   sectionElement.classList.add("articleSection");
   mainContents.appendChild(sectionElement);
@@ -162,9 +166,17 @@ const parseMdPage = async (mdpath, path) => {
   var editorLink = document.createElement("a");
   editorLink.classList.add("editorLink");
   editorLink.href = editor;
+  editorLink.target = "_blank";
   editorLink.innerHTML =
-    "<i class='fa-solid fa-pen-to-square'></i> <span>EDIT MD FILE</span>";
+    "<i class='fa-solid fa-pen-to-square'></i> <span>EDIT MD FILE</span>&nbsp;&nbsp;";
   originalElement.appendChild(editorLink);
+  var mdLink = document.createElement("a");
+  mdLink.classList.add("editorLink");
+  mdLink.href = viewer;
+  mdLink.target = "_blank";
+  mdLink.innerHTML =
+    "<i class='fa-solid fa-pen-to-square'></i> <span>VIEW MD FILE</span>";
+  originalElement.appendChild(mdLink);
   sectionElement.appendChild(originalElement);
 };
 

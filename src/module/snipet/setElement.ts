@@ -94,11 +94,6 @@ export const makeTextarea = (
   return child;
 };
 
-export const br = () => {
-  const child = document.createElement("br");
-  return child;
-};
-
 const setElement = {
   makeElement,
   makeInput,
@@ -106,7 +101,6 @@ const setElement = {
   makeSelect,
   makeFileSelect,
   setChild,
-  br,
 };
 
 export default setElement;

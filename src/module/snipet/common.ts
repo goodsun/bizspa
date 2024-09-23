@@ -1,8 +1,19 @@
+import dynamoConnect from "../connect/dynamoConnect";
 import { LANGSET } from "../common/lang";
-const link = (text, link) => {
+import utils from "../common/utils";
+
+const link = (text, link, option?) => {
   const aTag = document.createElement("a");
   aTag.href = link;
   aTag.textContent = text;
+  if (option != undefined) {
+    if (option.class != undefined) {
+      aTag.classList.add(option.class);
+    }
+    if (option.target != undefined) {
+      aTag.target = option.target;
+    }
+  }
   return aTag;
 };
 
@@ -132,12 +143,41 @@ const dispTbaOwner = (tbaInfo) => {
 const dispDiscordUser = (discordUser) => {
   return getDiscordUserSnipet(discordUser, "div", "walletOwnerElement");
 };
+const discordByEoa = async (eoa, elm, option?) => {
+  const discordUser = await dynamoConnect.getUserByEoa(eoa);
+  if (discordUser.Name == undefined) {
+    const notUserElm = document.createElement(elm);
+    notUserElm.innerHTML = "not discord user";
+    if (option != undefined) {
+      if (option.class != undefined) {
+        notUserElm.classList.add(option.class);
+      }
+    }
+    return notUserElm;
+  }
+  const element = getDiscordUserSnipet(discordUser, elm);
+  if (option != undefined) {
+    if (option.class != undefined) {
+      element.classList.add(option.class);
+    }
+  }
+  return element;
+};
 
-const getTbaOwnerSnipet = (tbaInfo, elm, className) => {
+const getTbaOwnerSnipet = (tbaInfo, elm, className?) => {
   const discordElem = document.createElement(elm);
-  discordElem.classList.add(className);
+
+  if (className != undefined) {
+    discordElem.classList.add(className);
+  }
   var newImage = document.createElement("img");
   newImage.src = tbaInfo.tokenInfo.image;
+  if (
+    newImage.src ==
+    "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
+  ) {
+    newImage.src = "https://bizen.sbs/img/alt.jpg";
+  }
   newImage.classList.add("walletOwnerIcon");
   discordElem.appendChild(newImage);
   const name = document.createElement("span");
@@ -155,11 +195,19 @@ const getTbaOwnerSnipet = (tbaInfo, elm, className) => {
   return discordElem;
 };
 
-const getDiscordUserSnipet = (discordUser, elm, className) => {
+const getDiscordUserSnipet = (discordUser, elm, className?) => {
   const discordElem = document.createElement(elm);
-  discordElem.classList.add(className);
+  if (className != undefined) {
+    discordElem.classList.add(className);
+  }
   var newImage = document.createElement("img");
   newImage.src = discordUser.Icon;
+  if (
+    newImage.src ==
+    "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
+  ) {
+    newImage.src = "https://bizen.sbs/img/alt.jpg";
+  }
   newImage.classList.add("walletOwnerIcon");
   discordElem.appendChild(newImage);
 
@@ -220,8 +268,19 @@ export const span = (text: string) => {
   return child;
 };
 
+export const bold = (text: string) => {
+  const child = document.createElement("b");
+  child.innerText = text;
+  return child;
+};
+
 export const br = () => {
   const child = document.createElement("br");
+  return child;
+};
+
+export const hr = () => {
+  const child = document.createElement("hr");
   return child;
 };
 
@@ -259,7 +318,40 @@ const short = (text: string) => {
   return replace;
 };
 
-const commonSnipet = {
+const userTypeByEoa = async (eoa, elm) => {
+  elm.innerHTML = "";
+  return await utils.getUserByEoa(eoa).then(async (eoaUser) => {
+    let result = "unknown";
+    console.log("check UserTypeByEoa");
+    console.dir(eoaUser);
+    if (eoaUser.type == "tba") {
+      elm.appendChild(cSnip.dispTbaOwner(eoaUser.tbaInfo));
+      result = await utils.getUserByEoa(eoa).then((eoaUser2) => {
+        let tbaRes = "TBA";
+        if (eoaUser2.type == "discordConnect") {
+          elm.appendChild(cSnip.dispDiscordUser(eoaUser2.discordUser));
+          tbaRes = "tba (discord user)";
+        } else if (eoaUser2.type == "eoa") {
+          elm.appendChild(cSnip.scan(eoaUser2.eoa, "Final owner", "unknownCa"));
+          tbaRes = "tba (unknown user)";
+        }
+        return result;
+      });
+    } else if (eoaUser.type == "discordConnect") {
+      elm.appendChild(cSnip.dispDiscordUser(eoaUser.discordUser));
+      result = "discord user";
+    } else if (eoaUser.type == "eoa") {
+      elm.appendChild(cSnip.scan(eoaUser.eoa, "UNKNOWN EOA", "unknownEoa"));
+      result = "end of address";
+    } else if (eoaUser.type == "ca") {
+      elm.appendChild(cSnip.scan(eoaUser.eoa, "UNKNOWN CA", "unknownCa"));
+      result = "contract address";
+    }
+    return result;
+  });
+};
+
+const cSnip = {
   short,
   link,
   linkCopy,
@@ -272,7 +364,11 @@ const commonSnipet = {
   labeledElm,
   span,
   br,
+  hr,
+  bold,
   copyAction,
   donateDetail,
+  discordByEoa,
+  userTypeByEoa,
 };
-export default commonSnipet;
+export default cSnip;
