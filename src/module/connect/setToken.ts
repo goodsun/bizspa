@@ -92,7 +92,7 @@ export const burnable = async (contractAddress: string, id: string) => {
       });
     return result;
   } catch (error) {
-    console.error("setToken burnable check:", error);
+    console.warn("setToken burnable check:", error);
   }
 };
 

@@ -147,7 +147,7 @@ const getMdContents = async (mdpath) => {
 
 const parseMdPage = async (mdpath, path) => {
   const editor = `${CONST.ARTICLE_REPO}edit.php?file=${path}`;
-  const viewer = `${CONST.ARTICLE_REPO}bizen-article/md/${path}`;
+  const viewer = `${CONST.ARTICLE_REPO}viewer.php?file=${path}`;
   const sectionElement = document.createElement("section");
   sectionElement.classList.add("articleSection");
   mainContents.appendChild(sectionElement);

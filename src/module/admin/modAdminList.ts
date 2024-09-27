@@ -35,12 +35,10 @@ export const getUI = async (parentDiv) => {
       const list = document.createElement("p");
       const eoa = String(adminList[key]);
 
-      list.appendChild(cSnip.span("EOA : "));
-      list.appendChild(cSnip.eoa(String(adminList[key])));
+      list.appendChild(cSnip.span("AdminEOA : "));
+      list.appendChild(cSnip.eoa(eoa));
       list.appendChild(
-        await cSnip.discordByEoa(String(adminList[key]), "span", {
-          class: "discordOwnerElement",
-        })
+        await cSnip.discordByEoa(eoa, "span", { class: "doelm" })
       );
 
       if (Number(adminList[key]) != Number(balance.eoa)) {

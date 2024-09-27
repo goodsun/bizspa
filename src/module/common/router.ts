@@ -1,6 +1,7 @@
 interface RouterParams {
   [index: number]: string;
 }
+console.log("load router");
 
 var fullUrl = window.location.href;
 var path = window.location.pathname;

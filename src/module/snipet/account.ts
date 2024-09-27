@@ -3,6 +3,9 @@ import getTokenConnect from "../connect/getToken";
 import utils from "../common/utils";
 import cSnip from "../snipet/common";
 
+/*
+  /accountページ オーナー情報エレメント
+*/
 const showAccount = async (eoa, tbaOwner, parent) => {
   {
     const accountElm = document.createElement("div");
@@ -16,7 +19,6 @@ const showAccount = async (eoa, tbaOwner, parent) => {
         tbaToken[1],
         tbaToken[2]
       );
-      // ===============================================
       const tokenInfo = await utils.fetchData(tokenUri);
       const image = document.createElement("img");
       image.classList.add("ownerProfPictIcon");
@@ -25,7 +27,7 @@ const showAccount = async (eoa, tbaOwner, parent) => {
         image.src ==
         "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
       ) {
-        image.src = "https://bizen.sbs/img/alt.jpg";
+        image.src = "/img/alt.jpg";
       }
       accountElm.appendChild(image);
 
@@ -36,38 +38,26 @@ const showAccount = async (eoa, tbaOwner, parent) => {
       accountInfo.appendChild(cSnip.eoa(eoa));
       accountInfo.appendChild(cSnip.br());
 
-      const tbaTokenElement = document.createElement("span");
-      tbaTokenElement.innerHTML =
-        "NFT : <a href='/tokens/" +
-        tbaToken[1] +
-        "/" +
-        tbaToken[2] +
-        "'>" +
-        tokenInfo.name +
-        "</a>";
-      accountInfo.appendChild(tbaTokenElement);
+      const tbaTokenElm = document.createElement("span");
+      tbaTokenElm.appendChild(cSnip.span("NFT : "));
+      tbaTokenElm.appendChild(
+        cSnip.link(tokenInfo.name, tbaToken[1] + "/" + tbaToken[2])
+      );
+      accountInfo.appendChild(tbaTokenElm);
       accountInfo.appendChild(cSnip.br());
-      const tbaOwnerElement = document.createElement("span");
-      tbaOwnerElement.appendChild(cSnip.span("NFT owner : "));
-      tbaOwnerElement.appendChild(
+
+      accountInfo.appendChild(cSnip.span("NFT owner : "));
+      accountInfo.appendChild(
         cSnip.eoa(tbaOwner, {
           link: "/account/" + tbaOwner,
           target: "",
           icon: "copy",
         })
       );
-      await utils.getUserByEoa(tbaOwner).then((eoaUser) => {
-        if (eoaUser.type == "discordConnect") {
-          tbaOwnerElement.appendChild(
-            cSnip.getDiscordUserSnipet(
-              eoaUser.discordUser,
-              "span",
-              "discordNameDisp"
-            )
-          );
-        }
-      });
-      accountInfo.appendChild(tbaOwnerElement);
+      accountInfo.appendChild(
+        await cSnip.discordByEoa(tbaOwner, "span", { class: "doelm" })
+      );
+
       accountElm.appendChild(accountInfo);
     } else {
       utils.getUserByEoa(eoa).then(async (eoaUser) => {
@@ -79,7 +69,7 @@ const showAccount = async (eoa, tbaOwner, parent) => {
             image.src ==
             "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
           ) {
-            image.src = "https://bizen.sbs/img/alt.jpg";
+            image.src = "/img/alt.jpg";
           }
           accountElm.appendChild(image);
           const accountInfo = document.createElement("div");

@@ -53,7 +53,7 @@ export const getUI = async () => {
       console.log("id" + params[2]);
       console.log("eoa" + balance.eoa);
       console.log("secret" + setSecret.value);
-      postAndRedirect("https://article.bizen.sbs/login.php", {
+      postAndRedirect(CONST.ARTICLE_REPO + "login.php", {
         id: params[2],
         eoa: balance.eoa,
         secret: setSecret.value,

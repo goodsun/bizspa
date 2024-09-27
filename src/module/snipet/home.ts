@@ -189,11 +189,11 @@ const getGallarys = async () => {
   try {
     const response = await fetch(Url);
     const results = await response.json();
-
     for (const key in results) {
+      if (results[key].Status == 0) {
+        continue;
+      }
       const gallaryInfo = JSON.parse(results[key].Json)[router.lang];
-      console.dir(gallaryInfo);
-
       const slideElement = document.createElement("div");
       slideElement.id = "slide_" + key;
       slideElement.classList.add("carousel-item-bg");

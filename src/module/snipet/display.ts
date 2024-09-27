@@ -10,7 +10,7 @@ import { CONST } from "../common/const";
 import getManagerConnect from "../connect/getManager";
 import getTbaConnect from "../connect/getTbaConnect";
 import setToken from "../connect/setToken";
-import donateConnect from "../connect/donate";
+import donateConnect from "../connect/donateConnect";
 import manageService from "../service/manageService";
 import setManagerConnect from "../connect/setManager";
 const mainContents = document.getElementById("mainContents");
@@ -328,7 +328,7 @@ export const displayToken = async (
         detailDisplay.sendForm(divElement);
       }
     }
-    if (burnable || usertype != "user") {
+    if (burnable || (usertype != "user" && usertype != undefined)) {
       detailDisplay.burnForm(divElement);
     }
   });
@@ -576,24 +576,26 @@ export const displayOwns = async (parentElement, result, eoa) => {
     if (!result[key][3]) {
       console.log(utils.getLocalTime() + "非表示判定" + result[key]);
     } else if (result[key][2] === "nft") {
+      const caName = await getTokenConnect.getToken("name", result[key][0]);
       const titleElm = document.createElement("h2");
       titleElm.classList.add("ownTokenCaTitle");
       titleElm.style.display = "none";
       const link = document.createElement("a");
       link.href = "/tokens/" + result[key][0];
-      link.textContent = result[key][1];
+      link.textContent = caName;
       titleElm.appendChild(link);
       nftListElm.appendChild(titleElm);
       displayOwnTokens(result[key][0], eoa, nftArea, nftListElm, titleElm);
       const floatClear = document.createElement("div");
       floatClear.classList.add("floatClear");
     } else if (result[key][2] === "sbt") {
+      const caName = await getTokenConnect.getToken("name", result[key][0]);
       const titleElm = document.createElement("h2");
       titleElm.classList.add("ownTokenCaTitle");
       titleElm.style.display = "none";
       const link = document.createElement("a");
       link.href = "/tokens/" + result[key][0];
-      link.textContent = result[key][1];
+      link.textContent = caName;
       titleElm.appendChild(link);
       sbtListElm.appendChild(titleElm);
       displayOwnTokens(result[key][0], eoa, sbtArea, sbtListElm, titleElm);
@@ -636,17 +638,18 @@ export const displayTokenContracts = async (result, filter) => {
   mainContents.appendChild(sbtfloatClear);
 
   for (const key in result) {
-    filteringJudge(result[key], filter).then((judge) => {
+    filteringJudge(result[key], filter).then(async (judge) => {
       if (!judge) {
         console.log("非表示判定" + result[key]);
       } else if (result[key][2] === "nft") {
+        const caName = await getTokenConnect.getToken("name", result[key][0]);
         console.log("NFT add:" + result[key][1]);
         nftArea.style.display = "block";
         const contractTitle = document.createElement("h3");
         nftListElm.appendChild(contractTitle);
         const contractLink = document.createElement("a");
         contractLink.href = "/tokens/" + result[key][0];
-        contractLink.innerHTML = result[key][1];
+        contractLink.innerHTML = caName;
         contractTitle.appendChild(contractLink);
 
         const mintLinkArea = document.createElement("span");
@@ -657,13 +660,14 @@ export const displayTokenContracts = async (result, filter) => {
         const floatClear = document.createElement("div");
         floatClear.classList.add("floatClear");
       } else if (result[key][2] === "sbt") {
+        const caName = await getTokenConnect.getToken("name", result[key][0]);
         console.log("SBT add:" + result[key][1]);
         sbtArea.style.display = "block";
         const contractTitle = document.createElement("h3");
         sbtListElm.appendChild(contractTitle);
         const contractLink = document.createElement("a");
         contractLink.href = "/tokens/" + result[key][0];
-        contractLink.innerHTML = result[key][1];
+        contractLink.innerHTML = caName;
         contractTitle.appendChild(contractLink);
 
         const mintLinkArea = document.createElement("span");

@@ -176,7 +176,7 @@ const getTbaOwnerSnipet = (tbaInfo, elm, className?) => {
     newImage.src ==
     "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
   ) {
-    newImage.src = "https://bizen.sbs/img/alt.jpg";
+    newImage.src = "/img/alt.jpg";
   }
   newImage.classList.add("walletOwnerIcon");
   discordElem.appendChild(newImage);
@@ -206,7 +206,7 @@ const getDiscordUserSnipet = (discordUser, elm, className?) => {
     newImage.src ==
     "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png"
   ) {
-    newImage.src = "https://bizen.sbs/img/alt.jpg";
+    newImage.src = "/img/alt.jpg";
   }
   newImage.classList.add("walletOwnerIcon");
   discordElem.appendChild(newImage);

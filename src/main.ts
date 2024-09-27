@@ -2,12 +2,9 @@ import { CONST } from "./module/common/const";
 import { router } from "./module/common/router";
 import getTokenConnect from "./module/connect/getToken";
 import getTbaConnect from "./module/connect/getTbaConnect";
-import { donate, getDonate } from "./module/connect/donate";
+import { donate, getDonate } from "./module/connect/donateConnect";
 import getManagerConnect from "./module/connect/getManager";
 import setManagerConnect from "./module/connect/setManager";
-import orderConnect from "./module/connect/order";
-import permawebcon from "./module/connect/permaweb";
-import setMeta from "./module/connect/metabuilder";
 import discordConnect from "./module/connect/discordConnect";
 import editorConnect from "./module/connect/editorConnect";
 import eoaDisconnect from "./module/connect/eoaDisconnect";
@@ -17,9 +14,13 @@ import managerSnipet from "./module/snipet/manager";
 import articleSnipet from "./module/snipet/article";
 import utils from "./module/common/utils";
 import displaySnipet from "./module/snipet/display";
-import cSnip from "./module/snipet/common";
 import accountSnipet from "./module/snipet/account";
+import cSnip from "./module/snipet/common";
+
 import adminSettings from "./module/admin/settings";
+
+import permawebcon from "./module/connect/permaweb";
+import setMeta from "./module/connect/metabuilder";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
 document.getElementById("pageTitle").innerHTML = CONST.HEADER_TITLE;
@@ -62,13 +63,6 @@ async function discordRegist() {
   await discordConnect.getUI();
 }
 async function metabuilder() {
-  /*
-  const checkBalance = await utils.checkBalance();
-  if (checkBalance.eoa == undefined) {
-    displaySnipet.isNotConnect();
-    return;
-  }
-    */
   await setMeta.getUI();
 }
 async function permaweb() {
@@ -88,10 +82,10 @@ async function setArticleDir(dir) {
 const setContents = async () => {
   articleSnipet.getMdSiteMap();
 };
-async function setDonate(params) {
-  const creators = await getManagerConnect.getManager("creators");
-  const checkBalance = await utils.checkBalance();
 
+async function setDonate(params) {
+  const checkBalance = await utils.checkBalance();
+  const creators = await getManagerConnect.getManager("creators");
   const calcElement = document.createElement("div");
   calcElement.classList.add("calcratorArea");
   mainContents.appendChild(calcElement);
@@ -101,7 +95,6 @@ async function setDonate(params) {
       const creatorDonateElement = document.createElement("div");
       creatorDonateElement.classList.add("donateArea");
       mainContents.appendChild(creatorDonateElement);
-      console.dir(checkBalance);
       displaySnipet.creatorDonateList(creatorDonateElement, checkBalance.eoa);
     }
   }

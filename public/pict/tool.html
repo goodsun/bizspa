@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>img resize tool</title>
+    <style>
+      body {
+        color: #333333;
+        background-color: #ffffff;
+        text-align: center;
+      }
+      #upload {
+        padding: 140px 200px;
+        background-color: #dddddd;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body></body>
+    <h1>画像リサイズツール</h1>
+    <img id="result" src="/img/empty.jpg" alt="Result Image" width="600px" />
+    <br />
+    <p id="ddarea">ファイルを選択するか、グレーのエリアにドラッグ&ドロップしてください。</p>
+    <input type="file" id="upload" accept="image/*" />
+    <br />
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { LANGSET } from "../common/lang";
 import { CONST } from "../../module/common/const";
-import { donate } from "../../module/connect/donate";
+import { donate } from "../../module/connect/donateConnect";
 import getManagerConnect from "../../module/connect/getManager";
 import dynamoConnect from "../../module/connect/dynamoConnect";
 import orderConnect from "../../module/connect/order";
@@ -9,6 +9,8 @@ import cSnip from "../snipet/common";
 import getTokenConnect from "../../module/connect/getToken";
 import getTbaConnect from "../../module/connect/getTbaConnect";
 import setElement from "../snipet/setElement";
+
+console.log("load utils");
 
 const connectWallet = document.getElementById("connectWallet");
 const modalbase = document.getElementById("modalbase");
@@ -327,7 +329,7 @@ export const checkMetamask = async () => {
       cSnip.eoa(
         balanceData.eoa,
         {
-          link: "#",
+          link: "/account/" + balanceData.eoa,
           target: "",
           icon: "copy",
         },

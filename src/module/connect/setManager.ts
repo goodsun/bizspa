@@ -3,13 +3,13 @@ import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 
 export const setManager = async (mode: string, input?: any) => {
-  const abi = ABIS.manager;
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const contract = await provider.getSigner().then((signer) => {
-    return new ethers.Contract(CONST.MANAGER_CA, abi, signer);
-  });
-
   try {
+    const abi = ABIS.manager;
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const contract = await provider.getSigner().then((signer) => {
+      return new ethers.Contract(CONST.MANAGER_CA, abi, signer);
+    });
+
     if (mode == "contracts") {
       const result = await contract.getAllContracts().then((response) => {
         return response;
