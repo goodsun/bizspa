@@ -758,6 +758,7 @@ p.carouselProfileName {
 
 .creatorDonateHistory {
   background: #222222;
+  margin-top: 20px;
   width: 100%;
   max-height: 250px;
   box-shadow: 0 5px 4px #1e1e1e3d;
@@ -1068,4 +1069,46 @@ span.eoaCopy {
   border: none;
   border-radius: 8px;
   margin: 2px 2px 2px 2px;
+}
+
+.staticDirArea > .articleSection > .articleArea {
+  h2,
+  h3,
+  h4,
+  h5 {
+    a {
+      color: #9999bb;
+    }
+  }
+  p {
+    a {
+      color: #ffffff;
+      font-size: 1.3em;
+    }
+  }
+}
+
+div#mainContents > section.articleSection > div.articleArea {
+  h1 {
+    font-size: 2.8em;
+  }
+  h2 {
+    font-size: 2.5em;
+  }
+  h3 {
+    font-size: 2.2em;
+  }
+  h4 {
+    font-size: 2em;
+  }
+  h5 {
+    font-size: 1.75em;
+  }
+  h6 {
+    font-size: 1.5em;
+  }
+  p {
+    font-size: 1.3em;
+    line-height: 2.2em;
+  }
 }

@@ -21,6 +21,15 @@ const getMdSiteMap = async () => {
   parentTitle.textContent = "Contents";
   contentsDirArea.appendChild(parentTitle);
 
+  const staticArea = document.createElement("div");
+  staticArea.classList.add("staticDirArea");
+  contentsDirArea.appendChild(staticArea);
+
+  const PATH = router.lang + "/common/staticmenu";
+  const mdPath = CONST.BOT_API_URL + "contents/get/" + PATH;
+  const path = `${PATH}.md`;
+  parseMdPage(mdPath, path, staticArea);
+
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -39,7 +48,13 @@ const getMdSiteMap = async () => {
       }
       console.dir(sitemap);
       for (const key in sitemap) {
-        if (key != "common") {
+        if (
+          key != "common" &&
+          key != "official_announce" &&
+          key != "official_youtube" &&
+          key != "official_manual" &&
+          key != "official_link"
+        ) {
           var dirTitle = document.createElement("h2");
           dirTitle.classList.add("contentDirTitle");
           var dirLink = document.createElement("a");
@@ -145,12 +160,17 @@ const getMdContents = async (mdpath) => {
   }
 };
 
-const parseMdPage = async (mdpath, path) => {
+const parseMdPage = async (mdpath, path, parentElm?) => {
   const editor = `${CONST.ARTICLE_REPO}edit.php?file=${path}`;
   const viewer = `${CONST.ARTICLE_REPO}viewer.php?file=${path}`;
   const sectionElement = document.createElement("section");
   sectionElement.classList.add("articleSection");
-  mainContents.appendChild(sectionElement);
+
+  if (parentElm == undefined) {
+    mainContents.appendChild(sectionElement);
+  } else {
+    parentElm.appendChild(sectionElement);
+  }
   /*
   const titleElement = document.createElement("h2");
   sectionElement.appendChild(titleElement);

@@ -117,7 +117,7 @@ h2 {
 }
 h3 {
   display: block;
-  font-size: 1.17rem;
+  font-size: 1.3rem;
   -webkit-margin-before: 1__qem;
   -webkit-margin-after: 1rem;
   -webkit-margin-start: 0;
@@ -126,6 +126,7 @@ h3 {
 }
 h4 {
   display: block;
+  font-size: 1.1rem;
   -webkit-margin-before: 1.33__qem;
   -webkit-margin-after: 1.33rem;
   -webkit-margin-start: 0;
@@ -134,7 +135,7 @@ h4 {
 }
 h5 {
   display: block;
-  font-size: 0.83rem;
+  font-size: 1rem;
   -webkit-margin-before: 1.67__qem;
   -webkit-margin-after: 1.67rem;
   -webkit-margin-start: 0;
@@ -143,7 +144,7 @@ h5 {
 }
 h6 {
   display: block;
-  font-size: 0.67rem;
+  font-size: 0.9rem;
   -webkit-margin-before: 2.33__qem;
   -webkit-margin-after: 2.33rem;
   -webkit-margin-start: 0;

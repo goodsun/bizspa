@@ -110,6 +110,12 @@ async function setDonate(params) {
   donateTitle.appendChild(cSnip.eoa(ca));
   divDonateElement.appendChild(donateTitle);
 
+  const PATH = router.lang + "/common/donate";
+  const mdPath = CONST.BOT_API_URL + "contents/get/" + PATH;
+  const path = `${PATH}.md`;
+
+  articleSnipet.parseMdPage(mdPath, path, divDonateElement);
+
   const historyDiv = document.createElement("div");
   historyDiv.classList.add("creatorDonateHistory");
   divDonateElement.appendChild(historyDiv);
@@ -161,15 +167,15 @@ async function setDonate(params) {
       allTotalDonation +
       " " +
       CONST.DONATE_SYMBOL +
-      +"</p>";
+      "</p>";
   }
   if (allTotalUsed > 0) {
     donateContents.innerHTML +=
       "<p>Total used point (All dao) : " +
       allTotalUsed +
-      +" " +
+      " " +
       CONST.DONATE_SYMBOL +
-      +"</p>";
+      "</p>";
   }
   divDonateElement.appendChild(donateContents);
 }
