@@ -107,7 +107,7 @@ export const getTokenInfo = async (ca: string) => {
       creator: await getToken("creator", ca),
       owner: await getToken("owner", ca),
       creatorOnly: await getToken("creatorOnly", ca),
-      needPoint: await getDonatePoint(ca), // 必要なD-BIZ
+      needPoint: await getDonatePoint(ca),
     };
     return result;
   } catch (error) {

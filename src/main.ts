@@ -139,25 +139,37 @@ async function setDonate(params) {
 
     if (totaldonations > 0) {
       donateContents.innerHTML +=
-        "<p>Total donations : " + totaldonations + " D-BIZ" + "</p>";
+        "<p>Total donations : " +
+        totaldonations +
+        " " +
+        CONST.DONATE_SYMBOL +
+        "</p>";
     }
     if (usedpoints > 0) {
       donateContents.innerHTML +=
-        "<p>Used points : " + usedpoints + " D-BIZ" + "</p>";
+        "<p>Used points : " + usedpoints + " " + CONST.DONATE_SYMBOL + "</p>";
     }
     if (donateBalance > 0) {
       donateContents.innerHTML +=
-        "<p>Balance : " + donateBalance + " D-BIZ" + "</p>";
+        "<p>Balance : " + donateBalance + " " + CONST.DONATE_SYMBOL + "</p>";
     }
   }
 
   if (allTotalDonation > 0) {
     donateContents.innerHTML +=
-      "<p>Total donation (All dao) : " + allTotalDonation + " D-BIZ" + "</p>";
+      "<p>Total donation (All dao) : " +
+      allTotalDonation +
+      " " +
+      CONST.DONATE_SYMBOL +
+      +"</p>";
   }
   if (allTotalUsed > 0) {
     donateContents.innerHTML +=
-      "<p>Total used point (All dao) : " + allTotalUsed + " D-BIZ" + "</p>";
+      "<p>Total used point (All dao) : " +
+      allTotalUsed +
+      +" " +
+      CONST.DONATE_SYMBOL +
+      +"</p>";
   }
   divDonateElement.appendChild(donateContents);
 }

@@ -722,7 +722,6 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     let message = "metaURI : " + tokenUriForm.value + "\n";
     message += "SEND TO : " + eoaForm.value + "\n";
     const donatePoint = await setToken.donatePoint(params[2]);
-    console.log("D-BIZ:" + donatePoint);
     if (donatePoint > 0) {
       message +=
         LANGSET("REQUIRE_DBIZ") + " : " + utils.waiToEth(donatePoint) + " pt";

@@ -1,4 +1,6 @@
 import { router } from "../../module/common/router";
+import { CONST } from "../../module/common/const";
+
 export const LANG = {
   en: {
     common: "about BizenDAO",
@@ -52,10 +54,11 @@ export const LANG = {
     REQUIRE_META_URL: "*Please specify the URL where the metadata is stored.",
     TRYING_TO_MINT:
       "Bizen DAO SBT is a contract that is tied to the soul of the work, so if a completely unrelated SBT is created, it may be deleted by the Admin.\nPlease note that these rules are intended to prevent mischief and abuse.",
-    REQUIRE_DBIZ: "require D-BIZ",
+    REQUIRE_DBIZ: "require " + CONST.DONATE_SYMBOL,
     INVALID_TOKENURI: " is an invalid tokenURI",
     CREATOR_ONLY: "This NFT MINT is limited to the artist",
-    NOT_ENOUGH_DBIZ: "You don't have enough D-BIZ to mint.",
+    NOT_ENOUGH_DBIZ:
+      "You don't have enough " + CONST.DONATE_SYMBOL + " to mint.",
     NOT_ENOUGH: " is not enough",
     MES1: "Please enter your donation amount",
     MES2: "Failed to get current price. Please wait for a while.",
@@ -75,7 +78,8 @@ export const LANG = {
     TBA_ISSUE_SUCCESS: "Issued TBA issue transaction",
     TBA_ISSUE_ABORT: "TBA issue transaction aborted",
     POINT_NOT_EXIST:
-      "D-BIZ of 1point or more is required to issue a member SBT",
+      CONST.DONATE_SYMBOL +
+      " of 1point or more is required to issue a member SBT",
     hidasuki: "hidasuki",
     sangiri: "sangiri",
     botamochi: "botamochi",
@@ -154,10 +158,11 @@ export const LANG = {
     REQUIRE_META_URL: "※ メタデータが格納されているURLを指定してください。",
     TRYING_TO_MINT:
       "Bizen DAO SBTは作品の魂に紐付けるためのコントラクトですので、全く関連性のないSBTが作成された場合、Adminによって削除される事があります。\n悪戯と乱用を防ぐ為のルールですので、ご了承の上、ご利用ください。",
-    REQUIRE_DBIZ: "必要なD-BIZ",
+    REQUIRE_DBIZ: "必要な" + CONST.DONATE_SYMBOL,
     INVALID_TOKENURI: " は無効なtokenURIです。",
     CREATOR_ONLY: "このNFTのMINTは作家限定です。",
-    NOT_ENOUGH_DBIZ: "Mintするのに必要なD-BIZが足りません。",
+    NOT_ENOUGH_DBIZ:
+      "Mintするのに必要な" + CONST.DONATE_SYMBOL + "が足りません。",
     NOT_ENOUGH: " が足りません。",
     MES1: "寄付額を入力してください",
     MES2: "現在価格の取得に失敗しました。しばらくお待ち下さい。",
@@ -175,7 +180,8 @@ export const LANG = {
     MEMBER_NOT_PARMITTED: "会員証SBT発行権限がありません。",
     TBA_ISSUE_SUCCESS: "TBA発行トランザクションを発行しました。",
     TBA_ISSUE_ABORT: "TBA発行を中断しました。",
-    POINT_NOT_EXIST: "メンバーズカード発行には1p以上のD-BIZが必要です。",
+    POINT_NOT_EXIST:
+      "メンバーズカード発行には1p以上の" + CONST.DONATE_SYMBOL + "が必要です。",
     hidasuki: "緋襷",
     sangiri: "桟切",
     botamochi: "牡丹餅",
