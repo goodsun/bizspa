@@ -1,13 +1,14 @@
 import { ethers } from "ethers";
+import { router } from "../../module/common/router";
 import { LANGSET } from "../common/lang";
 import { CONST } from "../../module/common/const";
 import { donate } from "../../module/connect/donateConnect";
 import getManagerConnect from "../../module/connect/getManager";
 import dynamoConnect from "../../module/connect/dynamoConnect";
-import orderConnect from "../../module/connect/order";
 import cSnip from "../snipet/common";
 import getTokenConnect from "../../module/connect/getToken";
 import getTbaConnect from "../../module/connect/getTbaConnect";
+import getAcord from "../../module/connect/getAkord";
 import setElement from "../snipet/setElement";
 
 console.log("load utils");
@@ -45,22 +46,41 @@ document.addEventListener("keydown", (event) => {
 });
 
 const formatUnixTime = (unixTime) => {
-  const date = new Date(Number(unixTime) * 1000); // UNIXタイムスタンプは秒単位なのでミリ秒に変換
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  const date = new Date(Number(unixTime)); // UNIXタイムスタンプは秒単位なのでミリ秒に変換
+  let datetime = "";
+  if (router.lang == "en") {
+    const jstDateOnly = date.toLocaleDateString("en-GB", {
+      timeZone: "UTC",
+    });
+    const jstTimeOnly = date.toLocaleTimeString("en-GB", {
+      timeZone: "UTC",
+    });
+    datetime = jstDateOnly + " " + jstTimeOnly + " GMT";
+  } else {
+    const jstDateOnly = date.toLocaleDateString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    });
+    const jstTimeOnly = date.toLocaleTimeString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    });
+    datetime = jstDateOnly + " " + jstTimeOnly + " JST";
+  }
+
+  return datetime;
 };
 
-const getParmawebList = async (data = []) => {
-  console.log("getParmawebList data:" + JSON.stringify(data));
+const getpermawebList = async (data = []) => {
+  console.log("getpermawebList data:" + JSON.stringify(data));
   modalcontent.innerHTML = "<div class='spinner'></div>loading...";
 
-  const orderCa = await getManagerConnect.getCA("order");
-  const assetListOrg = await orderConnect.getAsset(orderCa);
+  let searchKey = "";
+  if (data[0] == "jsonOnly") {
+    searchKey = "json";
+  }
+  if (data[0] == "notJson") {
+    searchKey = "";
+  }
+  const assetList = await getAcord.getStack(searchKey);
 
   modalcontent.innerHTML = "permaweb assets";
   const reload = document.createElement("span");
@@ -72,38 +92,24 @@ const getParmawebList = async (data = []) => {
   const vaultListDiv = document.createElement("div");
   modalcontent.appendChild(vaultListDiv);
 
-  const assetList = assetListOrg.reverse();
   for (const key in assetList) {
-    let dispcheck = true;
-    const filename = assetList[key].Filename as String;
-    if (data[0] == "jsonOnly") {
-      dispcheck = filename.includes(".json");
-    }
-    if (data[0] == "notJson") {
-      dispcheck = !filename.includes(".json");
-    }
-    if (assetList[key].Url == "upload_waiting") {
-      dispcheck = false;
-    }
-    if (dispcheck) {
-      console.dir(assetList[key]);
-      vaultListDiv.innerHTML +=
-        "<br />" +
-        "<span class='datetime'>" +
-        formatUnixTime(assetList[key].Date) +
-        "</span>" +
-        ' <a href="' +
-        assetList[key].Url +
-        '" target="_blank">' +
-        assetList[key].Filename +
-        "</a>";
-      addCopyButton(
-        vaultListDiv,
-        "COPYBUTTON_" + key,
-        "COPYBTN",
-        String(assetList[key].Url)
-      );
-    }
+    const datetime = formatUnixTime(Number(assetList[key].createdAt));
+    vaultListDiv.innerHTML +=
+      "<br />" +
+      "<span class='datetime'>" +
+      datetime +
+      "</span>" +
+      ' <a href="' +
+      assetList[key].arweaveUrl +
+      '" target="_blank">' +
+      assetList[key].name +
+      "</a>";
+    addCopyButton(
+      vaultListDiv,
+      "COPYBUTTON_" + key,
+      "COPYBTN",
+      String(assetList[key].Url)
+    );
   }
   const COPYBTNS = document.querySelectorAll(".COPYBTN");
   COPYBTNS.forEach((element) => {
@@ -123,7 +129,7 @@ const getParmawebList = async (data = []) => {
   document
     .getElementById("vaultReload")
     .addEventListener("click", function (event) {
-      getParmawebList(data);
+      getpermawebList(data);
     });
 };
 
@@ -163,7 +169,7 @@ const toggleModal = async (mode = "permawebList", data = []) => {
     dispmodal = true;
     const chk = await checkBalance();
     if (mode == "permawebList" && chk.balance != undefined) {
-      utils.getParmawebList(data);
+      utils.getpermawebList(data);
     }
     if (mode == "replaceValue") {
       return getReplaceValue(data);
@@ -473,12 +479,13 @@ const utils = {
   ethToWai,
   checkBalance,
   toggleModal,
-  getParmawebList,
+  getpermawebList,
   formatUnixTime,
   openInNativeBrowser,
   getUserByEoa,
   getTbaInfoByEoa,
   shortname,
+  addCopyButton,
 };
 
 export default utils;

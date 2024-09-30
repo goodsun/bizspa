@@ -3,6 +3,7 @@ import { CONST } from "../common/const";
 import setElement from "../snipet/setElement";
 import orderConnect from "../../module/connect/order";
 import getManagerConnect from "../../module/connect/getManager";
+import getAcord from "../../module/connect/getAkord";
 import utils from "../common/utils";
 
 const mainContents = document.getElementById("mainContents");
@@ -52,12 +53,62 @@ const getUI = async () => {
   divUploaderElement.classList.add("akordUploader");
   mainContents.appendChild(divUploaderElement);
   setUI(divUploaderElement, eoa);
+  const divListElement = document.createElement("div");
+  if (eoa != undefined) {
+    mainContents.appendChild(divListElement);
+    setUploadList(divListElement, eoa);
+  }
+};
+
+const setUploadList = async (parent, eoa) => {
+  const titleElm = document.createElement("h2");
+  titleElm.classList.add("akordUploader");
+  titleElm.innerHTML = "Upload List";
+  parent.appendChild(titleElm);
+
+  const listElm = document.createElement("h2");
+  parent.appendChild(listElm);
+  listElm.innerHTML = "<div class='spinner'></div>loading...";
+  const assetList = await getAcord.getStack("");
+  listElm.innerHTML = "";
+
+  const reload = document.createElement("span");
+  reload.classList.add("litelink");
+  reload.classList.add("reloadLink");
+  reload.id = "vaultReload";
+  reload.innerHTML = "reload";
+  listElm.appendChild(reload);
+  console.dir(assetList);
+  const vaultListDiv = document.createElement("div");
+  listElm.appendChild(vaultListDiv);
+
+  for (const key in assetList) {
+    const datetime = utils.formatUnixTime(Number(assetList[key].createdAt));
+
+    vaultListDiv.innerHTML +=
+      "<br />" +
+      "<span class='datetime'>" +
+      datetime +
+      "</span>" +
+      ' <a href="/permaweb/detail/' +
+      assetList[key].id +
+      '" target="_blank">' +
+      assetList[key].name +
+      "</a>";
+
+    utils.addCopyButton(
+      vaultListDiv,
+      "COPYBUTTON_" + key,
+      "COPYBTN",
+      String(assetList[key].Url)
+    );
+  }
 };
 
 const setUI = (parent, eoa) => {
   const titleElm = document.createElement("h2");
   titleElm.classList.add("akordUploader");
-  titleElm.innerHTML = "ParmaWeb Uploader";
+  titleElm.innerHTML = "permaWeb Uploader";
   parent.appendChild(titleElm);
   const uploadingInfoArea = document.createElement("div");
   uploadingInfoArea.classList.add("uploadInfoArea");
@@ -208,12 +259,12 @@ const setUI = (parent, eoa) => {
                 console.log("order ca", orderCa);
                 console.log("order result", orderResult);
                 console.log("filename", file.name);
-                console.log("parmawebUrl", result.parmawebUrl);
+                console.log("permawebUrl", result.permawebUrl);
 
                 //==============================================
                 //アップロード成功でリスト追加
                 const setUrlResult = await orderConnect
-                  .setUrl(orderCa, orderResult, file.name, result.parmawebUrl)
+                  .setUrl(orderCa, orderResult, file.name, result.permawebUrl)
                   .then((response) => {
                     console.dir(response);
                     uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
