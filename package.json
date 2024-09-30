@@ -5,13 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "local": "cp src/settings/front_prd.cnf src/module/common/const.ts;npx webpack; node server.js",
-    "dev": "cp src/settings/front_dev.cnf src/module/common/const.ts;npx webpack; node server.js",
-    "stg": "cp src/settings/front_stg.cnf src/module/common/const.ts;npx webpack; scp -r ./public/* bizendao:web/stg; scp ./public/.htaccess bizendao:web/stg/",
-    "biz": "cp src/settings/front_prd.cnf src/module/common/const.ts;npx webpack; scp -r ./public/* bizendao:web/bizen/; scp ./public/.htaccess bizendao:web/bizen/",
-    "flow": "cp src/settings/front_flow.cnf src/module/common/const.ts;npx webpack; scp -r ./public/* bonsoleil:web/flow/www/; scp ./public/.htaccess bonsoleil:web/flow/www/",
-    "prd": "cp src/settings/front_prd.cnf src/module/common/const.ts;npx webpack; scp -r ./public/* bizendao:web/bizen/; scp ./public/.htaccess bizendao:web/bizen/",
-    "s3": "cp src/settings/front_prd.cnf src/module/common/const.ts;npx webpack; aws s3 sync ./public s3://bizendao"
+    "local": "cp src/settings/front_prd.cnf src/module/common/const.ts; cp src/settings/potter_genre.cnf src/module/common/genrelist.ts; npx webpack; node server.js",
+    "dev": "cp src/settings/front_dev.cnf src/module/common/const.ts; cp src/settings/potter_genre.cnf src/module/common/genrelist.ts; npx webpack; node server.js",
+    "stg": "cp src/settings/front_stg.cnf src/module/common/const.ts; cp src/settings/potter_genre.cnf src/module/common/genrelist.ts; npx webpack; scp -r ./public/* bizendao:web/stg; scp ./public/.htaccess bizendao:web/stg/",
+    "biz": "cp src/settings/front_prd.cnf src/module/common/const.ts; cp src/settings/potter_genre.cnf src/module/common/genrelist.ts; npx webpack; scp -r ./public/* bizendao:web/bizen/; scp ./public/.htaccess bizendao:web/bizen/",
+    "flow": "cp src/settings/front_flow.cnf src/module/common/const.ts; cp src/settings/creator_genre.cnf src/module/common/genrelist.ts; npx webpack; scp -r ./public/* bonsoleil:web/flow/www/; scp ./public/.htaccess bonsoleil:web/flow/www/",
+    "prd": "cp src/settings/front_prd.cnf src/module/common/const.ts; cp src/settings/potter_genre.cnf src/module/common/genrelist.ts; npx webpack; scp -r ./public/* bizendao:web/bizen/; scp ./public/.htaccess bizendao:web/bizen/",
+    "s3": "cp src/settings/front_prd.cnf src/module/common/const.ts; cp src/settings/potter_genre.cnf src/module/common/genrelist.ts; npx webpack; aws s3 sync ./public s3://bizendao"
   },
   "keywords": [],
   "author": "",

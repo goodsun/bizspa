@@ -136,43 +136,59 @@ const getItems = async () => {
         profileArea.appendChild(nftDescribe);
       }
 
-      const priceinfo = document.createElement("p");
-      priceinfo.innerHTML =
-        '<i class="fa-solid fa-money-check-dollar"></i> ' +
-        results[key].Price +
-        " JPY";
-      textdiv.appendChild(priceinfo);
-      const ownerDetail = document.createElement("p");
-      ownerDetail.innerHTML =
-        '<i class="fa-solid fa-user"></i> ' + itemInfo.owner;
-      textdiv.appendChild(ownerDetail);
-      const typeDetail = document.createElement("p");
-      typeDetail.innerHTML =
-        '<i class="fa-solid fa-splotch"></i> ' + itemInfo.type;
-      textdiv.appendChild(typeDetail);
-      const genreDetail = document.createElement("p");
-      genreDetail.innerHTML =
-        '<i class="fa-solid fa-star-of-life"></i> ' + itemInfo.genre;
-      textdiv.appendChild(genreDetail);
-      const specDetail = document.createElement("p");
-      specDetail.innerHTML =
-        '<i class="fa-solid fa-weight-scale"></i> ' +
-        itemInfo.size +
-        " / " +
-        itemInfo.weight;
-      textdiv.appendChild(specDetail);
-      const workplaceDetail = document.createElement("p");
-      workplaceDetail.innerHTML =
-        '<i class="fa-solid fa-shop"></i> ' + itemInfo.workplace;
-      textdiv.appendChild(workplaceDetail);
-      const locationDetail = document.createElement("p");
-      locationDetail.innerHTML =
-        '<i class="fa-solid fa-location-dot"></i> ' + itemInfo.location;
-      textdiv.appendChild(locationDetail);
-      const stationDetail = document.createElement("p");
-      stationDetail.innerHTML =
-        '<i class="fa-solid fa-train-subway"></i> ' + itemInfo.station;
-      textdiv.appendChild(stationDetail);
+      if (results[key].Price != "") {
+        const priceinfo = document.createElement("p");
+        priceinfo.innerHTML =
+          '<i class="fa-solid fa-money-check-dollar"></i> ' +
+          results[key].Price +
+          " JPY";
+        textdiv.appendChild(priceinfo);
+      }
+      if (itemInfo.owner != "") {
+        const ownerDetail = document.createElement("p");
+        ownerDetail.innerHTML =
+          '<i class="fa-solid fa-user"></i> ' + itemInfo.owner;
+        textdiv.appendChild(ownerDetail);
+      }
+      if (itemInfo.type != "") {
+        const typeDetail = document.createElement("p");
+        typeDetail.innerHTML =
+          '<i class="fa-solid fa-splotch"></i> ' + itemInfo.type;
+        textdiv.appendChild(typeDetail);
+      }
+      if (itemInfo.genre != "") {
+        const genreDetail = document.createElement("p");
+        genreDetail.innerHTML =
+          '<i class="fa-solid fa-star-of-life"></i> ' + itemInfo.genre;
+        textdiv.appendChild(genreDetail);
+      }
+      if (itemInfo.size != "" || itemInfo.weight != "") {
+        const specDetail = document.createElement("p");
+        specDetail.innerHTML =
+          '<i class="fa-solid fa-weight-scale"></i> ' +
+          itemInfo.size +
+          " / " +
+          itemInfo.weight;
+        textdiv.appendChild(specDetail);
+      }
+      if (itemInfo.workplace != "") {
+        const workplaceDetail = document.createElement("p");
+        workplaceDetail.innerHTML =
+          '<i class="fa-solid fa-shop"></i> ' + itemInfo.workplace;
+        textdiv.appendChild(workplaceDetail);
+      }
+      if (itemInfo.location != "") {
+        const locationDetail = document.createElement("p");
+        locationDetail.innerHTML =
+          '<i class="fa-solid fa-location-dot"></i> ' + itemInfo.location;
+        textdiv.appendChild(locationDetail);
+      }
+      if (itemInfo.station != "") {
+        const stationDetail = document.createElement("p");
+        stationDetail.innerHTML =
+          '<i class="fa-solid fa-train-subway"></i> ' + itemInfo.station;
+        textdiv.appendChild(stationDetail);
+      }
 
       slides.push(slideElement);
     }

@@ -1112,3 +1112,28 @@ div#mainContents > section.articleSection > div.articleArea {
     line-height: 2.2em;
   }
 }
+
+div#mainContents > div > section.articleSection > div.articleArea {
+  h1 {
+    font-size: 2.8em;
+  }
+  h2 {
+    font-size: 2.5em;
+  }
+  h3 {
+    font-size: 2.2em;
+  }
+  h4 {
+    font-size: 2em;
+  }
+  h5 {
+    font-size: 1.75em;
+  }
+  h6 {
+    font-size: 1.5em;
+  }
+  p {
+    font-size: 1.3em;
+    line-height: 2.2em;
+  }
+}

@@ -1,12 +1,15 @@
 import { router } from "../common/router";
-import { LANGSET, LANG } from "../common/lang";
+import { LANGSET } from "../common/lang";
 import utils from "../common/utils";
 import dynamoConnect from "../connect/dynamoConnect";
 import cSnip from "../snipet/common";
 import setElement from "../snipet/setElement";
 import { FORMATS } from "../common/formats";
 import getTokenConnect from "../connect/getToken";
-const statusList = ["販売前", "販売中", "売り切れ"];
+import { genre_names, type_names, sales_types } from "../common/genrelist";
+import setManagerConnect from "../connect/setManager";
+
+const usertype = await setManagerConnect.setManager("checkUser");
 
 export const getUI = async (parentDiv) => {
   const balance = await utils.checkBalance();
@@ -40,16 +43,16 @@ export const getUI = async (parentDiv) => {
         cSnip.linkCopy(items[key].Contract + "/" + items[key].TokenId)
       );
       itemInfomations.appendChild(
-        cSnip.span(" [" + statusList[items[key].Status] + "]")
+        cSnip.span(" [" + sales_types[items[key].Status] + "]")
       );
       list.appendChild(itemInfomations);
 
-      if (balance.eoa == items[key].Creator) {
+      if (balance.eoa == items[key].Creator || usertype == "admin") {
         const deleteButton = document.createElement("button");
         deleteButton.classList.add("itemTag");
         deleteButton.innerHTML = "delete";
         deleteButton.addEventListener("click", async () => {
-          if (confirm(items[key].Name + "を削除しますか？")) {
+          if (confirm(items[key].Name + LANGSET("DEL_CONFIRM"))) {
             await dynamoConnect.postDynamoApi("item/delete", {
               id: items[key].Id,
             });
@@ -243,17 +246,21 @@ const setInterFace = async (parentDiv, item, eoa, title) => {
   parentDiv.appendChild(jsonForm);
 
   const statusForm = setElement.makeSelect("ContractType", "BaseInput");
-  for (const key in statusList) {
+  for (const key in sales_types) {
     const option = document.createElement("option");
     option.value = key;
-    option.innerHTML = statusList[key];
+    option.innerHTML = sales_types[key];
     statusForm.appendChild(option);
   }
   statusForm.classList.add("w7p");
   statusForm.value = item.Status;
   parentDiv.appendChild(statusForm);
 
-  if (eoa == item.Creator || router.params[3] == undefined) {
+  if (
+    eoa == item.Creator ||
+    router.params[3] == undefined ||
+    usertype == "admin"
+  ) {
     const makeSubmit = setElement.makeInput(
       "submit",
       "submitID",
@@ -265,7 +272,7 @@ const setInterFace = async (parentDiv, item, eoa, title) => {
     parentDiv.appendChild(makeSubmit);
 
     makeSubmit.addEventListener("click", async () => {
-      alert(nameForm.value + "を登録します");
+      alert(nameForm.value + LANGSET("ADD_CONFIRM"));
       const body = {
         name: nameForm.value,
         contract: contractForm.value,
@@ -594,35 +601,35 @@ const setJsonIf = async (parentDiv, item) => {
 };
 
 const genreUi = async (parentDiv, item) => {
-  const genre = await dynamoConnect.getDynamoApi("genre");
-  for (const key in genre) {
+  //const genre = await dynamoConnect.getDynamoApi("genre");
+  for (const key in genre_names) {
     const genreButton = document.createElement("button");
-    genreButton.id = "genre_" + genre[key].name + "_button";
-    if (item.en.genre.includes(LANG.en[genre[key].name])) {
+    genreButton.id = "genre_" + key + "_button";
+    if (item.en.genre.includes(genre_names[key][router.lang])) {
       genreButton.classList.add("button_selected");
     } else {
       genreButton.classList.add("button_unselected");
     }
-    genreButton.innerHTML = LANGSET(genre[key].name);
+    genreButton.innerHTML = genre_names[key][router.lang];
     parentDiv.appendChild(genreButton);
     genreButton.addEventListener("click", async () => {
-      toggreGenre(genre[key].name);
+      toggreGenre(key);
     });
   }
   parentDiv.appendChild(cSnip.br());
-  const type = await dynamoConnect.getDynamoApi("type");
-  for (const key in type) {
+  //const type = await dynamoConnect.getDynamoApi("type");
+  for (const key in type_names) {
     const typeButton = document.createElement("button");
-    typeButton.id = "type_" + type[key].name + "_button";
-    if (item.en.type.includes(LANG.en[type[key].name])) {
+    typeButton.id = "type_" + key + "_button";
+    if (item.en.type.includes(type_names[key][router.lang])) {
       typeButton.classList.add("button_selected");
     } else {
       typeButton.classList.add("button_unselected");
     }
-    typeButton.innerHTML = LANGSET(type[key].name);
+    typeButton.innerHTML = type_names[key][router.lang];
     parentDiv.appendChild(typeButton);
     typeButton.addEventListener("click", async () => {
-      toggreType(type[key].name);
+      toggreType(key);
     });
   }
 };
@@ -633,8 +640,8 @@ const toggreGenre = async (key) => {
   const elm = document.getElementById(
     "genre_" + key + "_button"
   ) as HTMLTextAreaElement;
-  if (item.en.genre.includes(LANG.en[key])) {
-    const index = item.en.genre.indexOf(LANG.en[key]);
+  if (item.en.genre.includes(genre_names[key]["en"])) {
+    const index = item.en.genre.indexOf(genre_names[key]["en"]);
     if (index !== -1) {
       item.en.genre.splice(index, 1);
       item.ja.genre.splice(index, 1);
@@ -642,8 +649,8 @@ const toggreGenre = async (key) => {
     elm.classList.remove("button_selected");
     elm.classList.add("button_unselected");
   } else {
-    item.ja.genre.push(LANG.ja[key]);
-    item.en.genre.push(LANG.en[key]);
+    item.ja.genre.push(genre_names[key]["ja"]);
+    item.en.genre.push(genre_names[key]["en"]);
     elm.classList.add("button_selected");
     elm.classList.remove("button_unselected");
   }
@@ -658,8 +665,8 @@ const toggreType = async (key) => {
   const elm = document.getElementById(
     "type_" + key + "_button"
   ) as HTMLTextAreaElement;
-  if (item.en.type.includes(LANG.en[key])) {
-    const index = item.en.type.indexOf(LANG.en[key]);
+  if (item.en.type.includes(type_names[key]["en"])) {
+    const index = item.en.type.indexOf(type_names[key]["en"]);
     if (index !== -1) {
       item.en.type.splice(index, 1);
       item.ja.type.splice(index, 1);
@@ -667,8 +674,8 @@ const toggreType = async (key) => {
     elm.classList.remove("button_selected");
     elm.classList.add("button_unselected");
   } else {
-    item.en.type.push(LANG.en[key]);
-    item.ja.type.push(LANG.ja[key]);
+    item.en.type.push(type_names[key]["en"]);
+    item.ja.type.push(type_names[key]["ja"]);
     elm.classList.add("button_selected");
     elm.classList.remove("button_unselected");
   }

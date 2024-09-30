@@ -3,11 +3,13 @@ import { CONST } from "../../module/common/const";
 import { LANGSET } from "../common/lang";
 import { router } from "../../module/common/router";
 import { displayArticleCard } from "../snipet/display";
-import { uuidV4 } from "ethers";
+import { exclude_dir } from "../common/genrelist";
+
 const mainContents = document.getElementById("mainContents");
 const options = {
   breaks: true,
 };
+
 marked.setOptions(options);
 
 const getMdSiteMap = async () => {
@@ -48,13 +50,7 @@ const getMdSiteMap = async () => {
       }
       console.dir(sitemap);
       for (const key in sitemap) {
-        if (
-          key != "common" &&
-          key != "official_announce" &&
-          key != "official_youtube" &&
-          key != "official_manual" &&
-          key != "official_link"
-        ) {
+        if (!exclude_dir.includes(key)) {
           var dirTitle = document.createElement("h2");
           dirTitle.classList.add("contentDirTitle");
           var dirLink = document.createElement("a");

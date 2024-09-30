@@ -1,5 +1,6 @@
 import { router } from "../common/router";
 import utils from "../common/utils";
+import { LANGSET } from "../common/lang";
 import dynamoConnect from "../connect/dynamoConnect";
 import cSnip from "../snipet/common";
 import setElement from "../snipet/setElement";
@@ -7,7 +8,8 @@ import CryptoJS from "crypto-js";
 import { FORMATS } from "../common/formats";
 import { CONST } from "../common/const";
 import setManagerConnect from "../connect/setManager";
-const statusList = ["無効", "有効"];
+import { status_type, gallary_type } from "../common/genrelist";
+
 const secretKey = CONST.CRYPTO_SECRET;
 const usertype = await setManagerConnect.setManager("checkUser");
 const balance = await utils.checkBalance();
@@ -36,7 +38,10 @@ export const getUI = async (parentDiv) => {
     const items = await dynamoConnect.getDynamoApi("shop");
     for (const key in items) {
       if (balance.eoa == items[key].Eoa || usertype == "admin") {
-        if (params[3] == undefined || params[3] == "") {
+        if (
+          (params[3] == undefined || params[3] == "") &&
+          usertype != "admin"
+        ) {
           window.location.href = "/setting/gallary/" + items[key].Id;
         }
         gallaryCount++;
@@ -50,7 +55,7 @@ export const getUI = async (parentDiv) => {
         );
         itemInfomations.appendChild(cSnip.span(" " + info.workplace + " "));
         itemInfomations.appendChild(
-          cSnip.span(" [" + statusList[items[key].Status] + "]")
+          cSnip.span(" [" + status_type[items[key].Status] + "]")
         );
         list.appendChild(itemInfomations);
 
@@ -58,7 +63,7 @@ export const getUI = async (parentDiv) => {
         deleteButton.classList.add("itemTag");
         deleteButton.innerHTML = "delete";
         deleteButton.addEventListener("click", async () => {
-          if (confirm(items[key].Name + "を削除しますか？")) {
+          if (confirm(items[key].Name + LANGSET("DEL_CONFIRM"))) {
             await dynamoConnect.postDynamoApi("shop/delete", {
               id: items[key].Id,
             });
@@ -187,11 +192,10 @@ const setInterFace = async (parentDiv, item, title) => {
   parentDiv.appendChild(jsonForm);
 
   const typeForm = setElement.makeSelect("ContractType", "BaseInput");
-  let typeList = ["creator", "gallary", "shop"];
-  for (const key in typeList) {
+  for (const key in gallary_type) {
     const option = document.createElement("option");
-    option.value = typeList[key];
-    option.innerHTML = typeList[key];
+    option.value = gallary_type[key];
+    option.innerHTML = gallary_type[key];
     typeForm.appendChild(option);
   }
   typeForm.classList.add("w35p");
@@ -199,10 +203,10 @@ const setInterFace = async (parentDiv, item, title) => {
   parentDiv.appendChild(typeForm);
 
   const statusForm = setElement.makeSelect("ContractType", "BaseInput");
-  for (const key in statusList) {
+  for (const key in status_type) {
     const option = document.createElement("option");
     option.value = key;
-    option.innerHTML = statusList[key];
+    option.innerHTML = status_type[key];
     statusForm.appendChild(option);
   }
   statusForm.classList.add("w35p");
@@ -240,21 +244,24 @@ const setInterFace = async (parentDiv, item, title) => {
     console.log(JSON.stringify(body));
     try {
       if (balance.eoa != eoaForm.value && usertype != "admin") {
-        alert("登録できません");
+        alert(LANGSET("CAN_NOT_CREATE"));
       } else if (
         gallaryCount > 0 &&
         usertype != "admin" &&
         router.params[3] == undefined
       ) {
-        alert("重複登録できません");
+        alert(LANGSET("CAN_NOT_W_CREATE"));
       } else if (router.params[3] == undefined) {
-        alert(nameForm.value + "を登録します");
-        await dynamoConnect.postDynamoApi("shop/add/", body);
+        if (confirm(nameForm.value + LANGSET("ADD_CONFIRM"))) {
+          await dynamoConnect.postDynamoApi("shop/add/", body);
+          window.location.href = "/setting/gallary";
+        }
       } else {
-        alert(nameForm.value + "を更新します");
-        await dynamoConnect.postDynamoApi("shop/update/" + item.Id, body);
+        if (confirm(nameForm.value + LANGSET("UPDATE_CONFIRM"))) {
+          await dynamoConnect.postDynamoApi("shop/update/" + item.Id, body);
+          window.location.href = "/setting/gallary";
+        }
       }
-      window.location.href = "/setting/gallary";
     } catch (e) {
       console.error(e);
     }

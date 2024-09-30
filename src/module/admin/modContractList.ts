@@ -6,6 +6,7 @@ import getManagerConnect from "../connect/getManager";
 import setManagerConnect from "../connect/setManager";
 import cSnip from "../snipet/common";
 import setElement from "../snipet/setElement";
+import { contract_types } from "../common/genrelist";
 
 export const getUI = async (parentDiv) => {
   const balance = await utils.checkBalance();
@@ -56,7 +57,11 @@ export const getUI = async (parentDiv) => {
         deleteButton.addEventListener("click", async () => {
           if (
             confirm(
-              contracts[key][1] + "[" + contracts[key][2] + "]を削除しますか？"
+              contracts[key][1] +
+                "[" +
+                contracts[key][2] +
+                "]" +
+                LANGSET("DEL_CONFIRM")
             )
           ) {
             await setManagerConnect.setManager("deleteContract", [
@@ -104,11 +109,10 @@ export const getUI = async (parentDiv) => {
     subDiv.appendChild(contractName);
 
     const selectForm = setElement.makeSelect("ContractType", "BaseInput");
-    let selectList = ["nft", "sbt", "tba", "donate", "order"];
-    for (const key in selectList) {
+    for (const key in contract_types) {
       const option = document.createElement("option");
-      option.value = selectList[key];
-      option.innerHTML = selectList[key];
+      option.value = contract_types[key];
+      option.innerHTML = contract_types[key];
       selectForm.appendChild(option);
     }
     selectForm.classList.add("w7p");
@@ -144,21 +148,23 @@ export const getUI = async (parentDiv) => {
 
     makeSubmit.addEventListener("click", async () => {
       if (router.params[3] == undefined) {
-        alert(contractName.value + "を登録します");
-        await setManagerConnect.setManager("setContract", [
-          contractAddress.value,
-          contractName.value,
-          selectForm.value,
-        ]);
-        window.location.href = "/setting/contract";
+        if (confirm(contractName.value + LANGSET("ADD_CONFIRM"))) {
+          await setManagerConnect.setManager("setContract", [
+            contractAddress.value,
+            contractName.value,
+            selectForm.value,
+          ]);
+          window.location.href = "/setting/contract";
+        }
       } else {
-        alert(contractName.value + "を更新します");
-        await setManagerConnect.setManager("setContractInfo", [
-          contractAddress.value,
-          contractName.value,
-          selectForm.value,
-        ]);
-        window.location.href = "/setting/contract/" + router.params[3];
+        if (confirm(contractName.value + LANGSET("UPDATE_CONFIRM"))) {
+          await setManagerConnect.setManager("setContractInfo", [
+            contractAddress.value,
+            contractName.value,
+            selectForm.value,
+          ]);
+          window.location.href = "/setting/contract/" + router.params[3];
+        }
       }
     });
   } else {

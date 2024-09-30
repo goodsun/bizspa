@@ -6,13 +6,7 @@ import getManagerConnect from "../connect/getManager";
 import setManagerConnect from "../connect/setManager";
 import cSnip from "../snipet/common";
 import setElement from "../snipet/setElement";
-const creatorTypeList = [
-  "creator",
-  "administrator",
-  "editor",
-  "3Dmodeler",
-  "other",
-];
+import { creator_types } from "../common/genrelist";
 
 export const getUI = async (parentDiv) => {
   const balance = await utils.checkBalance();
@@ -55,7 +49,8 @@ export const getUI = async (parentDiv) => {
         deleteButton.addEventListener("click", async () => {
           if (
             confirm(
-              JSON.parse(creatorList[key][1])[router.lang] + "を削除しますか？"
+              JSON.parse(creatorList[key][1])[router.lang] +
+                LANGSET("DEL_CONFIRM")
             )
           ) {
             await setManagerConnect.setManager("delCreator", [
@@ -111,10 +106,10 @@ export const getUI = async (parentDiv) => {
     subDiv.appendChild(jpName);
 
     const selectForm = setElement.makeSelect("ContractType", "BaseInput");
-    for (const key in creatorTypeList) {
+    for (const key in creator_types) {
       const option = document.createElement("option");
-      option.value = creatorTypeList[key];
-      option.innerHTML = creatorTypeList[key];
+      option.value = creator_types[key];
+      option.innerHTML = creator_types[key];
       selectForm.appendChild(option);
     }
     selectForm.classList.add("w7p");
@@ -131,7 +126,7 @@ export const getUI = async (parentDiv) => {
     subDiv.appendChild(makeSubmit);
 
     makeSubmit.addEventListener("click", async () => {
-      alert(jpName.value + "を登録します");
+      alert(jpName.value + LANGSET("ADD_CONFIRM"));
       await setManagerConnect.setManager("setCreator", [
         contractAddress.value,
         JSON.stringify({ en: enName.value, ja: jpName.value }),

@@ -2,4 +2,5 @@
 node_modules
 public/js/*
 src/module/common/const.ts
-src/settings/front_*
+src/module/common/genrelist.ts
+src/settings/*

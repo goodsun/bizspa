@@ -47,7 +47,7 @@ export const getUI = async (parentDiv) => {
         deleteButton.classList.add("itemTag");
         deleteButton.innerHTML = "delete";
         deleteButton.addEventListener("click", async () => {
-          if (confirm(adminList[key] + "を削除しますか？")) {
+          if (confirm(adminList[key] + LANGSET("DEL_CONFIRM"))) {
             await setManagerConnect.setManager("delAdmin", adminList[key]);
           }
         });
@@ -94,7 +94,7 @@ export const getUI = async (parentDiv) => {
     });
 
     makeSubmit.addEventListener("click", async () => {
-      if (confirm(sendToInput.value + "を登録しますか？")) {
+      if (confirm(sendToInput.value + LANGSET("ADD_CONFIRM"))) {
         await setManagerConnect.setManager("setAdmin", [sendToInput.value]);
         window.location.href = "/setting/admin";
       }
