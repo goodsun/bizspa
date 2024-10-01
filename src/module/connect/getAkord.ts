@@ -13,13 +13,30 @@ const upload = async () => {
   console.log("SIGNER:" + signer);
 };
 
-const getStack = async (searchKey) => {
+const getStack = async (stackId) => {
+  console.log("getStack:" + stackId);
+  let Url = CONST.AKORD_API_URL + "/stack/" + stackId;
+  try {
+    const response = await fetch(Url);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const stackDetail = await response.json();
+    console.log("parmaweb Stack Detail");
+    console.dir(stackDetail);
+    return stackDetail.stack;
+  } catch (error) {
+    console.warn("There was a problem with the fetch operation:", error);
+  }
+};
+
+const getStackList = async (searchKey) => {
   const signer = await getSigner();
   let Url = CONST.AKORD_API_URL + "/list/" + signer;
   if (searchKey != "") {
     Url = Url + "/" + searchKey;
   }
-  console.log("getStack:" + Url);
+  console.log("getStackList:" + Url);
   try {
     const response = await fetch(Url);
     if (!response.ok) {
@@ -47,6 +64,7 @@ const getStack = async (searchKey) => {
 
 const getAkord = {
   upload,
+  getStackList,
   getStack,
   getSigner,
 };

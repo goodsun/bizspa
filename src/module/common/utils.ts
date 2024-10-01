@@ -45,6 +45,11 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+function isImageFile(filename) {
+  const imageExtensions = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i;
+  return imageExtensions.test(filename);
+}
+
 const formatUnixTime = (unixTime) => {
   const date = new Date(Number(unixTime)); // UNIXタイムスタンプは秒単位なのでミリ秒に変換
   let datetime = "";
@@ -80,15 +85,24 @@ const getpermawebList = async (data = []) => {
   if (data[0] == "notJson") {
     searchKey = "";
   }
-  const assetList = await getAcord.getStack(searchKey);
+  const assetList = await getAcord.getStackList(searchKey);
 
   modalcontent.innerHTML = "permaweb assets";
+
+  const upload = document.createElement("span");
+  upload.classList.add("litelink");
+  upload.classList.add("reloadLink");
+  upload.id = "vaultReload";
+  upload.innerHTML = "<a href='/permaweb' target='_blank'>upload</a>";
+  modalcontent.appendChild(upload);
+
   const reload = document.createElement("span");
   reload.classList.add("litelink");
   reload.classList.add("reloadLink");
   reload.id = "vaultReload";
   reload.innerHTML = "reload";
   modalcontent.appendChild(reload);
+
   const vaultListDiv = document.createElement("div");
   modalcontent.appendChild(vaultListDiv);
 
@@ -99,8 +113,8 @@ const getpermawebList = async (data = []) => {
       "<span class='datetime'>" +
       datetime +
       "</span>" +
-      ' <a href="' +
-      assetList[key].arweaveUrl +
+      ' <a href="/permaweb/detail/' +
+      assetList[key].id +
       '" target="_blank">' +
       assetList[key].name +
       "</a>";
@@ -486,6 +500,7 @@ const utils = {
   getTbaInfoByEoa,
   shortname,
   addCopyButton,
+  isImageFile,
 };
 
 export default utils;

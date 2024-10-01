@@ -125,7 +125,7 @@ const getMdPath = async () => {
   parseMdPage(mdpath, path);
 };
 
-const getMdContents = async (mdpath) => {
+const getMdContents = async (mdpath, path) => {
   try {
     const url = mdpath + "?test=" + Date.now();
     console.log("GET MD CONTENTS:" + url);
@@ -152,7 +152,7 @@ const getMdContents = async (mdpath) => {
   } catch (error) {
     // エラーハンドリング
     console.error("Fetch operation failed:", error);
-    return "md file notfound md | " + mdpath;
+    return "md file notfound md | " + path;
   }
 };
 
@@ -174,7 +174,7 @@ const parseMdPage = async (mdpath, path, parentElm?) => {
   const articleElement = document.createElement("div");
   articleElement.classList.add("articleArea");
   sectionElement.appendChild(articleElement);
-  articleElement.innerHTML = await getMdContents(mdpath);
+  articleElement.innerHTML = await getMdContents(mdpath, path);
 
   const originalElement = document.createElement("div");
   originalElement.classList.add("articleArea");

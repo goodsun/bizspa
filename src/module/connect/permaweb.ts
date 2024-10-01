@@ -7,6 +7,7 @@ import orderConnect from "../../module/connect/order";
 import getManagerConnect from "../../module/connect/getManager";
 import getAcord from "../../module/connect/getAkord";
 import utils from "../common/utils";
+import cSnip from "../snipet/common";
 
 const mainContents = document.getElementById("mainContents");
 const agree_ext_list = [
@@ -83,6 +84,50 @@ const setDetail = async (parent, stackId) => {
   titleElm.classList.add("stackTitle");
   titleElm.innerHTML = "Stack Detail " + stackId;
   parent.appendChild(titleElm);
+
+  const detailElm = document.createElement("div");
+  detailElm.innerHTML = "<div class='spinner'></div>loading...";
+  parent.appendChild(detailElm);
+  1;
+  const assetDetail = await getAcord.getStack(stackId);
+  detailElm.innerHTML = "";
+  console.dir(assetDetail);
+  titleElm.innerHTML = "Stack Detail | " + assetDetail.name;
+  if (utils.isImageFile(assetDetail.name)) {
+    var akrdImg = document.createElement("img");
+    akrdImg.classList.add("akrdImage");
+    akrdImg = document.createElement("img");
+    akrdImg.src = "http://akrd.net/" + assetDetail.uri;
+    detailElm.appendChild(akrdImg);
+  } else {
+    detailElm.appendChild(cSnip.span("url : " + assetDetail.uri));
+  }
+  detailElm.appendChild(cSnip.br());
+  detailElm.appendChild(cSnip.span("stackId : " + assetDetail.id));
+  detailElm.appendChild(cSnip.br());
+  detailElm.appendChild(cSnip.span("akord link :"));
+  detailElm.appendChild(
+    cSnip.link("akord", "https://akrd.net/" + assetDetail.uri)
+  );
+  detailElm.appendChild(cSnip.br());
+  detailElm.appendChild(cSnip.span("permaweb link :"));
+  detailElm.appendChild(
+    cSnip.link("permaweb", "https://arweave.net/" + assetDetail.uri)
+  );
+  detailElm.appendChild(cSnip.br());
+  detailElm.appendChild(cSnip.span("viewblock link :"));
+  detailElm.appendChild(
+    cSnip.link(
+      "viewblock",
+      "https://viewblock.io/arweave/tx/" + assetDetail.uri
+    )
+  );
+  detailElm.appendChild(cSnip.br());
+  detailElm.appendChild(
+    cSnip.span(
+      "createdAt : " + utils.formatUnixTime(Number(assetDetail.createdAt))
+    )
+  );
 };
 
 const setUploadList = async (parent) => {
@@ -94,7 +139,7 @@ const setUploadList = async (parent) => {
   const listElm = document.createElement("h2");
   parent.appendChild(listElm);
   listElm.innerHTML = "<div class='spinner'></div>loading...";
-  const assetList = await getAcord.getStack("");
+  const assetList = await getAcord.getStackList("");
   listElm.innerHTML = "";
 
   const reload = document.createElement("span");
