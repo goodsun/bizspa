@@ -62,7 +62,7 @@ const getUI = async () => {
       const divInnerElement = document.createElement("div");
       divInnerElement.classList.add("permawebStackDetail");
       permawebElement.appendChild(divInnerElement);
-      setDetail(divInnerElement, router.params[3]);
+      setDetail(divInnerElement, router.params[3], eoa);
     } else {
       const divUploaderElement = document.createElement("div");
       divUploaderElement.classList.add("akordUploaderElement");
@@ -79,7 +79,7 @@ const getUI = async () => {
   }
 };
 
-const setDetail = async (parent, stackId) => {
+const setDetail = async (parent, stackId, eoa) => {
   const titleElm = document.createElement("h2");
   titleElm.classList.add("stackTitle");
   titleElm.innerHTML = "Stack Detail " + stackId;
@@ -100,10 +100,18 @@ const setDetail = async (parent, stackId) => {
     akrdImg.src = "http://akrd.net/" + assetDetail.uri;
     detailElm.appendChild(akrdImg);
   } else {
-    detailElm.appendChild(cSnip.span("url : " + assetDetail.uri));
+    // todo
+    console.log(assetDetail.versions[0].type);
+    //detailElm.appendChild(cSnip.span("url : " + assetDetail.uri));
   }
   detailElm.appendChild(cSnip.br());
   detailElm.appendChild(cSnip.span("stackId : " + assetDetail.id));
+  detailElm.appendChild(cSnip.br());
+  detailElm.appendChild(cSnip.span("MIME : " + assetDetail.versions[0].type));
+  detailElm.appendChild(cSnip.br());
+  detailElm.appendChild(
+    cSnip.span("size : " + assetDetail.versions[0].size + "byte")
+  );
   detailElm.appendChild(cSnip.br());
   detailElm.appendChild(cSnip.span("akord link :"));
   detailElm.appendChild(
@@ -128,6 +136,90 @@ const setDetail = async (parent, stackId) => {
       "createdAt : " + utils.formatUnixTime(Number(assetDetail.createdAt))
     )
   );
+
+  const controlElm = document.createElement("div");
+  detailElm.appendChild(controlElm);
+
+  const renameName = setElement.makeInput(
+    "input",
+    "sendTo",
+    "BaseInput",
+    "NEW NAME"
+  );
+  renameName.classList.add("w7p");
+  controlElm.appendChild(renameName);
+  controlElm.appendChild(cSnip.br());
+
+  const renameButton = document.createElement("button");
+  renameButton.classList.add("itemTag");
+  renameButton.innerHTML = "rename";
+  renameButton.classList.add("w35p");
+  controlElm.appendChild(renameButton);
+  renameButton.addEventListener("click", async () => {
+    if (confirm(renameName.value + LANGSET("STACK_RENAME_CONFIRM"))) {
+      controlElm.innerHTML = "<div class='spinner'></div>processing...";
+      const URL = CONST.AKORD_API_URL + "stack/rename";
+      const params = new URLSearchParams();
+      params.append("id", router.params[3]);
+      params.append("eoa", eoa);
+      params.append("name", renameName.value);
+
+      try {
+        const checkresult = await fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: params.toString(),
+        });
+
+        if (checkresult.ok) {
+          alert("updatred");
+          window.location.href = "/permaweb/" + router.params[3];
+        } else {
+          console.log("File delete error:");
+          console.dir(checkresult);
+        }
+      } catch (error) {
+        console.dir(error);
+      }
+    }
+  });
+
+  const deleteButton = document.createElement("button");
+  deleteButton.classList.add("itemTag");
+  deleteButton.innerHTML = "delete";
+  deleteButton.classList.add("w35p");
+  controlElm.appendChild(deleteButton);
+
+  deleteButton.addEventListener("click", async () => {
+    if (confirm(renameName.value + LANGSET("STACK_DELETE_CONFIRM"))) {
+      controlElm.innerHTML = "<div class='spinner'></div>processing...";
+      const URL = CONST.AKORD_API_URL + "stack/delete";
+      const params = new URLSearchParams();
+      params.append("id", router.params[3]);
+      params.append("eoa", eoa);
+
+      try {
+        const checkresult = await fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: params.toString(),
+        });
+        if (checkresult.ok) {
+          alert("deleted");
+          window.location.href = "/permaweb";
+        } else {
+          console.log("File delete error:");
+          console.dir(checkresult);
+        }
+      } catch (error) {
+        console.dir(error);
+      }
+    }
+  });
 };
 
 const setUploadList = async (parent) => {
@@ -136,7 +228,7 @@ const setUploadList = async (parent) => {
   titleElm.innerHTML = "Upload List";
   parent.appendChild(titleElm);
 
-  const listElm = document.createElement("h2");
+  const listElm = document.createElement("div");
   parent.appendChild(listElm);
   listElm.innerHTML = "<div class='spinner'></div>loading...";
   const assetList = await getAcord.getStackList("");
@@ -150,12 +242,12 @@ const setUploadList = async (parent) => {
   listElm.appendChild(reload);
   console.dir(assetList);
   const vaultListDiv = document.createElement("div");
+  vaultListDiv.classList.add("uploadFileList");
   listElm.appendChild(vaultListDiv);
 
   for (const key in assetList) {
     const datetime = utils.formatUnixTime(Number(assetList[key].createdAt));
     vaultListDiv.innerHTML +=
-      "<br />" +
       "<span class='datetime'>" +
       datetime +
       "</span>" +
@@ -170,6 +262,7 @@ const setUploadList = async (parent) => {
       "COPYBTN",
       String(assetList[key].arweaveUrl)
     );
+    vaultListDiv.appendChild(cSnip.br());
   }
 
   const COPYBTNS = document.querySelectorAll(".COPYBTN");

@@ -1141,3 +1141,26 @@ div#mainContents > div > section.articleSection > div.articleArea {
 .permawebElement {
   padding: 10px 20px;
 }
+
+.permawebStackList {
+  background-color: #ffffff;
+  margin: 40px 10px;
+  border-radius: 20px;
+  padding: 10px 20px 30px 20px;
+
+  h2 {
+    color: #444444;
+  }
+}
+
+.uploadFileList {
+  font-size: 1.8em;
+  line-height: 2em;
+  margin: 0px;
+  .datetime {
+    font-size: 0.5em;
+  }
+  .copyLink {
+    font-size: 0.7em;
+  }
+}

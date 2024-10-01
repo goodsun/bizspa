@@ -92,7 +92,7 @@ const getpermawebList = async (data = []) => {
   const upload = document.createElement("span");
   upload.classList.add("litelink");
   upload.classList.add("reloadLink");
-  upload.id = "vaultReload";
+  upload.id = "stackUpload";
   upload.innerHTML = "<a href='/permaweb' target='_blank'>upload</a>";
   modalcontent.appendChild(upload);
 

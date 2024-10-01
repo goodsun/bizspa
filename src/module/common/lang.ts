@@ -98,6 +98,8 @@ export const LANG = {
     CANCEL_TO_UPLOAD: "Cancel to upload",
     FAILED_TO_CHECK_FILE: "Failed to check file",
     UPLOAD_ERROR: "Upload error",
+    STACK_RENAME_CONFIRM: " | trying to change the file name. Are you sure?",
+    STACK_DELETE_CONFIRM: " | trying to delete the file. Are you sure?",
   },
   ja: {
     common: "BIZENDAOとは",
@@ -194,6 +196,10 @@ export const LANG = {
     CANCEL_TO_UPLOAD: "アップロードをキャンセルしました。",
     FAILED_TO_CHECK_FILE: "ファイルのチェックに失敗しました。",
     UPLOAD_ERROR: "アップロード中にエラーが発生しました。",
+    STACK_RENAME_CONFIRM:
+      " にリネームしようとしています。本当によろしいでしょうか？",
+    STACK_DELETE_CONFIRM:
+      " こちらのファイルを一覧から削除します。本当によろしいですか？\n一覧からの削除のみで本体のファイルを消すことはできません。",
   },
 };
 
