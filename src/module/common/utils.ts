@@ -108,7 +108,7 @@ const getpermawebList = async (data = []) => {
       vaultListDiv,
       "COPYBUTTON_" + key,
       "COPYBTN",
-      String(assetList[key].Url)
+      String(assetList[key].arweaveUrl)
     );
   }
   const COPYBTNS = document.querySelectorAll(".COPYBTN");

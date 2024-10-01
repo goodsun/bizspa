@@ -31,38 +31,6 @@ export const order = async (contractAddress: string, value: string) => {
   }
 };
 
-export const setUrl = async (
-  contractAddress: string,
-  orderId: string,
-  url: string,
-  filename: string
-) => {
-  alert(
-    "ファイル管理に登録しますか?:" +
-      " filename:" +
-      filename +
-      " url:" +
-      url +
-      "\nファイル管理が不要な場合このトランザクションをキャンセルすることが可能です。\n" +
-      "必ずpermawebURLを記録してください。。"
-  );
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const contract = await provider.getSigner().then((signer) => {
-    return new ethers.Contract(contractAddress, orderAbi, signer);
-  });
-  try {
-    const result = await contract
-      .setUrl(orderId, filename, url)
-      .then((response) => {
-        return response;
-      });
-    console.log("order selial number:" + result);
-    return result;
-  } catch (error) {
-    console.dir(error);
-  }
-};
-
 export const getAsset = async (contractAddress: string) => {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const contract = await provider.getSigner().then((signer) => {
@@ -95,7 +63,6 @@ export const getAsset = async (contractAddress: string) => {
 
 const orderConnect = {
   order,
-  setUrl,
   getAsset,
 };
 

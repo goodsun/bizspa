@@ -88,6 +88,16 @@ export const LANG = {
     CAN_NOT_CREATE: "You can not create",
     CAN_NOT_W_CREATE: "Duplicate registration is not possible",
     CAN_NOT_UPDATE: "You can not update",
+    CANT_UPLOAD_FILE:
+      "You are trying to upload a file with an unknown extension. \nThis file may not be viewed correctly. \nPlease check whether the contents of the file are correct. ",
+    UPLOAD_CONFIRM:
+      "You are trying to upload this file. This file will be public forever.\nThis operation cannot be undone.\nAre you sure you want to upload this?",
+    UPLOAD_SUCCESS:
+      "has been uploaded. <br /> Please wait for a while until it is reflected on permaweb.",
+    FAILED_TO_UPLOAD: "Failed to upload",
+    CANCEL_TO_UPLOAD: "Cancel to upload",
+    FAILED_TO_CHECK_FILE: "Failed to check file",
+    UPLOAD_ERROR: "Upload error",
   },
   ja: {
     common: "BIZENDAOとは",
@@ -174,6 +184,16 @@ export const LANG = {
     CAN_NOT_CREATE: "登録できません",
     CAN_NOT_W_CREATE: "重複登録できません",
     CAN_NOT_UPDATE: "更新できません",
+    CANT_UPLOAD_FILE:
+      "\n不明な拡張子のファイルをアップロードしようとしています。\nこちらのファイルは正しく閲覧できない可能性があります。\nファイルの内容が正しいかご確認ください。",
+    UPLOAD_CONFIRM:
+      "こちらのファイルをアップロードしようとしています。\nこのファイルは永遠に公開され、この操作は取り消すことができません。\n本当にアップロードしてもよろしいですか。",
+    UPLOAD_SUCCESS:
+      "のアップロードが完了しました。<br /> permawebに反映されるまでしばらくお待ちください",
+    FAILED_TO_UPLOAD: "アップロードに失敗しました。",
+    CANCEL_TO_UPLOAD: "アップロードをキャンセルしました。",
+    FAILED_TO_CHECK_FILE: "ファイルのチェックに失敗しました。",
+    UPLOAD_ERROR: "アップロード中にエラーが発生しました。",
   },
 };
 

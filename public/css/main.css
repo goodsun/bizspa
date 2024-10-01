@@ -1137,3 +1137,7 @@ div#mainContents > div > section.articleSection > div.articleArea {
     line-height: 2.2em;
   }
 }
+
+.permawebElement {
+  padding: 10px 20px;
+}

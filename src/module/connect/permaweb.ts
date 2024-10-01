@@ -1,5 +1,7 @@
+import { router } from "../common/router";
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
+import { LANGSET } from "../common/lang";
 import setElement from "../snipet/setElement";
 import orderConnect from "../../module/connect/order";
 import getManagerConnect from "../../module/connect/getManager";
@@ -49,20 +51,43 @@ const getUI = async () => {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
   const eoa = await signer.getAddress();
-  const divUploaderElement = document.createElement("div");
-  divUploaderElement.classList.add("akordUploader");
-  mainContents.appendChild(divUploaderElement);
-  setUI(divUploaderElement, eoa);
-  const divListElement = document.createElement("div");
+  const permawebElement = document.createElement("div");
+  permawebElement.classList.add("permawebElement");
+  mainContents.appendChild(permawebElement);
+
   if (eoa != undefined) {
-    mainContents.appendChild(divListElement);
-    setUploadList(divListElement, eoa);
+    const divInnerElement = document.createElement("div");
+    if (router.params[2] == "detail" && router.params[3] != "") {
+      const divInnerElement = document.createElement("div");
+      divInnerElement.classList.add("permawebStackDetail");
+      permawebElement.appendChild(divInnerElement);
+      setDetail(divInnerElement, router.params[3]);
+    } else {
+      const divUploaderElement = document.createElement("div");
+      divUploaderElement.classList.add("akordUploaderElement");
+      permawebElement.appendChild(divUploaderElement);
+
+      divInnerElement.classList.add("permawebStackList");
+      permawebElement.appendChild(divInnerElement);
+
+      setUploadUI(divUploaderElement, divInnerElement);
+      setUploadList(divInnerElement);
+    }
+  } else {
+    alert("walletを接続してください。");
   }
 };
 
-const setUploadList = async (parent, eoa) => {
+const setDetail = async (parent, stackId) => {
   const titleElm = document.createElement("h2");
-  titleElm.classList.add("akordUploader");
+  titleElm.classList.add("stackTitle");
+  titleElm.innerHTML = "Stack Detail " + stackId;
+  parent.appendChild(titleElm);
+};
+
+const setUploadList = async (parent) => {
+  const titleElm = document.createElement("h2");
+  titleElm.classList.add("uploaderTitle");
   titleElm.innerHTML = "Upload List";
   parent.appendChild(titleElm);
 
@@ -84,7 +109,6 @@ const setUploadList = async (parent, eoa) => {
 
   for (const key in assetList) {
     const datetime = utils.formatUnixTime(Number(assetList[key].createdAt));
-
     vaultListDiv.innerHTML +=
       "<br />" +
       "<span class='datetime'>" +
@@ -92,20 +116,39 @@ const setUploadList = async (parent, eoa) => {
       "</span>" +
       ' <a href="/permaweb/detail/' +
       assetList[key].id +
-      '" target="_blank">' +
+      '" >' +
       assetList[key].name +
       "</a>";
-
     utils.addCopyButton(
       vaultListDiv,
       "COPYBUTTON_" + key,
       "COPYBTN",
-      String(assetList[key].Url)
+      String(assetList[key].arweaveUrl)
     );
   }
+
+  const COPYBTNS = document.querySelectorAll(".COPYBTN");
+  COPYBTNS.forEach((element) => {
+    element.addEventListener("click", () => {
+      const copytext = element.getAttribute("data-clipboard-text");
+      navigator.clipboard
+        .writeText(copytext)
+        .then(function () {
+          alert("URL" + LANGSET("COPYED"));
+        })
+        .catch(function (error) {
+          alert(LANGSET("COPYFAILED") + error);
+        });
+    });
+  });
+
+  reload.addEventListener("click", function (event) {
+    parent.innerHTML = "";
+    setUploadList(parent);
+  });
 };
 
-const setUI = (parent, eoa) => {
+const setUploadUI = (parent, stackList) => {
   const titleElm = document.createElement("h2");
   titleElm.classList.add("akordUploader");
   titleElm.innerHTML = "permaWeb Uploader";
@@ -142,12 +185,8 @@ const setUI = (parent, eoa) => {
     const ext = file.name.split(".").pop().toLocaleLowerCase();
     console.log("file extention:" + ext);
     if (!agree_ext_list.includes(ext)) {
-      alert(
-        file.name +
-          "\n不明な拡張子のファイルをアップロードしようとしています。\nこちらのファイルは正しく閲覧できない可能性があります。\nファイルの内容が正しいかご確認ください。"
-      );
+      alert(file.name + "\n" + LANGSET("CANT_UPLOAD_FILE"));
     }
-
     const price = Price.vaultPriceByByte * file.size;
     console.log(price);
     uploadingInfoArea.innerHTML =
@@ -179,7 +218,8 @@ const setUI = (parent, eoa) => {
     const price = Price.vaultPriceByByte * file.size;
     if (
       confirm(
-        "以下のファイルをアップロードします。よろしいですか？\n" +
+        LANGSET("UPLOAD_CONFIRM") +
+          "\n" +
           "FileName: " +
           file.name +
           "\n" +
@@ -260,43 +300,30 @@ const setUI = (parent, eoa) => {
                 console.log("order result", orderResult);
                 console.log("filename", file.name);
                 console.log("permawebUrl", result.permawebUrl);
-
-                //==============================================
-                //アップロード成功でリスト追加
-                const setUrlResult = await orderConnect
-                  .setUrl(orderCa, orderResult, file.name, result.permawebUrl)
-                  .then((response) => {
-                    console.dir(response);
-                    uploadingInfoArea.innerHTML = "UPLOAD SUCCESSFULLY";
-                    uploadingInfoArea.classList.add("upload-success");
-                    return response;
-                  })
-                  .catch((error) => {
-                    uploadingInfoArea.innerHTML =
-                      " Non Manage This File<br /> permaweb url:" +
-                      result.permawebUrl;
-                    uploadingInfoArea.classList.add("upload-success");
-                    console.dir(error);
-                  });
-                console.log("SetUrlResult" + setUrlResult);
+                uploadingInfoArea.innerHTML =
+                  file.name + " " + LANGSET("UPLOAD_SUCCESS");
+                uploadingInfoArea.classList.add("upload-success");
+                stackList.innerHTML = "";
+                setUploadList(stackList);
               } else {
                 console.error("Failed to upload file:", response.statusText);
-                uploadingInfoArea.innerHTML = "Failed to Upload file";
+                uploadingInfoArea.innerHTML = LANGSET("FAILED_TO_UPLOAD");
                 uploadingInfoArea.classList.add("upload-failed");
               }
             } else {
               console.error("Failed to check file:", checkresult.statusText);
-              uploadingInfoArea.innerHTML = "cansel to upload";
+              uploadingInfoArea.innerHTML = LANGSET("CANCEL_TO_UPLOAD");
               uploadingInfoArea.classList.add("upload-success");
             }
           } else {
             console.error("Failed to check file:", checkresult.statusText);
-            uploadingInfoArea.innerHTML = "Failed to check file";
+            uploadingInfoArea.innerHTML =
+              LANGSET("FAILED_TO_CHECK_FILE") + checkresult.statusText;
             uploadingInfoArea.classList.add("upload-failed");
           }
         } catch (error) {
           console.error("Error:", error);
-          uploadingInfoArea.innerHTML = "UPLOAD ERROR";
+          uploadingInfoArea.innerHTML = LANGSET("UPLOAD_ERROR");
           uploadingInfoArea.classList.add("upload-failed");
         }
       } else {
