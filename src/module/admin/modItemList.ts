@@ -272,7 +272,6 @@ const setInterFace = async (parentDiv, item, eoa, title) => {
     parentDiv.appendChild(makeSubmit);
 
     makeSubmit.addEventListener("click", async () => {
-      alert(nameForm.value + LANGSET("ADD_CONFIRM"));
       const body = {
         name: nameForm.value,
         contract: contractForm.value,
@@ -286,9 +285,17 @@ const setInterFace = async (parentDiv, item, eoa, title) => {
 
       try {
         if (router.params[3] == undefined) {
-          await dynamoConnect.postDynamoApi("item/add/", body);
+          if (confirm(nameForm.value + LANGSET("ADD_CONFIRM"))) {
+            await dynamoConnect.postDynamoApi("item/add/", body);
+            alert(nameForm.value + LANGSET("ADD_COMPLETE"));
+            window.location.href = "/setting/item";
+          }
         } else {
-          await dynamoConnect.postDynamoApi("item/update/" + item.Id, body);
+          if (confirm(nameForm.value + LANGSET("UPDATE_CONFIRM"))) {
+            await dynamoConnect.postDynamoApi("item/update/" + item.Id, body);
+            alert(nameForm.value + LANGSET("UPDATE_COMPLETE"));
+            window.location.href = "/setting/item";
+          }
         }
         window.location.href = "/setting/item";
       } catch (e) {

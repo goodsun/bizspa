@@ -126,14 +126,15 @@ export const getUI = async (parentDiv) => {
     subDiv.appendChild(makeSubmit);
 
     makeSubmit.addEventListener("click", async () => {
-      alert(jpName.value + LANGSET("ADD_CONFIRM"));
-      await setManagerConnect.setManager("setCreator", [
-        contractAddress.value,
-        JSON.stringify({ en: enName.value, ja: jpName.value }),
-        selectForm.value,
-      ]);
-      alert(jpName.value + "を登録しました");
-      window.location.href = "/setting/creator";
+      if (confirm(jpName.value + LANGSET("ADD_CONFIRM"))) {
+        await setManagerConnect.setManager("setCreator", [
+          contractAddress.value,
+          JSON.stringify({ en: enName.value, ja: jpName.value }),
+          selectForm.value,
+        ]);
+        alert(jpName.value + LANGSET("ADD_COMPLETE"));
+        window.location.href = "/setting/creator";
+      }
     });
   } else {
     const main = document.createElement("p");

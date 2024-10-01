@@ -254,6 +254,7 @@ const setInterFace = async (parentDiv, item, title) => {
       } else if (router.params[3] == undefined) {
         if (confirm(nameForm.value + LANGSET("ADD_CONFIRM"))) {
           await dynamoConnect.postDynamoApi("shop/add/", body);
+          alert(nameForm.value + LANGSET("ADD_COMPLETE"));
           window.location.href = "/setting/gallary";
         }
       } else {

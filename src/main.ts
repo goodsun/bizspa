@@ -124,7 +124,7 @@ async function setDonate(params) {
   for (let key = donationList.length - 1; key >= 0; key--) {
     const val = donationList[key];
     const log = document.createElement("p");
-    log.appendChild(cSnip.span(utils.formatUnixTime(val[1])));
+    log.appendChild(cSnip.span(utils.formatUnixTime(Number(val[1]) * 1000)));
     log.appendChild(cSnip.donateDetail(val[2]));
     log.appendChild(
       cSnip.span(utils.waiToEth(val[0]) + " " + CONST.DEFAULT_SYMBOL)
@@ -241,7 +241,8 @@ const setOwner = async (eoa) => {
   console.dir(discordUser.discordUser.Roles);
   if (
     minter == tbaOwner ||
-    (discordUser.discordUser.Roles &&
+    (discordUser.discordUser &&
+      discordUser.discordUser.Roles &&
       discordUser.discordUser.Roles.includes("Soul Binder"))
   ) {
     // ownerTitle.textContent = "SBT Mint for TBA";
@@ -366,13 +367,14 @@ const setTokens = async () => {
   const discordUser = await utils.getUserByEoa(checkBalance.eoa);
   if (
     symbol != "SBT" ||
-    discordUser.discordUser.Roles.includes("Soul Binder")
+    (discordUser.discordUser &&
+      discordUser.discordUser.Roles &&
+      discordUser.discordUser.Roles.includes("Soul Binder"))
   ) {
     const mintLinkArea = document.createElement("span");
     pElement.appendChild(mintLinkArea);
     displaySnipet.createMintLinkElm(router.params[2], mintLinkArea);
   }
-
   displaySnipet.displayTokens(divTokensElement, router.params[2], false);
 };
 

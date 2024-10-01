@@ -308,23 +308,28 @@ const getTbaInfoByEoa = async (eoa) => {
 
 const getUserByEoa = async (eoa) => {
   let type = "none";
-  const tbaInfo = await getTbaInfoByEoa(eoa);
-  const discordUser = await dynamoConnect.getUserByEoa(eoa);
-  if (tbaInfo.tokenUri) {
-    type = "tba";
-    console.dir(tbaInfo);
-  } else {
-    type = tbaInfo.type;
+  try {
+    const tbaInfo = await getTbaInfoByEoa(eoa);
+    const discordUser = await dynamoConnect.getUserByEoa(eoa);
+    if (tbaInfo.tokenUri) {
+      type = "tba";
+      console.dir(tbaInfo);
+    } else {
+      type = tbaInfo.type;
+    }
+    if (discordUser.DiscordId) {
+      type = "discordConnect";
+    }
+    return {
+      type: type,
+      discordUser: discordUser,
+      tbaInfo: tbaInfo,
+      eoa: eoa,
+    };
+  } catch (e) {
+    console.error(e);
+    return {};
   }
-  if (discordUser.DiscordId) {
-    type = "discordConnect";
-  }
-  return {
-    type: type,
-    discordUser: discordUser,
-    tbaInfo: tbaInfo,
-    eoa: eoa,
-  };
 };
 
 export const checkMetamask = async () => {
