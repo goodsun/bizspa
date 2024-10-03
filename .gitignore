@@ -3,4 +3,4 @@ node_modules
 public/js/*
 src/module/common/const.ts
 src/module/common/genrelist.ts
-src/settings/*
+deploy/settings/*

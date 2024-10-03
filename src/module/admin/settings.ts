@@ -1,5 +1,5 @@
 import { router } from "../common/router";
-import { CONST } from "../common/const";
+import { CONST, SRC_VERSION } from "../common/const";
 import { LANGSET } from "../common/lang";
 import utils from "../common/utils";
 import modAdminList from "./modAdminList";
@@ -37,6 +37,7 @@ export const getUI = async () => {
   manageCA.innerHTML = "manager CA : ";
   manageCA.appendChild(cSnip.eoa(CONST.MANAGER_CA));
   subDiv.appendChild(manageCA);
+
   const usertype = await setManagerConnect.setManager("checkUser");
 
   // -- MENU --
@@ -124,6 +125,10 @@ export const getUI = async () => {
     main.innerHTML = "Please connect Wallet";
     subDiv.appendChild(main);
   }
+
+  const version = document.createElement("p");
+  version.innerHTML = "website version : " + SRC_VERSION;
+  subDiv.appendChild(version);
 };
 
 const adminSettings = {
