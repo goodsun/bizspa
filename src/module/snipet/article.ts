@@ -4,6 +4,7 @@ import { LANGSET } from "../common/lang";
 import { router } from "../../module/common/router";
 import { displayArticleCard } from "../snipet/display";
 import { exclude_dir } from "../common/genrelist";
+import { page_dir } from "../common/genrelist";
 
 const mainContents = document.getElementById("mainContents");
 const options = {
@@ -13,7 +14,8 @@ const options = {
 marked.setOptions(options);
 
 const getMdSiteMap = async () => {
-  const apiUrl = CONST.BOT_API_URL + "/contents/get/" + router.lang;
+  const apiUrl = CONST.ARTICLE_REPO + "smjson.php";
+
   const contentsDirArea = document.createElement("div");
   contentsDirArea.classList.add("contentsDirArea");
   mainContents.appendChild(contentsDirArea);
@@ -39,41 +41,50 @@ const getMdSiteMap = async () => {
       }
       return response.json();
     })
-    .then((data) => {
-      let sitemap = {};
-      for (let contents of data) {
-        const tmp = contents.Path.split("/");
-        if (!sitemap[tmp[1]]) {
-          sitemap[tmp[1]] = [];
+    .then((json) => {
+      console.dir(
+        "DIR順は" + JSON.stringify(Object.keys(page_dir[router.lang]), null, 2)
+      );
+
+      const originaldata = json[router.lang];
+      const sortOrder = Object.keys(page_dir[router.lang]);
+      const data: { [key: string]: any } = {};
+
+      sortOrder.forEach((key) => {
+        if (originaldata[key]) {
+          data[key] = originaldata[key];
         }
-        sitemap[tmp[1]].push(contents);
-      }
-      console.dir(sitemap);
-      for (const key in sitemap) {
-        if (!exclude_dir.includes(key)) {
+      });
+
+      Object.keys(originaldata).forEach((key) => {
+        if (!data[key]) {
+          data[key] = originaldata[key];
+        }
+      });
+
+      Object.keys(data).forEach((dir) => {
+        if (!exclude_dir.includes(dir)) {
           var dirTitle = document.createElement("h2");
           dirTitle.classList.add("contentDirTitle");
           var dirLink = document.createElement("a");
-          dirLink.href = "/contents/" + key;
-          dirLink.textContent = LANGSET(key);
+          dirLink.href = "/contents/" + dir;
+          dirLink.textContent = page_dir[router.lang][dir];
           dirTitle.appendChild(dirLink);
           contentsDirArea.appendChild(dirTitle);
           var dirList = document.createElement("div");
           dirList.classList.add("contentChildList");
           contentsDirArea.appendChild(dirList);
-          for (const dir in sitemap[key].slice(0, 5)) {
-            console.dir(sitemap[key][dir]);
+          data[dir].forEach((contents) => {
+            console.log(
+              `Category: ${dir}, Link: ${contents.link}, Title: ${contents.title}`
+            );
             var childLink = document.createElement("a");
-            childLink.href = "/contents/" + sitemap[key][dir].Path.substring(3);
-            childLink.innerHTML =
-              sitemap[key][dir].Title +
-              "<span class='ac'>(" +
-              sitemap[key][dir].AccessCount +
-              ")<span>";
+            childLink.href = `/contents/${dir}/${contents.link}`;
+            childLink.innerHTML = contents.title;
             dirList.appendChild(childLink);
-          }
+          });
         }
-      }
+      });
     })
     .catch((error) => {
       console.error("can't get directry", error);
@@ -81,8 +92,8 @@ const getMdSiteMap = async () => {
 };
 
 const getMdDir = async (dirname) => {
-  const apiUrl =
-    CONST.BOT_API_URL + "/contents/get/" + router.lang + "/" + dirname;
+  //const apiUrl = CONST.BOT_API_URL + "/contents/get/" + router.lang + "/" + dirname;
+  const apiUrl = CONST.ARTICLE_REPO + "smjson.php";
   const contentsDirArea = document.createElement("div");
   contentsDirArea.classList.add("contentsDirArea");
   mainContents.appendChild(contentsDirArea);
@@ -96,7 +107,7 @@ const getMdDir = async (dirname) => {
 
   var dirTitle = document.createElement("h2");
   dirTitle.classList.add("contentDirTitle");
-  dirTitle.textContent = LANGSET(dirname);
+  dirTitle.textContent = page_dir[dirname];
   contentsDirArea.appendChild(dirTitle);
 
   fetch(apiUrl)
@@ -106,9 +117,11 @@ const getMdDir = async (dirname) => {
       }
       return response.json();
     })
-    .then((data) => {
+    .then((json) => {
+      const data = json[router.lang][dirname];
+      console.dir("ARTICLE順は" + JSON.stringify(data, null, 2));
       for (let contents of data) {
-        displayArticleCard(contents, contentsDirArea);
+        displayArticleCard(contents, dirname, contentsDirArea);
       }
     })
     .catch((error) => {
@@ -125,28 +138,16 @@ const getMdPath = async () => {
   parseMdPage(mdpath, path);
 };
 
-const getMdContents = async (mdpath, path) => {
+const getMdContents = async (path) => {
   try {
-    const url = mdpath + "?test=" + Date.now();
-    console.log("GET MD CONTENTS:" + url);
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const mdBody = await response.json();
-    let htmlContent = await marked(mdBody.Contents);
-    const baseMdUrl = new URL(mdpath, window.location.origin);
-
-    htmlContent = htmlContent.replace(
-      /(src|href)="([^"]*)"/g,
-      (match, p1, p2) => {
-        if (!p2.startsWith("http")) {
-          const absoluteUrl = new URL(p2, baseMdUrl).href;
-          return `${p1}="${absoluteUrl}"`;
-        }
-        return match;
-      }
-    );
+    const htmlContent = await fetch(
+      `${CONST.ARTICLE_REPO_URL}/${path}?n=${Date.now()}`
+    )
+      .then((response) => response.text())
+      .then((markdown) => {
+        return marked(markdown);
+      })
+      .catch((error) => console.error("Error fetching markdown:", error));
 
     return htmlContent;
   } catch (error) {
@@ -167,14 +168,10 @@ const parseMdPage = async (mdpath, path, parentElm?) => {
   } else {
     parentElm.appendChild(sectionElement);
   }
-  /*
-  const titleElement = document.createElement("h2");
-  sectionElement.appendChild(titleElement);
-  */
   const articleElement = document.createElement("div");
   articleElement.classList.add("articleArea");
   sectionElement.appendChild(articleElement);
-  articleElement.innerHTML = await getMdContents(mdpath, path);
+  articleElement.innerHTML = String(await getMdContents(path));
 
   const originalElement = document.createElement("div");
   originalElement.classList.add("articleArea");

@@ -20,51 +20,6 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const getDiffTime = (date: string): string => {
-  const targetDate = new Date(date);
-  const now = new Date();
-  const diffInMilliseconds = now.getTime() - targetDate.getTime();
-
-  const millisecondsPerMinute = 60 * 1000;
-  const millisecondsPerHour = 60 * 60 * 1000;
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  const millisecondsPerWeek = 7 * millisecondsPerDay;
-  const millisecondsPerMonth = 30 * millisecondsPerDay;
-  const millisecondsPerYear = 365 * millisecondsPerDay;
-
-  if (diffInMilliseconds >= millisecondsPerYear) {
-    const yearsDifference = Math.floor(
-      diffInMilliseconds / millisecondsPerYear
-    );
-    return `${yearsDifference} year${yearsDifference !== 1 ? "s" : ""} ago`;
-  } else if (diffInMilliseconds >= millisecondsPerMonth) {
-    const monthsDifference = Math.floor(
-      diffInMilliseconds / millisecondsPerMonth
-    );
-    return `${monthsDifference} month${monthsDifference !== 1 ? "s" : ""} ago`;
-  } else if (diffInMilliseconds >= millisecondsPerWeek) {
-    const weeksDifference = Math.floor(
-      diffInMilliseconds / millisecondsPerWeek
-    );
-    return `${weeksDifference} week${weeksDifference !== 1 ? "s" : ""} ago`;
-  } else if (diffInMilliseconds >= millisecondsPerDay) {
-    const daysDifference = Math.floor(diffInMilliseconds / millisecondsPerDay);
-    return `${daysDifference} day${daysDifference !== 1 ? "s" : ""} ago`;
-  } else if (diffInMilliseconds >= millisecondsPerHour) {
-    const hoursDifference = Math.floor(
-      diffInMilliseconds / millisecondsPerHour
-    );
-    return `${hoursDifference} hour${hoursDifference !== 1 ? "s" : ""} ago`;
-  } else {
-    const minutesDifference = Math.floor(
-      diffInMilliseconds / millisecondsPerMinute
-    );
-    return `${minutesDifference} minute${
-      minutesDifference !== 1 ? "s" : ""
-    } ago`;
-  }
-};
-
 export const displayMintUI = async (targetElem, params) => {
   const balance = await utils.checkBalance();
   const mintableInfo = await getTokenConnect.getTokenInfo(params[2]);
@@ -748,31 +703,44 @@ export const displayAssets = async (result, filter) => {
   }
 };
 
-export const displayArticleCard = (article, parentElm) => {
+export const displayArticleCard = (article, dirname, parentElm) => {
   const cardArea = document.createElement("div");
   cardArea.classList.add("cardContractArea");
   parentElm.appendChild(cardArea);
   var cardLink = document.createElement("a");
-  cardLink.href = "/contents/" + article.Path.substring(3);
+  cardLink.href = `/contents/${dirname}/${article.link}`;
   cardArea.appendChild(cardLink);
   const cardImg = document.createElement("img");
-  cardImg.src = article.Imgurl;
+  if (article.img != "") {
+    cardImg.src = article.img;
+  } else {
+    cardImg.src = "/img/dummy.jpg";
+  }
   cardLink.appendChild(cardImg);
   const textArea = document.createElement("div");
   textArea.classList.add("cardTextArea");
   cardLink.appendChild(textArea);
   const cardHeader = document.createElement("h2");
-  cardHeader.textContent = article.Title;
+  cardHeader.textContent = article.title;
   textArea.appendChild(cardHeader);
   const cardMain = document.createElement("p");
-  cardMain.innerHTML =
-    "Created <span class='date'>" +
-    getDiffTime(article.Created) +
-    "</span> | Last Access <span class='date'>" +
-    getDiffTime(article.Updated) +
-    "</span> | Access <span class='date'>" +
-    article.AccessCount +
-    " hit</span>";
+  if (article.lastUpdate) {
+    const date = new Date(article.lastUpdate * 1000);
+    if (router.lang == "ja") {
+      cardMain.appendChild(
+        cSnip.span("last update: " + date.toLocaleString("ja-JP"))
+      );
+    } else {
+      cardMain.appendChild(cSnip.span("last update: " + date.toUTCString()));
+    }
+  }
+
+  if (article.auther) {
+    cardMain.appendChild(cSnip.span("auther: " + article.auther));
+  }
+  if (article.description) {
+    cardMain.appendChild(cSnip.span("description: " + article.description));
+  }
   textArea.appendChild(cardMain);
 };
 
