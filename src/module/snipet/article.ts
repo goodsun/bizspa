@@ -14,7 +14,7 @@ const options = {
 marked.setOptions(options);
 
 const getMdSiteMap = async () => {
-  const apiUrl = CONST.ARTICLE_REPO + "smjson.php";
+  const apiUrl = CONST.ARTICLE_REPO + `smjson.php?n=${Date.now()}`;
 
   const contentsDirArea = document.createElement("div");
   contentsDirArea.classList.add("contentsDirArea");
@@ -74,15 +74,30 @@ const getMdSiteMap = async () => {
           var dirList = document.createElement("div");
           dirList.classList.add("contentChildList");
           contentsDirArea.appendChild(dirList);
-          data[dir].forEach((contents) => {
-            console.log(
-              `Category: ${dir}, Link: ${contents.link}, Title: ${contents.title}`
+
+          // コンテンツをLankで並べ替え
+          const sortedData = data[dir]
+            .filter(
+              (item) => item.setting && typeof item.setting.lank !== "undefined"
+            )
+            .sort((a, b) => a.setting.lank - b.setting.lank)
+            .concat(
+              data[dir].filter(
+                (item) =>
+                  !item.setting || typeof item.setting.lank === "undefined"
+              )
             );
+
+          for (let contents of sortedData) {
+            console.log(`setting: ${JSON.stringify(contents.setting)}`);
+            if (contents.setting && contents.setting.index == "hidden") {
+              continue;
+            }
             var childLink = document.createElement("a");
             childLink.href = `/contents/${dir}/${contents.link}`;
             childLink.innerHTML = contents.title;
             dirList.appendChild(childLink);
-          });
+          }
         }
       });
     })
@@ -93,7 +108,7 @@ const getMdSiteMap = async () => {
 
 const getMdDir = async (dirname) => {
   //const apiUrl = CONST.BOT_API_URL + "/contents/get/" + router.lang + "/" + dirname;
-  const apiUrl = CONST.ARTICLE_REPO + "smjson.php";
+  const apiUrl = CONST.ARTICLE_REPO + `smjson.php?n=${Date.now()}`;
   const contentsDirArea = document.createElement("div");
   contentsDirArea.classList.add("contentsDirArea");
   mainContents.appendChild(contentsDirArea);
@@ -119,8 +134,23 @@ const getMdDir = async (dirname) => {
     })
     .then((json) => {
       const data = json[router.lang][dirname];
-      console.dir("ARTICLE順は" + JSON.stringify(data, null, 2));
-      for (let contents of data) {
+
+      const sortedData = data
+        .filter(
+          (item) => item.setting && typeof item.setting.lank !== "undefined"
+        )
+        .sort((a, b) => a.setting.lank - b.setting.lank)
+        .concat(
+          data.filter(
+            (item) => !item.setting || typeof item.setting.lank === "undefined"
+          )
+        );
+
+      for (let contents of sortedData) {
+        console.log(`setting: ${JSON.stringify(contents.setting)}`);
+        if (contents.setting && contents.setting.index == "hidden") {
+          continue;
+        }
         displayArticleCard(contents, dirname, contentsDirArea);
       }
     })

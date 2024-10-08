@@ -274,6 +274,13 @@ export const bold = (text: string) => {
   return child;
 };
 
+export const thin = (text: string) => {
+  const child = document.createElement("span");
+  child.classList.add("thinText");
+  child.innerText = text;
+  return child;
+};
+
 export const br = () => {
   const child = document.createElement("br");
   return child;
@@ -366,6 +373,7 @@ const cSnip = {
   br,
   hr,
   bold,
+  thin,
   copyAction,
   donateDetail,
   discordByEoa,

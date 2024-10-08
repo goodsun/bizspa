@@ -726,23 +726,22 @@ export const displayArticleCard = (article, dirname, parentElm) => {
   const cardMain = document.createElement("p");
   if (article.lastUpdate) {
     const date = new Date(article.lastUpdate * 1000);
+    cardMain.appendChild(cSnip.span(" last update: "));
     if (router.lang == "ja") {
-      cardMain.appendChild(
-        cSnip.span("last update: " + date.toLocaleString("ja-JP"))
-      );
+      cardMain.appendChild(cSnip.thin(date.toLocaleString("ja-JP")));
     } else {
-      cardMain.appendChild(cSnip.span("last update: " + date.toUTCString()));
+      cardMain.appendChild(cSnip.thin(date.toLocaleString("en-BG")));
     }
   }
 
   if (article.setting) {
     if (article.setting.auther) {
-      cardMain.appendChild(cSnip.span("auther: " + article.setting.auther));
+      cardMain.appendChild(cSnip.span(" auther: "));
+      cardMain.appendChild(cSnip.thin(article.setting.auther));
     }
-    if (article.description) {
-      cardMain.appendChild(
-        cSnip.span("description: " + article.setting.description)
-      );
+    if (article.setting.description) {
+      cardMain.appendChild(cSnip.span(" description: "));
+      cardMain.appendChild(cSnip.thin(article.setting.description));
     }
   }
   textArea.appendChild(cardMain);

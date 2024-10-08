@@ -657,6 +657,10 @@ a {
     font-size: 1rem;
     color: #69b6b1;
   }
+  span.thinText {
+    font-size: 0.9rem;
+    color: #cccccc;
+  }
 }
 
 .contentParentTitle {
