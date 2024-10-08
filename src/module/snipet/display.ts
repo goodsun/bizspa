@@ -724,15 +724,6 @@ export const displayArticleCard = (article, dirname, parentElm) => {
   cardHeader.textContent = article.title;
   textArea.appendChild(cardHeader);
   const cardMain = document.createElement("p");
-  if (article.lastUpdate) {
-    const date = new Date(article.lastUpdate * 1000);
-    cardMain.appendChild(cSnip.span(" last update: "));
-    if (router.lang == "ja") {
-      cardMain.appendChild(cSnip.thin(date.toLocaleString("ja-JP")));
-    } else {
-      cardMain.appendChild(cSnip.thin(date.toLocaleString("en-BG")));
-    }
-  }
 
   if (article.setting) {
     if (article.setting.auther) {
@@ -742,6 +733,15 @@ export const displayArticleCard = (article, dirname, parentElm) => {
     if (article.setting.description) {
       cardMain.appendChild(cSnip.span(" description: "));
       cardMain.appendChild(cSnip.thin(article.setting.description));
+    }
+  }
+  if (article.lastUpdate) {
+    const date = new Date(article.lastUpdate * 1000);
+    cardMain.appendChild(cSnip.span(" last update: "));
+    if (router.lang == "ja") {
+      cardMain.appendChild(cSnip.thin(date.toLocaleString("ja-JP")));
+    } else {
+      cardMain.appendChild(cSnip.thin(date.toLocaleString("en-BG")));
     }
   }
   textArea.appendChild(cardMain);
