@@ -735,11 +735,15 @@ export const displayArticleCard = (article, dirname, parentElm) => {
     }
   }
 
-  if (article.auther) {
-    cardMain.appendChild(cSnip.span("auther: " + article.auther));
-  }
-  if (article.description) {
-    cardMain.appendChild(cSnip.span("description: " + article.description));
+  if (article.setting) {
+    if (article.setting.auther) {
+      cardMain.appendChild(cSnip.span("auther: " + article.setting.auther));
+    }
+    if (article.description) {
+      cardMain.appendChild(
+        cSnip.span("description: " + article.setting.description)
+      );
+    }
   }
   textArea.appendChild(cardMain);
 };
