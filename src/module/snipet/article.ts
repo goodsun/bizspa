@@ -3,13 +3,33 @@ import { CONST } from "../../module/common/const";
 import { LANGSET } from "../common/lang";
 import { router } from "../../module/common/router";
 import { displayArticleCard } from "../snipet/display";
-import { exclude_dir } from "../common/genrelist";
-import { page_dir } from "../common/genrelist";
+import { exclude_dir, page_dir } from "../common/genrelist";
 
 const mainContents = document.getElementById("mainContents");
 const options = {
   breaks: true,
 };
+
+const apiUrl = CONST.ARTICLE_REPO + `smjson.php?n=${Date.now()}`;
+const contentsList = await fetch(apiUrl).then((response) => {
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return response.json();
+});
+
+if (contentsList.system?.setting) {
+  for (let contents of contentsList.system.setting) {
+    console.log(`page_dir: ${JSON.stringify(contents.setting.page_dir)}`);
+    console.log(`exclude_dir: ${JSON.stringify(contents.setting.exclude_dir)}`);
+    /*
+    console.log(`setting: ${JSON.stringify(contents)}`);
+    if (contents.setting?.index == "hidden") {
+      continue;
+    }
+    */
+  }
+}
 
 marked.setOptions(options);
 
@@ -102,12 +122,11 @@ const getMdSiteMap = async () => {
       });
     })
     .catch((error) => {
-      console.error("can't get directry", error);
+      console.error("can't get directory", error);
     });
 };
 
 const getMdDir = async (dirname) => {
-  //const apiUrl = CONST.BOT_API_URL + "/contents/get/" + router.lang + "/" + dirname;
   const apiUrl = CONST.ARTICLE_REPO + `smjson.php?n=${Date.now()}`;
   const contentsDirArea = document.createElement("div");
   contentsDirArea.classList.add("contentsDirArea");
@@ -155,7 +174,7 @@ const getMdDir = async (dirname) => {
       }
     })
     .catch((error) => {
-      console.error("can't get directry", error);
+      console.error("can't get directory", error);
     });
 };
 
