@@ -5,6 +5,9 @@ import { router } from "../../module/common/router";
 import { displayArticleCard } from "../snipet/display";
 import { exclude_dir, page_dir } from "../common/genrelist";
 
+let excludeDir = exclude_dir;
+let pageDir = page_dir;
+
 const mainContents = document.getElementById("mainContents");
 const options = {
   breaks: true,
@@ -20,14 +23,14 @@ const contentsList = await fetch(apiUrl).then((response) => {
 
 if (contentsList.system?.setting) {
   for (let contents of contentsList.system.setting) {
-    console.log(`page_dir: ${JSON.stringify(contents.setting.page_dir)}`);
-    console.log(`exclude_dir: ${JSON.stringify(contents.setting.exclude_dir)}`);
-    /*
-    console.log(`setting: ${JSON.stringify(contents)}`);
-    if (contents.setting?.index == "hidden") {
-      continue;
+    if (contents.setting?.page_dir) {
+      pageDir = contents.setting.page_dir;
+      console.log(`replace pageDir: ${JSON.stringify(pageDir)}`);
     }
-    */
+    if (contents.setting?.exclude_dir) {
+      excludeDir = contents.setting.exclude_dir;
+      console.log(`replace excludeDir: ${JSON.stringify(excludeDir)}`);
+    }
   }
 }
 
@@ -63,11 +66,11 @@ const getMdSiteMap = async () => {
     })
     .then((json) => {
       console.dir(
-        "DIR順は" + JSON.stringify(Object.keys(page_dir[router.lang]), null, 2)
+        "DIR順は" + JSON.stringify(Object.keys(pageDir[router.lang]), null, 2)
       );
 
       const originaldata = json[router.lang];
-      const sortOrder = Object.keys(page_dir[router.lang]);
+      const sortOrder = Object.keys(pageDir[router.lang]);
       const data: { [key: string]: any } = {};
 
       sortOrder.forEach((key) => {
@@ -83,12 +86,12 @@ const getMdSiteMap = async () => {
       });
 
       Object.keys(data).forEach((dir) => {
-        if (!exclude_dir.includes(dir)) {
+        if (!excludeDir.includes(dir)) {
           var dirTitle = document.createElement("h2");
           dirTitle.classList.add("contentDirTitle");
           var dirLink = document.createElement("a");
           dirLink.href = "/contents/" + dir;
-          dirLink.textContent = page_dir[router.lang][dir];
+          dirLink.textContent = pageDir[router.lang][dir];
           dirTitle.appendChild(dirLink);
           contentsDirArea.appendChild(dirTitle);
           var dirList = document.createElement("div");
@@ -141,7 +144,7 @@ const getMdDir = async (dirname) => {
 
   var dirTitle = document.createElement("h2");
   dirTitle.classList.add("contentDirTitle");
-  dirTitle.textContent = page_dir[dirname];
+  dirTitle.textContent = pageDir[dirname];
   contentsDirArea.appendChild(dirTitle);
 
   fetch(apiUrl)
