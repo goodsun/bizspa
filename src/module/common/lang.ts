@@ -104,6 +104,8 @@ export const LANG = {
     UPLOAD_ERROR: "Upload error",
     STACK_RENAME_CONFIRM: " | trying to change the file name. Are you sure?",
     STACK_DELETE_CONFIRM: " | trying to delete the file. Are you sure?",
+    APPROVED: "Your request has been approved.",
+    NOT_APPROVED: "An invalid request was sent.",
   },
   ja: {
     common: "BIZENDAOとは",
@@ -208,6 +210,8 @@ export const LANG = {
       " にリネームしようとしています。本当によろしいでしょうか？",
     STACK_DELETE_CONFIRM:
       " こちらのファイルを一覧から削除します。本当によろしいですか？\n一覧からの削除のみで本体のファイルを消すことはできません。",
+    APPROVED: "あなたの購入証明は正しく認証されました。",
+    NOT_APPROVED: "不正なリクエストが送信されました。",
   },
 };
 

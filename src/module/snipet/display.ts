@@ -239,8 +239,7 @@ export const displayToken = async (
                   body: JSON.stringify(data),
                 });
                 const result = await response.json();
-                alert(result.message);
-                console.dir(result);
+                alert(LANGSET(result.message));
               } catch (error) {
                 console.error(
                   "There was a problem with the fetch operation:",
