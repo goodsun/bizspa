@@ -281,9 +281,10 @@ export const displayToken = async (
         }
         detailDisplay.sendForm(divElement);
       }
-    }
-    if (burnable || (usertype != "user" && usertype != undefined)) {
-      detailDisplay.burnForm(divElement);
+
+      if (burnable || (usertype != "user" && usertype != undefined)) {
+        detailDisplay.burnForm(divElement);
+      }
     }
   });
 };
