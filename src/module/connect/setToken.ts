@@ -19,7 +19,7 @@ export const mint = async (
   const sinerid = await signer.getAddress();
   try {
     const result = await contract
-      .mint(eoa, tokenUri)
+      .mint(eoa, tokenUri.trim())
       .then(() => {
         alert(LANGSET("WAIT_MINT_TX"));
         return "success";

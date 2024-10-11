@@ -78,7 +78,7 @@ export const displayToken = async (
   const owner = await getTokenConnect.getToken("ownerOf", ca, id);
   const burnable = await setToken.burnable(ca, id);
 
-  divElement.classList.add("tokenUri_" + tokenUri);
+  divElement.classList.add("tokenUri_" + tokenUri.trim());
   displayTokenElement.appendChild(divElement);
 
   const divTbaElement = document.createElement("div");
