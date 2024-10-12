@@ -129,6 +129,10 @@ export const getUI = async () => {
   const version = document.createElement("p");
   version.innerHTML = "website version : " + SRC_VERSION;
   subDiv.appendChild(version);
+
+  const apiurl = document.createElement("p");
+  apiurl.innerHTML = "BOT API : " + CONST.BOT_API_URL;
+  subDiv.appendChild(apiurl);
 };
 
 const adminSettings = {

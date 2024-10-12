@@ -218,6 +218,7 @@ a {
 }
 .nftArea {
   margin: 10px 30px;
+  font-size: 1.15em;
 }
 .childNftArea {
   width: 100%;
@@ -1087,58 +1088,58 @@ span.eoaCopy {
   p {
     a {
       color: #ffffff;
-      font-size: 1.3em;
+      font-size: 1.1em;
     }
   }
 }
 
 div#mainContents > section.articleSection > div.articleArea {
   h1 {
-    font-size: 2.8em;
-  }
-  h2 {
-    font-size: 2.5em;
-  }
-  h3 {
     font-size: 2.2em;
   }
-  h4 {
+  h2 {
     font-size: 2em;
   }
+  h3 {
+    font-size: 1.8em;
+  }
+  h4 {
+    font-size: 1.6;
+  }
   h5 {
-    font-size: 1.75em;
+    font-size: 1.4em;
   }
   h6 {
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
   p {
-    font-size: 1.3em;
-    line-height: 2.2em;
+    font-size: 1.1em;
+    line-height: 1.8em;
   }
 }
 
 div#mainContents > div > section.articleSection > div.articleArea {
   h1 {
-    font-size: 2.8em;
-  }
-  h2 {
-    font-size: 2.5em;
-  }
-  h3 {
     font-size: 2.2em;
   }
-  h4 {
+  h2 {
     font-size: 2em;
   }
+  h3 {
+    font-size: 1.8em;
+  }
+  h4 {
+    font-size: 1.6em;
+  }
   h5 {
-    font-size: 1.75em;
+    font-size: 1.4em;
   }
   h6 {
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
   p {
-    font-size: 1.3em;
-    line-height: 2.2em;
+    font-size: 1.1em;
+    line-height: 1.8em;
   }
 }
 

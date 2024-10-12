@@ -30,7 +30,14 @@ export const getUI = async () => {
   main.innerHTML = CONST.MEMBERSCARD_CA;
   makeDiscordCont.appendChild(main);
 
-  if (balance.dpoint >= 1) {
+  const discordUser = await utils.getUserByEoa(balance.eoa);
+  console.log("discordUser");
+  console.dir(discordUser.discordUser.DiscordId);
+  if (discordUser.discordUser?.DiscordId != params[2]) {
+    const differentUser = document.createElement("p");
+    differentUser.innerHTML = LANGSET("DIFFERENT_USER");
+    makeDiscordCont.appendChild(differentUser);
+  } else if (balance.dpoint >= 1) {
     const setSecret = setElement.makeInput(
       "input",
       "nameForm",
@@ -45,8 +52,8 @@ export const getUI = async () => {
       "submit",
       "submitID",
       "BaseSubmit",
-      "LOGIN",
-      "LOGIN"
+      "MINT SBT",
+      "MINT SBT"
     );
     setEoaRegist.classList.add("w3p");
     makeDiscordCont.appendChild(setEoaRegist);
@@ -54,8 +61,12 @@ export const getUI = async () => {
     setEoaRegist.addEventListener("click", async () => {
       const result = await sendRegist(params[2], setSecret.value);
       if (result.result) {
-        console.dir(result.role);
-        if (result.role.includes("Holder &Fan")) {
+        console.dir(result);
+        console.log(CONST.DISCORD_HOLDER_ROLL_ID);
+        if (
+          result.role.includes(CONST.DISCORD_HOLDER_ROLL_ID) ||
+          result.role.includes(CONST.DISCORD_HOLDER_ROLL_NAME)
+        ) {
           alert("メンバーSBTを発行します。");
           const result = await setToken.mint(
             CONST.MEMBERSCARD_CA, // CA
@@ -70,7 +81,7 @@ export const getUI = async () => {
             window.location.href = "/account/" + balance.eoa;
           }
         } else {
-          alert("MEMBER_NOT_PARMITTED");
+          alert(LANGSET("MEMBER_NOT_PARMITTED"));
         }
       } else {
         alert("check user result :" + result.message);

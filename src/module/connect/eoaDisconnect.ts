@@ -84,7 +84,7 @@ export const getUI = async () => {
         setBurnForm.classList.add("w3p");
         makeDiscordCont.appendChild(setBurnForm);
         setBurnForm.addEventListener("click", async () => {
-          const result = sendDiscon(eoaUser.discordUser.DiscordId);
+          const result = await sendDiscon(eoaUser.discordUser.DiscordId);
           console.dir(result);
           window.location.href = "/disconnect";
         });
@@ -102,12 +102,6 @@ export const getUI = async () => {
         makeDiscordCont.appendChild(Main);
       }
     });
-  }
-};
-
-const sendBurn = async () => {
-  if (confirm("BURNしますか")) {
-    alert("BURNしました");
   }
 };
 
@@ -135,24 +129,6 @@ const sendDiscon = async (discordId) => {
     }
   }
 };
-
-function postAndRedirect(url, data) {
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = url;
-
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = data[key];
-      form.appendChild(input);
-    }
-  }
-  document.body.appendChild(form);
-  form.submit(); // POSTリクエストを実行してリダイレクト
-}
 
 const eoaDisconnect = {
   getUI,

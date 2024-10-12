@@ -32,10 +32,10 @@ elif [ $1 = 'prd' ]; then
 	npx webpack; scp -r ./public/* bizendao:web/bizen/;
 	scp ./public/.htaccess bizendao:web/bizen/;
 elif [ $1 = 'local' ]; then
-	cp deploy/settings/front_flow.cnf src/module/common/const.ts;
-	cp deploy/settings/creator_genre.cnf src/module/common/genrelist.ts;
-	#cp deploy/settings/front_prd.cnf src/module/common/const.ts;
-	#cp deploy/settings/potter_genre.cnf src/module/common/genrelist.ts;
+	#cp deploy/settings/front_flow.cnf src/module/common/const.ts;
+	#cp deploy/settings/creator_genre.cnf src/module/common/genrelist.ts;
+	cp deploy/settings/front_prd.cnf src/module/common/const.ts;
+	cp deploy/settings/potter_genre.cnf src/module/common/genrelist.ts;
 	git show --format='export const SRC_VERSION="%h";' --no-patch >> src/module/common/const.ts;
 	npx webpack; node server.js;
 else
