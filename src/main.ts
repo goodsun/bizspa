@@ -237,8 +237,6 @@ const setOwner = async (eoa) => {
   accountSnipet.showAccount(eoa, tbaOwner, divOwnerElement);
 
   const discordUser = await utils.getUserByEoa(minter);
-  console.log("Roles Checkers");
-  console.dir(discordUser.discordUser.Roles);
   if (
     minter == tbaOwner ||
     (discordUser.discordUser &&

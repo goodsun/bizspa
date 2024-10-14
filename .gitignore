@@ -1,5 +1,6 @@
 .env
 node_modules
+public/index.html
 public/js/*
 src/module/common/const.ts
 src/module/common/genrelist.ts

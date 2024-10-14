@@ -2,6 +2,11 @@
 dir=$(cd $(dirname $0); pwd)
 cd ${dir}
 cd ../
+cp public/index.html.tmpl public/index.html
+
+VERSION=`git show --format='%h' --no-patch`
+sed -i "" "s/###VERSION###/${VERSION}/g" public/index.html
+
 pwd
 if [ $# -ne 1 ]; then
     echo "please input env";
