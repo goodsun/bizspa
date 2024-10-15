@@ -535,7 +535,7 @@ export const burnForm = (divElement: HTMLParagraphElement) => {
 
   burnSubmit.addEventListener("click", async () => {
     const params = router.params;
-    if (confirm(LANGSET("BURNNFT"))) {
+    if (prompt(LANGSET("BURNNFT")) === "BURN") {
       const result = await setToken
         .burn(params[2], params[3])
         .then(() => {
@@ -545,6 +545,8 @@ export const burnForm = (divElement: HTMLParagraphElement) => {
           alert(LANGSET("BURN_STOP"));
         });
       console.dir(result);
+    } else {
+      alert(LANGSET("BURN_STOP"));
     }
   });
   return divElement;

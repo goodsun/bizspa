@@ -48,7 +48,8 @@ export const LANG = {
     SENDTOEOA: "Send this NFT to EOA",
     SENDNFTBEF: "Do you really want to send this NFT to ",
     SENDNFTAFT: "？",
-    BURNNFT: "Do you really want to burn this NFT?",
+    BURNNFT:
+      "Do you really want to burn this NFT?\nTo delete, please enter 'BURN' in the input box below.",
     BURNED: "NFT Burned",
     BURN_STOP: "Burn transaction has aborted.",
     SENDED: "Sent NFT",
@@ -155,7 +156,7 @@ export const LANG = {
     SENDNFTBEF: "本当にこのNFTを",
     SENDNFTAFT: "に送信しますか？",
     BURNNFT:
-      "NFTを完全に削除します。\nこの操作は取り消すことができません。\n本当にこのNFTをBURNしますか？",
+      "NFTを完全に削除します。\nこの操作は取り消すことができません。\n本当にこのNFTをBURNしますか？\n削除する場合は以下の入力BOXに「BURN」と入力してください。",
     BURNED: "BURNしました。",
     BURN_STOP: "BURN操作を中断しました。",
     SENDED: "送信しました",
