@@ -57,7 +57,8 @@ export const getUI = async (parentDiv) => {
               creatorList[key][0],
             ]);
             alert(
-              JSON.parse(creatorList[key][1])[router.lang] + "を削除しました"
+              JSON.parse(creatorList[key][1])[router.lang] +
+                LANGSET("DEL_COMPLETE")
             );
             window.location.href = "/setting/creator";
           }

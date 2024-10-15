@@ -99,13 +99,13 @@ const setInterFace = async (parentDiv, item, title) => {
   const nameLabel = document.createElement("div");
   nameLabel.classList.add("w2p");
   nameLabel.classList.add("wInline");
-  nameLabel.innerHTML = "名前";
+  nameLabel.innerHTML = "name";
   parentDiv.appendChild(nameLabel);
   const nameForm = setElement.makeInput(
     "input",
     "creatorName",
     "BaseInput",
-    "管理名"
+    "name"
   );
   nameForm.classList.add("w8p");
   nameForm.value = item.Name;
@@ -133,7 +133,7 @@ const setInterFace = async (parentDiv, item, title) => {
   const imageurlLabel = document.createElement("div");
   imageurlLabel.classList.add("w2p");
   imageurlLabel.classList.add("wInline");
-  imageurlLabel.innerHTML = "画像URL";
+  imageurlLabel.innerHTML = "image URL";
   parentDiv.appendChild(imageurlLabel);
   const imageurlForm = setElement.makeInput(
     "input",
@@ -154,7 +154,7 @@ const setInterFace = async (parentDiv, item, title) => {
     "input",
     "seed",
     "BaseInput",
-    "暗号化キー"
+    "secret key"
   );
 
   const bytes = CryptoJS.AES.decrypt(item.Seed, secretKey);
@@ -172,7 +172,7 @@ const setInterFace = async (parentDiv, item, title) => {
     "input",
     "channelId",
     "BaseInput",
-    "通知チャンネルID"
+    "channel ID"
   );
   channelIdForm.classList.add("w8p");
   channelIdForm.value = item.ChannelId;

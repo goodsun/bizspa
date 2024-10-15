@@ -67,7 +67,7 @@ export const getUI = async () => {
           result.role.includes(CONST.DISCORD_HOLDER_ROLL_ID) ||
           result.role.includes(CONST.DISCORD_HOLDER_ROLL_NAME)
         ) {
-          alert("メンバーSBTを発行します。");
+          alert(LANGSET("MEMBER_SBT_ISSUE"));
           const result = await setToken.mint(
             CONST.MEMBERSCARD_CA, // CA
             balance.eoa, // EOA
