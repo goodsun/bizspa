@@ -319,6 +319,7 @@ export const displayOwnTokens = async (
           .appendChild(childNftDiv);
 
         utils.fetchData(tokenData.tokenURI).then((nftinfo) => {
+          console.log(`nftinfo 322 : ${JSON.stringify(nftinfo)}`);
           var newLink = document.createElement("a");
           newLink.href = "/tokens/" + ca + "/" + tokenData.tokenId;
           var newTitle = document.createElement("h4");
@@ -388,6 +389,7 @@ export const displayTokens = async (tokensElement, ca, filter) => {
         document.getElementById("token_" + ca + "_" + i).remove();
       } else {
         const newLink = await utils.fetchData(tokenUri).then((nftinfo) => {
+          console.log(`nftinfo 392: ${JSON.stringify(nftinfo)}`);
           var newLink = document.createElement("a");
           newLink.href = "/tokens/" + ca + "/" + i;
           var newTitle = document.createElement("h3");
@@ -971,6 +973,7 @@ const creatorDonateList = async (elm, eoa) => {
       ) {
         selectForm.value = key;
         setSendNft();
+        selectForm.disabled = true;
       }
     }
     sendTo.value = router.params[2];
@@ -1035,7 +1038,7 @@ const creatorDonateList = async (elm, eoa) => {
         if (sendResult != undefined) {
           alert(metaDataInfo[selectForm.value].name + LANGSET("MES5"));
           console.dir(sendResult);
-          location.reload();
+          window.location.href = "/donate";
         }
       }
     }
@@ -1068,7 +1071,9 @@ const creatorDonateHistory = async (elm) => {
   for (let key = subDonationList.length - 1; key >= 0; key--) {
     const val = subDonationList[key];
     const log = document.createElement("p");
-    log.appendChild(cSnip.span(utils.formatUnixTime(val[2])));
+    console.log(`SubDonateList ${val[2]}`);
+    console.log(`unixTime : ${utils.formatUnixTime(Number(val[2]) * 1000)}`);
+    log.appendChild(cSnip.span(utils.formatUnixTime(Number(val[2]) * 1000)));
     log.appendChild(cSnip.donateDetail(val[3]));
     log.appendChild(cSnip.eoa(val[1]));
     await utils.getUserByEoa(val[1]).then((eoaUser) => {

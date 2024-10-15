@@ -75,10 +75,11 @@ export const LANG = {
     MINT_TX_SEND: "MINT transaction has been issued.",
     MINT_TX_STOP: "MINT transaction was aborted.",
     WAIT_MINT_TX: "Please wait while the transaction completes",
+    MEMBER_SBT_ISSUE: "I'll issue your Membership SBT",
     MEMBER_SBT_EXIST:
-      "Membership card SBT cannot be issued. It may have already been issued.",
+      "Membership SBT cannot be issued. It may have already been issued.",
     MEMBER_NOT_PARMITTED:
-      "Membership card SBT cannot be issued. It may not be allowed.",
+      "Membership SBT cannot be issued. It may not be allowed.",
     TBA_ISSUE_SUCCESS: "Issued TBA issue transaction",
     TBA_ISSUE_ABORT: "TBA issue transaction aborted",
     POINT_NOT_EXIST:
@@ -183,6 +184,7 @@ export const LANG = {
     MINT_TX_STOP: "MINTのトランザクションを中断しました。",
     WAIT_MINT_TX:
       "トランザクションの実行が完了するまでしばらくお待ちください。",
+    MEMBER_SBT_ISSUE: "会員証SBTを発行します。",
     MEMBER_SBT_EXIST: "会員証SBT発行不可 すでに発行済みの可能性があります。",
     MEMBER_NOT_PARMITTED: "会員証SBT発行権限がありません。",
     TBA_ISSUE_SUCCESS: "TBA発行トランザクションを発行しました。",

@@ -206,13 +206,13 @@ const setInterFace = async (parentDiv, item, eoa, title) => {
   const priceLabel = document.createElement("div");
   priceLabel.classList.add("w2p");
   priceLabel.classList.add("wInline");
-  priceLabel.innerHTML = "販売価格";
+  priceLabel.innerHTML = "Sales Price";
   parentDiv.appendChild(priceLabel);
   const priceForm = setElement.makeInput(
     "input",
     "itemPrice",
     "BaseInput",
-    "販売価格"
+    "Sales Price"
   );
   priceForm.classList.add("w8p");
   priceForm.value = item.Price;
@@ -221,13 +221,13 @@ const setInterFace = async (parentDiv, item, eoa, title) => {
   const urlLabel = document.createElement("div");
   urlLabel.classList.add("w2p");
   urlLabel.classList.add("wInline");
-  urlLabel.innerHTML = "販売URL";
+  urlLabel.innerHTML = "shop site URL";
   parentDiv.appendChild(urlLabel);
   const urlForm = setElement.makeInput(
     "input",
     "itemBuyUrl",
     "BaseInput",
-    "販売URL"
+    "Shop Site URL"
   );
   urlForm.classList.add("w8p");
   urlForm.value = item.Link;
@@ -513,14 +513,14 @@ const setJsonIf = async (parentDiv, item) => {
   if (gallary.Eoa != undefined) {
     const setShopButton = document.createElement("button");
     setShopButton.classList.add("button_selected");
-    setShopButton.innerHTML = "gallary情報をセット";
+    setShopButton.innerHTML = "Set gallary info";
     setShopButton.addEventListener("click", async () => {
       setGallaryInfo(gallary);
     });
     setShopInfo.appendChild(setShopButton);
   } else {
-    setShopInfo.appendChild(cSnip.span("gallary情報がセットされていません"));
-    setShopInfo.appendChild(cSnip.link("gallary情報", "/setting/gallary"));
+    setShopInfo.appendChild(cSnip.span("gallary info not exist"));
+    setShopInfo.appendChild(cSnip.link("setup gallary", "/setting/gallary"));
   }
 
   setJsonDiv.appendChild(cSnip.hr());

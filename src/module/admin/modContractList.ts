@@ -67,7 +67,7 @@ export const getUI = async (parentDiv) => {
             await setManagerConnect.setManager("deleteContract", [
               contracts[key][0],
             ]);
-            alert(contractName.value + "を削除しました");
+            alert(contractName.value + LANGSET("DEL_COMPLETE"));
             window.location.href = "/setting/contract";
           }
         });
