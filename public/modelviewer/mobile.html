@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BizenDAO modelViewer</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden; /* 画面全体をキャンバスに使用 */
+      }
+      canvas {
+        display: block; /* キャンバスをブロック要素に */
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/examples/js/controls/OrbitControls.js"></script>
+    <script>
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const MODEL_SRC = urlParams.get("model-view-src");
+      const inputURL = new URL(MODEL_SRC);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // コントロールを追加
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; // 慣性を有効化
+      controls.dampingFactor = 0.25;
+      controls.screenSpacePanning = false; // 垂直パンニングを無効化
+      controls.minDistance = 2; // 最小ズーム距離
+      controls.maxDistance = 20; // 最大ズーム距離
+
+      const light = new THREE.HemisphereLight(0xffffff, 0x444444, 8);
+      light.position.set(0, 20, 0);
+      scene.add(light);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+      directionalLight.position.set(5, 10, 7.5);
+      scene.add(directionalLight);
+
+      let model;
+      let xplus = 0.0005;
+
+      const loader = new THREE.GLTFLoader();
+      loader.load(
+        inputURL.toString(),
+        (gltf) => {
+          model = gltf.scene;
+          scene.add(model);
+          model.position.set(0, 0, 0);
+          model.scale.set(10, 10, 10);
+          animate();
+        },
+        undefined,
+        (error) => {
+          console.error("GLB loading error:", error);
+        }
+      );
+
+      camera.position.set(0, 1, 5);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (model) {
+          model.rotation.y -= 0.002;
+          if (model.rotation.x < -0.2) {
+            xplus = 0.0002;
+          }
+          if (model.rotation.x > 0.2) {
+            xplus = -0.0002;
+          }
+          model.rotation.x += xplus;
+        }
+        controls.update(); // コントロールを更新
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+  </body>
+</html>

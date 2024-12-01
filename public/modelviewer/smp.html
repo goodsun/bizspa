@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BizenDAO modelViewer</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/examples/js/controls/OrbitControls.js"></script>
+    <script>
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const MODEL_SRC = urlParams.get("model-view-src");
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.25;
+      controls.minDistance = 2;
+      controls.maxDistance = 50;
+
+      const light = new THREE.HemisphereLight(0xffffff, 0x444444, 8);
+      light.position.set(0, 20, 0);
+      scene.add(light);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+      directionalLight.position.set(5, 10, 7.5);
+      scene.add(directionalLight);
+
+      let model;
+
+      // モデルの重心を計算し、中央に配置
+      function centerAndScaleModel(object) {
+        const box = new THREE.Box3().setFromObject(object);
+        const center = new THREE.Vector3();
+        const size = new THREE.Vector3();
+
+        box.getCenter(center); // 中心座標を取得
+        box.getSize(size); // サイズを取得
+
+        // モデルの重心をシーンの中心に移動
+        object.position.sub(center); // 中心を原点に移動
+
+        // サイズを基準にスケール調整
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 2 / maxDim; // 基準スケールを2に設定
+        object.scale.setScalar(scale);
+
+        object.updateMatrixWorld(); // 座標系を更新
+        return size; // モデルの大きさを返す
+      }
+
+      const loader = new THREE.GLTFLoader();
+      loader.load(
+        MODEL_SRC,
+        (gltf) => {
+          model = gltf.scene;
+
+          // 全ての子要素にリセットを適用
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.geometry.computeBoundingBox();
+              child.geometry.center(); // 個別のメッシュを中心に
+            }
+          });
+
+          // モデルをリセットしてシーンに追加
+          const modelSize = centerAndScaleModel(model);
+          scene.add(model);
+
+          // カメラの初期位置を設定
+          camera.position.set(0, 1, 5);
+          controls.target.set(0, 0, 0);
+          controls.update();
+
+          animate();
+        },
+        undefined,
+        (error) => {
+          console.error("GLB loading error:", error);
+        }
+      );
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (model) {
+          model.rotation.y += 0.002; // 回転を追加
+        }
+        controls.update();
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+  </body>
+</html>

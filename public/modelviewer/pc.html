@@ -28,26 +28,32 @@
     </style>
   </header>
   <body>
+    <div id="viewer">
+      <h1>Model Viewer</h1>
+      <model-viewer
+        auto-rotate="true"
+        autoplay="true"
+        camera-controls="true"
+        id="model-view"
+        ar-status="not-presenting"
+      >
+      </model-viewer>
+    </div>
     <script>
+      const viewerElm = document.getElementById("viewer");
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const MODEL_SRC = urlParams.get("model-view-src");
       const inputURL = new URL(MODEL_SRC);
-
-      function isMobile() {
-        const userAgent =
-          navigator.userAgent || navigator.vendor || window.opera;
-        return /android|iphone|ipad|ipod|windows phone|blackberry/i.test(
-          userAgent
-        );
+      var userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.includes("metamask")) {
+        viewerElm.innerHTML =
+          "<p>Please open Default browser<br />右下の … より「ブラウザで開く」をクリックしてください。</p>";
       }
 
-      if (isMobile()) {
-        window.location.href =
-          "/modelviewer/smp.html?model-view-src=" + inputURL.toString();
-      } else {
-        window.location.href =
-          "/modelviewer/pc.html?model-view-src=" + inputURL.toString();
+      inputURL.protocol = "https:";
+      if (inputURL.host !== "opensea.io") {
+        document.getElementById("model-view").src = inputURL.toString();
       }
     </script>
   </body>
