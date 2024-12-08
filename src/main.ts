@@ -19,7 +19,6 @@ import cSnip from "./module/snipet/common";
 
 import adminSettings from "./module/admin/settings";
 
-import permawebcon from "./module/connect/permaweb";
 import setMeta from "./module/connect/metabuilder";
 
 document.getElementById("headerTitle").innerHTML = CONST.HEADER_TITLE;
@@ -64,14 +63,6 @@ async function discordRegist() {
 }
 async function metabuilder() {
   await setMeta.getUI();
-}
-async function permaweb() {
-  const checkBalance = await utils.checkBalance();
-  if (checkBalance.eoa == undefined) {
-    displaySnipet.isNotConnect();
-    return;
-  }
-  await permawebcon.getUI();
 }
 async function setArticle() {
   articleSnipet.getMdPath();
@@ -237,11 +228,13 @@ const setOwner = async (eoa) => {
   accountSnipet.showAccount(eoa, tbaOwner, divOwnerElement);
 
   const discordUser = await utils.getUserByEoa(minter);
+  console.log("soul bind check");
+  console.dir(discordUser);
   if (
     minter == tbaOwner ||
     (discordUser.discordUser &&
       discordUser.discordUser.Roles &&
-      discordUser.discordUser.Roles.includes("Soul Binder"))
+      discordUser.discordUser.Roles.includes(CONST.SOUL_BINDER_ROLE_ID))
   ) {
     // ownerTitle.textContent = "SBT Mint for TBA";
     console.log("This tba ca:" + eoa);
@@ -363,11 +356,13 @@ const setTokens = async () => {
   // TODO サポーターの場合、他人のTBAにもミントできるようにする
   const checkBalance = await utils.checkBalance();
   const discordUser = await utils.getUserByEoa(checkBalance.eoa);
+  console.log("soul bind check");
+  console.dir(discordUser);
   if (
     symbol != "SBT" ||
     (discordUser.discordUser &&
       discordUser.discordUser.Roles &&
-      discordUser.discordUser.Roles.includes("Soul Binder"))
+      discordUser.discordUser.Roles.includes(CONST.SOUL_BINDER_ROLE_ID))
   ) {
     const mintLinkArea = document.createElement("span");
     pElement.appendChild(mintLinkArea);
@@ -430,8 +425,6 @@ const checkRoute = () => {
     });
   } else if (param1 === "meta") {
     metabuilder();
-  } else if (param1 === "permaweb") {
-    permaweb();
   } else if (param1 === "regist") {
     discordRegist();
   } else if (param1 === "editor") {

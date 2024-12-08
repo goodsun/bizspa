@@ -1161,13 +1161,13 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
     "submit",
     "submitID",
     "BaseSubmit",
-    "OPEN VAULT",
-    "OPEN VAULT"
+    "ArDrive",
+    "ArDrive"
   );
   vaultSelect.classList.add("w3p");
   mintableFormArea.appendChild(vaultSelect);
   vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal("permawebList", ["jsonOnly"]);
+    window.open("http://meta.bon-soleil.com", "ArDriveWindow");
   });
 
   selectForm.addEventListener("change", async () => {

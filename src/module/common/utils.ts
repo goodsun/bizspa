@@ -74,79 +74,6 @@ const formatUnixTime = (unixTime) => {
   return datetime;
 };
 
-const getpermawebList = async (data = []) => {
-  console.log("getpermawebList data:" + JSON.stringify(data));
-  modalcontent.innerHTML = "<div class='spinner'></div>loading...";
-
-  let searchKey = "";
-  if (data[0] == "jsonOnly") {
-    searchKey = "json";
-  }
-  if (data[0] == "notJson") {
-    searchKey = "";
-  }
-  const assetList = await getAcord.getStackList(searchKey);
-
-  modalcontent.innerHTML = "permaweb assets";
-
-  const upload = document.createElement("span");
-  upload.classList.add("litelink");
-  upload.classList.add("reloadLink");
-  upload.id = "stackUpload";
-  upload.innerHTML = "<a href='/permaweb' target='_blank'>upload</a>";
-  modalcontent.appendChild(upload);
-
-  const reload = document.createElement("span");
-  reload.classList.add("litelink");
-  reload.classList.add("reloadLink");
-  reload.id = "vaultReload";
-  reload.innerHTML = "reload";
-  modalcontent.appendChild(reload);
-
-  const vaultListDiv = document.createElement("div");
-  modalcontent.appendChild(vaultListDiv);
-
-  for (const key in assetList) {
-    const datetime = formatUnixTime(Number(assetList[key].createdAt));
-    vaultListDiv.innerHTML +=
-      "<br />" +
-      "<span class='datetime'>" +
-      datetime +
-      "</span>" +
-      ' <a href="/permaweb/detail/' +
-      assetList[key].id +
-      '" target="_blank">' +
-      assetList[key].name +
-      "</a>";
-    addCopyButton(
-      vaultListDiv,
-      "COPYBUTTON_" + key,
-      "COPYBTN",
-      String(assetList[key].arweaveUrl)
-    );
-  }
-  const COPYBTNS = document.querySelectorAll(".COPYBTN");
-  COPYBTNS.forEach((element) => {
-    element.addEventListener("click", () => {
-      const copytext = element.getAttribute("data-clipboard-text");
-      navigator.clipboard
-        .writeText(copytext)
-        .then(function () {
-          alert("URL" + LANGSET("COPYED"));
-        })
-        .catch(function (error) {
-          alert(LANGSET("COPYFAILED") + error);
-        });
-    });
-  });
-
-  document
-    .getElementById("vaultReload")
-    .addEventListener("click", function (event) {
-      getpermawebList(data);
-    });
-};
-
 const addCopyButton = (
   elm: HTMLElement,
   id: string,
@@ -182,9 +109,6 @@ const toggleModal = async (mode = "permawebList", data = []) => {
     modalbase.classList.add("active");
     dispmodal = true;
     const chk = await checkBalance();
-    if (mode == "permawebList" && chk.balance != undefined) {
-      utils.getpermawebList(data);
-    }
     if (mode == "replaceValue") {
       return getReplaceValue(data);
     }
@@ -498,7 +422,6 @@ const utils = {
   ethToWai,
   checkBalance,
   toggleModal,
-  getpermawebList,
   formatUnixTime,
   openInNativeBrowser,
   getUserByEoa,

@@ -632,8 +632,8 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
     "submit",
     "submitID",
     "BaseSubmit",
-    "OPEN VAULT",
-    "OPEN VAULT"
+    "ArDrive",
+    "ArDrive"
   );
   vaultSelect.classList.add("w3p");
   divElement.appendChild(vaultSelect);
@@ -645,7 +645,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   divElement.appendChild(cSnip.br());
 
   vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal("permawebList", ["jsonOnly"]);
+    window.open("http://meta.bon-soleil.com", "ArDriveWindow");
   });
 
   const discordUserCheckArea = document.createElement("div");

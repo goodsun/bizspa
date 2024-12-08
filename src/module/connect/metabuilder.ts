@@ -100,6 +100,10 @@ export const getUI = async () => {
   vaultSelect.classList.add("w3p");
   makeMetaCont.appendChild(vaultSelect);
 
+  vaultSelect.addEventListener("click", async () => {
+    window.open("http://meta.bon-soleil.com", "ArDriveWindow");
+  });
+
   const animationMovieForm = setElement.makeInput(
     "input",
     "animationUrl",
@@ -125,12 +129,13 @@ export const getUI = async () => {
   mintLink.innerHTML = LANGSET("PICTTOOL");
   makeMetaCont.appendChild(mintLink);
 
-  const permaweb = document.createElement("a");
-  permaweb.classList.add("litelink");
-  permaweb.classList.add("mintlink");
-  permaweb.href = "/permaweb";
-  permaweb.innerHTML = LANGSET("PERMAWEB");
-  makeMetaCont.appendChild(permaweb);
+  const ardrive = document.createElement("a");
+  ardrive.classList.add("litelink");
+  ardrive.classList.add("mintlink");
+  ardrive.href = "https://meta.bon-soleil.com/";
+  ardrive.innerHTML = "ArDrive";
+  ardrive.target = "_brank";
+  makeMetaCont.appendChild(ardrive);
 
   const jsonsample = document.createElement("a");
   jsonsample.classList.add("litelink");
@@ -139,10 +144,6 @@ export const getUI = async () => {
   jsonsample.download = "sample.json";
   jsonsample.innerHTML = LANGSET("JSONSAMPLE");
   makeMetaCont.appendChild(jsonsample);
-
-  vaultSelect.addEventListener("click", async () => {
-    utils.toggleModal("permawebList", ["notJson"]);
-  });
 
   metaLoad.addEventListener("input", (event) => {
     loadMetadata(event);
