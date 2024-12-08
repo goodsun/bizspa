@@ -237,11 +237,13 @@ const setOwner = async (eoa) => {
   accountSnipet.showAccount(eoa, tbaOwner, divOwnerElement);
 
   const discordUser = await utils.getUserByEoa(minter);
+  console.log("soul bind check");
+  console.dir(discordUser);
   if (
     minter == tbaOwner ||
     (discordUser.discordUser &&
       discordUser.discordUser.Roles &&
-      discordUser.discordUser.Roles.includes("Soul Binder"))
+      discordUser.discordUser.Roles.includes(CONST.SOUL_BINDER_ROLE_ID))
   ) {
     // ownerTitle.textContent = "SBT Mint for TBA";
     console.log("This tba ca:" + eoa);
@@ -363,11 +365,13 @@ const setTokens = async () => {
   // TODO サポーターの場合、他人のTBAにもミントできるようにする
   const checkBalance = await utils.checkBalance();
   const discordUser = await utils.getUserByEoa(checkBalance.eoa);
+  console.log("soul bind check");
+  console.dir(discordUser);
   if (
     symbol != "SBT" ||
     (discordUser.discordUser &&
       discordUser.discordUser.Roles &&
-      discordUser.discordUser.Roles.includes("Soul Binder"))
+      discordUser.discordUser.Roles.includes(CONST.SOUL_BINDER_ROLE_ID))
   ) {
     const mintLinkArea = document.createElement("span");
     pElement.appendChild(mintLinkArea);
