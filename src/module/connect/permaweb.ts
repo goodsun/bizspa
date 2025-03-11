@@ -71,7 +71,10 @@ const getUI = async () => {
       divInnerElement.classList.add("permawebStackList");
       permawebElement.appendChild(divInnerElement);
 
-      setUploadUI(divUploaderElement, divInnerElement);
+      alert(
+        "akord廃止期間につき移行中 | Currently transitioning due to akord being discontinued"
+      );
+      // setUploadUI(divUploaderElement, divInnerElement);
       setUploadList(divInnerElement);
     }
   } else {
