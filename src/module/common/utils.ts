@@ -8,7 +8,6 @@ import dynamoConnect from "../../module/connect/dynamoConnect";
 import cSnip from "../snipet/common";
 import getTokenConnect from "../../module/connect/getToken";
 import getTbaConnect from "../../module/connect/getTbaConnect";
-import getAcord from "../../module/connect/getAkord";
 import setElement from "../snipet/setElement";
 
 console.log("load utils");

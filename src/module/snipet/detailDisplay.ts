@@ -1,5 +1,6 @@
 import utils from "../common/utils";
 import { LANGSET } from "../common/lang";
+import { CONST } from "../common/const";
 import { router } from "../../module/common/router";
 import getTbaConnect from "../../module/connect/getTbaConnect";
 import setElement from "./setElement";
@@ -645,7 +646,7 @@ export const mintForm = (divElement: HTMLParagraphElement) => {
   divElement.appendChild(cSnip.br());
 
   vaultSelect.addEventListener("click", async () => {
-    window.open("http://meta.bon-soleil.com", "ArDriveWindow");
+    window.open(CONST.METABUILDER_URL, "ArDriveWindow");
   });
 
   const discordUserCheckArea = document.createElement("div");

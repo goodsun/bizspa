@@ -101,7 +101,7 @@ export const getUI = async () => {
   makeMetaCont.appendChild(vaultSelect);
 
   vaultSelect.addEventListener("click", async () => {
-    window.open("http://meta.bon-soleil.com", "ArDriveWindow");
+    window.open(CONST.METABUILDER_URL, "ArDriveWindow");
   });
 
   const animationMovieForm = setElement.makeInput(
@@ -132,7 +132,7 @@ export const getUI = async () => {
   const ardrive = document.createElement("a");
   ardrive.classList.add("litelink");
   ardrive.classList.add("mintlink");
-  ardrive.href = "https://meta.bon-soleil.com/";
+  ardrive.href = CONST.METABUILDER_URL;
   ardrive.innerHTML = "ArDrive";
   ardrive.target = "_brank";
   makeMetaCont.appendChild(ardrive);

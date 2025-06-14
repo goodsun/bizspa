@@ -1167,7 +1167,7 @@ const mintableContractSelect = async (elm, mintableContract, sendTo) => {
   vaultSelect.classList.add("w3p");
   mintableFormArea.appendChild(vaultSelect);
   vaultSelect.addEventListener("click", async () => {
-    window.open("http://meta.bon-soleil.com", "ArDriveWindow");
+    window.open(CONST.METABUILDER_URL, "ArDriveWindow");
   });
 
   selectForm.addEventListener("change", async () => {
