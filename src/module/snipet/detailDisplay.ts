@@ -120,7 +120,9 @@ export const showToken = async (
       if (contentType == "model/gltf-binary") {
         const link = document.createElement("a");
         link.target = "blank";
-        link.href = "/modelviewer/?model-view-src=" + metadata["animation_url"];
+        link.href =
+          "https://goodsun.github.io/modelviewer/?src=" +
+          metadata["animation_url"];
         nftImgDiv.appendChild(link);
         var icon3d = document.createElement("i");
         icon3d.classList.add("far", "fa-solid", "fa-cubes", "cubeMark");
