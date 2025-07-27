@@ -60,7 +60,7 @@ function createModal(): void {
         <div class="rpc-modal-content">
             <div class="rpc-modal-header">
                 <div class="rpc-spinner"></div>
-                <span id="rpc-status-text">connecting...</span>
+                <span id="rpc-status-text">接続中...</span>
             </div>
             <div class="rpc-modal-body">
                 <div class="rpc-details"></div>
@@ -96,9 +96,7 @@ function updateModalContent(): void {
     detailsHTML += `
             <div class="rpc-detail-item">
                 <span class="rpc-label">CA:</span>
-                <span class="rpc-value" title="${
-                  currentRPCCall.params.contract
-                }">
+                <span class="rpc-value" title="${currentRPCCall.params.contract}">
                     ${currentRPCCall.params.contract}
                 </span>
             </div>
@@ -156,7 +154,7 @@ function updateModalContent(): void {
   // 経過時間をヘッダーに表示
   const statusElement = modalElement.querySelector("#rpc-status-text");
   if (statusElement) {
-    statusElement.textContent = `connecting... ${elapsedTime}s`;
+    statusElement.textContent = `ブロックチェーンに問い合わせています 経過時間:${elapsedTime}秒`;
   }
 
   detailsElement.innerHTML = detailsHTML;
