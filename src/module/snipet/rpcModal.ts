@@ -11,6 +11,8 @@ interface RPCCallInfo {
 let currentRPCCall: RPCCallInfo | null = null;
 let modalElement: HTMLElement | null = null;
 let intervalId: NodeJS.Timeout | null = null;
+let showTimeoutId: NodeJS.Timeout | null = null;
+const SHOW_DELAY_MS = 300; // 0.3秒
 
 export function showRPCModal(
   method: string,
@@ -26,16 +28,29 @@ export function showRPCModal(
     functionName,
   };
 
-  createModal();
-  updateModalContent();
-
-  if (intervalId) {
-    clearInterval(intervalId);
+  // 0.3秒後にモーダルを表示
+  if (showTimeoutId) {
+    clearTimeout(showTimeoutId);
   }
-  intervalId = setInterval(updateModalContent, 100);
+  
+  showTimeoutId = setTimeout(() => {
+    createModal();
+    updateModalContent();
+    
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+    intervalId = setInterval(updateModalContent, 100);
+  }, SHOW_DELAY_MS);
 }
 
 export function hideRPCModal(): void {
+  // タイムアウトをクリア
+  if (showTimeoutId) {
+    clearTimeout(showTimeoutId);
+    showTimeoutId = null;
+  }
+  
   if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;
