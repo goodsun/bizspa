@@ -9,6 +9,7 @@ import cSnip from "../snipet/common";
 import getTokenConnect from "../../module/connect/getToken";
 import getTbaConnect from "../../module/connect/getTbaConnect";
 import setElement from "../snipet/setElement";
+import { createWrappedProvider } from "./rpcWrapper";
 
 console.log("load utils");
 
@@ -19,7 +20,7 @@ const modalcontent = document.getElementById("modalcontent");
 let dispmodal = false;
 
 const isContract = async (address) => {
-  const provider = new ethers.JsonRpcProvider(CONST.RPC_URL);
+  const provider = createWrappedProvider(new ethers.JsonRpcProvider(CONST.RPC_URL));
   const code = await provider.getCode(address);
   return code !== "0x" && code !== "0x0";
 };
@@ -325,8 +326,9 @@ export async function checkBalance() {
   let dpoint: number;
   if (window.ethereum && window.ethereum.isMetaMask) {
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
+      const browserProvider = new ethers.BrowserProvider(window.ethereum);
+      const provider = createWrappedProvider(browserProvider);
+      const signer = await browserProvider.getSigner();
       const network = await provider.getNetwork();
       chainId = String(network.chainId);
       if (chainId == CONST.BC_NETWORK_ID) {

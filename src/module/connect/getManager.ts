@@ -1,12 +1,13 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
+import { createWrappedProvider, createWrappedContract } from "../common/rpcWrapper";
 
 const getManager = async (method: string) => {
   const abi = ABIS.manager;
   const rpc_url = CONST.RPC_URL;
-  const provider = new ethers.JsonRpcProvider(rpc_url);
-  const contract = new ethers.Contract(CONST.MANAGER_CA, abi, provider);
+  const provider = createWrappedProvider(new ethers.JsonRpcProvider(rpc_url));
+  const contract = createWrappedContract(new ethers.Contract(CONST.MANAGER_CA, abi, provider));
 
   try {
     if (method == "contracts") {

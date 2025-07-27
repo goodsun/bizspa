@@ -1,9 +1,10 @@
 import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import utils from "../common/utils";
+import { createWrappedProvider, createWrappedContract } from "../common/rpcWrapper";
 
 const rpc_url = CONST.RPC_URL;
-const provider = new ethers.JsonRpcProvider(rpc_url);
+const provider = createWrappedProvider(new ethers.JsonRpcProvider(rpc_url));
 
 const BizNftAbi = [
   "function balanceOf(address owner) view returns (uint256)",
@@ -35,7 +36,7 @@ export const getOwn = (eoa: string, ca: string, type?: string | null) => {
 };
 
 async function getBizNft(ownerAddress: string, contractAddress: string) {
-  const contract = new ethers.Contract(contractAddress, BizNftAbi, provider);
+  const contract = createWrappedContract(new ethers.Contract(contractAddress, BizNftAbi, provider));
   try {
     const balance = await contract.balanceOf(ownerAddress);
     if (balance == 0) {
@@ -61,7 +62,7 @@ async function getBizNft(ownerAddress: string, contractAddress: string) {
 }
 
 async function getERC721Tokens(ownerAddress: string, contractAddress: string) {
-  const contract = new ethers.Contract(contractAddress, erc721Abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(contractAddress, erc721Abi, provider));
   try {
     const balance = await contract.balanceOf(ownerAddress);
 
@@ -82,7 +83,7 @@ async function getERC721Tokens(ownerAddress: string, contractAddress: string) {
 }
 
 async function getERC1155Tokens(ownerAddress, contractAddress, tokenIds) {
-  const contract = new ethers.Contract(contractAddress, erc1155Abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(contractAddress, erc1155Abi, provider));
   let tokens = [];
 
   for (let tokenId of tokenIds) {

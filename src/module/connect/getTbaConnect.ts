@@ -3,8 +3,9 @@ import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 import utils from "../../module/common/utils";
 import getManagerConnect from "../../module/connect/getManager";
+import { createWrappedProvider, createWrappedContract } from "../common/rpcWrapper";
 const rpc_url = CONST.RPC_URL;
-const provider = new ethers.JsonRpcProvider(rpc_url);
+const provider = createWrappedProvider(new ethers.JsonRpcProvider(rpc_url));
 
 const getTbaContracts = async () => {
   const result = await getManagerConnect.getManager("contracts");
@@ -49,7 +50,7 @@ export const getAddress = async (
   salt: string
 ) => {
   const abi = ABIS.tbaRegistry;
-  const contract = new ethers.Contract(contractAddress, abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(contractAddress, abi, provider));
 
   try {
     const result = await contract
@@ -65,7 +66,7 @@ export const getAddress = async (
 
 export const checkOwner = async (contractAddress: string) => {
   const abi = ABIS.tbaAccount;
-  const contract = new ethers.Contract(contractAddress, abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(contractAddress, abi, provider));
   const result = await contract
     .owner()
     .then((response) => {
@@ -79,7 +80,7 @@ export const checkOwner = async (contractAddress: string) => {
 
 export const checkToken = async (contractAddress: string) => {
   const abi = ABIS.tbaAccount;
-  const contract = new ethers.Contract(contractAddress, abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(contractAddress, abi, provider));
   const result = await contract
     .token()
     .then((response) => {
@@ -98,9 +99,10 @@ export const executeCall = async (
   byteCode: string // 操作対象に流すcalldata
 ) => {
   const abi = ABIS.tbaAccount;
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const contract = await provider.getSigner().then((signer) => {
-    return new ethers.Contract(tokenBoundAccount, abi, signer);
+  const browserProvider = new ethers.BrowserProvider(window.ethereum);
+  const provider = createWrappedProvider(browserProvider);
+  const contract = await browserProvider.getSigner().then((signer) => {
+    return createWrappedContract(new ethers.Contract(tokenBoundAccount, abi, signer));
   });
   const result = await contract
     .executeCall(contractAddress, value, byteCode)
@@ -122,7 +124,7 @@ export const createAccount = async (ca: string, id: string) => {
 
   const browserProvider = new ethers.BrowserProvider(window.ethereum);
   const contract = await browserProvider.getSigner().then((signer) => {
-    return new ethers.Contract(tbaRegistCa, abi, signer);
+    return createWrappedContract(new ethers.Contract(tbaRegistCa, abi, signer));
   });
 
   const result = await contract

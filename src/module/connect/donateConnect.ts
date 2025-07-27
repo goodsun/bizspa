@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import utils from "../common/utils";
 import { ABIS } from "./abi";
+import { createWrappedProvider, createWrappedContract } from "../common/rpcWrapper";
 const donateAbi = ABIS.donate;
 
 export const getDonate = async (
@@ -10,8 +11,8 @@ export const getDonate = async (
   input?: Array<string>
 ) => {
   const rpc_url = CONST.RPC_URL;
-  const provider = new ethers.JsonRpcProvider(rpc_url);
-  const contract = new ethers.Contract(contractAddress, donateAbi, provider);
+  const provider = createWrappedProvider(new ethers.JsonRpcProvider(rpc_url));
+  const contract = createWrappedContract(new ethers.Contract(contractAddress, donateAbi, provider));
   try {
     if (mode == "total") {
       const result = await contract.totalSupply().then((response) => {
@@ -39,11 +40,12 @@ export const donate = async (
   contractAddress: string,
   input?: Array<string>
 ) => {
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const contract = await provider.getSigner().then((signer) => {
-    return new ethers.Contract(contractAddress, donateAbi, signer);
+  const browserProvider = new ethers.BrowserProvider(window.ethereum);
+  const provider = createWrappedProvider(browserProvider);
+  const contract = await browserProvider.getSigner().then((signer) => {
+    return createWrappedContract(new ethers.Contract(contractAddress, donateAbi, signer));
   });
-  const signer = await provider.getSigner();
+  const signer = await browserProvider.getSigner();
   const eoa = await signer.getAddress();
 
   try {

@@ -2,17 +2,18 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 import manageConnect from "./getManager";
+import { createWrappedProvider, createWrappedContract } from "../common/rpcWrapper";
 
 const abi = ABIS.nft;
 const rpc_url = CONST.RPC_URL;
-const provider = new ethers.JsonRpcProvider(rpc_url);
+const provider = createWrappedProvider(new ethers.JsonRpcProvider(rpc_url));
 
 export const getToken = async (
   method: string,
   ca: string,
   id?: string | null
 ) => {
-  const contract = new ethers.Contract(ca, abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(ca, abi, provider));
   try {
     if (method == "getInfo") {
       const result = await contract.getInfo().then((response) => {
@@ -116,13 +117,13 @@ export const getTokenInfo = async (ca: string) => {
 };
 
 export const getCallData = async (ca: string, mode, args) => {
-  const contract = new ethers.Contract(ca, abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(ca, abi, provider));
   const result = contract.interface.encodeFunctionData(mode, args);
   return result;
 };
 
 export const tokenOfOwnerByIndex = async (ca: string, eoa, index) => {
-  const contract = new ethers.Contract(ca, abi, provider);
+  const contract = createWrappedContract(new ethers.Contract(ca, abi, provider));
   try {
     const result = await contract
       .tokenOfOwnerByIndex(eoa, index)
