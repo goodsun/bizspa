@@ -121,8 +121,7 @@ export const showToken = async (
         const link = document.createElement("a");
         link.target = "blank";
         link.href =
-          "https://goodsun.github.io/modelviewer/?src=" +
-          metadata["animation_url"];
+          "https://3d.bon-soleil.com/?src=" + metadata["animation_url"];
         nftImgDiv.appendChild(link);
         var icon3d = document.createElement("i");
         icon3d.classList.add("far", "fa-solid", "fa-cubes", "cubeMark");
