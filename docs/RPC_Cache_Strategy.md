@@ -2,7 +2,7 @@
 
 ## エグゼクティブサマリー
 
-BizenDAO NFTプロジェクトにおいて、サーバーサイドを使用せずにRPCノードへのリクエストを最適化するためのクライアントサイドキャッシュ戦略を実装します。IndexedDBを使用した構造化データのキャッシュにより、パフォーマンス向上とコスト削減を実現します。
+BizenDAO プロジェクトにおいて、サーバーサイドを使用せずにRPCノードへのリクエストを最適化するためのクライアントサイドキャッシュ戦略を実装します。IndexedDBを使用した構造化データのキャッシュにより、パフォーマンス向上とコスト削減を実現します。
 
 ## 現状の課題
 
@@ -34,10 +34,7 @@ BizenDAO NFTプロジェクトにおいて、サーバーサイドを使用せ�
 ### 1. 永続キャッシュ（Immutable Data）
 
 **対象データ：**
-- コントラクト基本情報（name, symbol）
-- バーン履歴（burnHistory）
-- SBTロック状態（tokenLocked）
-- 最大ロイヤリティ設定（MAX_ROYALTY_BPS）
+- コントラクト基本情報（不変のもの）
 
 **特徴：**
 - TTL: 無期限
@@ -47,10 +44,9 @@ BizenDAO NFTプロジェクトにおいて、サーバーサイドを使用せ�
 ### 2. 長期キャッシュ（Slow-changing Data）
 
 **対象データ：**
-- ミント料金（mintFee）
-- デフォルトロイヤリティ情報（royaltyInfo）
-- 作者のトークンリスト（creatorTokens）
-- NFT/SBTリスト（normalTokens, sbtTokens）
+- 作者情報
+- 作者別トークン数
+- トークンURI
 
 **特徴：**
 - TTL: 1時間（3,600,000ms）
@@ -60,9 +56,7 @@ BizenDAO NFTプロジェクトにおいて、サーバーサイドを使用せ�
 ### 3. 中期キャッシュ（Moderate Data）
 
 **対象データ：**
-- トークンURI（tokenURI）
-- 作者別トークン数（creatorTokenCount）
-- NFT/SBT別カウント（normalTokenCount, sbtTokenCount）
+- NFT/SBTリスト
 
 **特徴：**
 - TTL: 5分（300,000ms）
@@ -72,7 +66,6 @@ BizenDAO NFTプロジェクトにおいて、サーバーサイドを使用せ�
 ### 4. 短期キャッシュ（Dynamic Data）
 
 **対象データ：**
-- 総供給量（totalSupply）
 - 残高（balanceOf）
 - 所有者情報（ownerOf）
 
@@ -350,6 +343,10 @@ class CacheMetrics {
   }
 }
 ```
+
+## 希望
+できればこの情報はどこかでブラウザ上から見ることができるようにしたい。
+/cacheinfo ページなどを作り、クリアできるようにするか要検討
 
 ## 結論
 
