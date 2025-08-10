@@ -110,15 +110,12 @@ export function createWrappedContract(
                     const cacheKey = bizenCache.generateCacheKey(prop, args, contractAddress);
                     const ttl = BIZEN_CACHE_CONFIG[prop];
                     
-                    // 読み取り専用メソッドかチェック（書き込みメソッドはキャッシュしない）
-                    const isReadMethod = !prop.startsWith('set') && !prop.startsWith('mint') && 
-                                       !prop.startsWith('burn') && !prop.startsWith('transfer') && 
-                                       !prop.startsWith('approve') && prop !== 'safeMint' &&
-                                       prop !== 'grantRole' && prop !== 'revokeRole';
+                    // ホワイトリスト方式：明示的に定義されたメソッドのみキャッシュ
+                    const isCacheable = ttl !== undefined && ttl !== null;
                     
-                    if (isReadMethod && ttl !== undefined) {
+                    if (isCacheable) {
                         const cached = await bizenCache.get(cacheKey);
-                        if (cached !== null) {
+                        if (cached !== null && cached !== '0x') {
                             console.log(`Cache hit: ${prop} on ${contractAddress}`);
                             return cached;
                         }
@@ -144,8 +141,8 @@ export function createWrappedContract(
                         setSmartContractFlag(true);
                         const result = await originalMethod.apply(target, args);
                         
-                        // 結果をキャッシュに保存
-                        if (isReadMethod && ttl !== undefined && result !== undefined) {
+                        // 結果をキャッシュに保存（空の結果はキャッシュしない）
+                        if (isCacheable && result !== undefined && result !== '0x' && result !== null) {
                             await bizenCache.set(cacheKey, result, ttl, 'contract');
                         }
                         

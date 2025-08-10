@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Invalid Cache</title>
+</head>
+<body>
+    <h1>Invalid Cache Cleaner</h1>
+    <button id="clean">Clean Invalid Cache Entries</button>
+    <div id="result"></div>
+    
+    <script type="module">
+        document.getElementById('clean').addEventListener('click', async () => {
+            const dbRequest = indexedDB.open('bizenDAO_rpc_cache', 1);
+            
+            dbRequest.onsuccess = () => {
+                const db = dbRequest.result;
+                const transaction = db.transaction(['cache'], 'readwrite');
+                const store = transaction.objectStore('cache');
+                const getAllRequest = store.getAll();
+                
+                getAllRequest.onsuccess = () => {
+                    const entries = getAllRequest.result;
+                    let cleaned = 0;
+                    
+                    entries.forEach(entry => {
+                        if (entry.value === '0x' || entry.value === null || entry.value === '') {
+                            store.delete(entry.key);
+                            cleaned++;
+                        }
+                    });
+                    
+                    document.getElementById('result').innerHTML = `Cleaned ${cleaned} invalid entries`;
+                };
+            };
+        });
+    </script>
+</body>
+</html>

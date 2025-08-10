@@ -18,32 +18,38 @@ interface GalleryCacheEntry {
 }
 
 export const BIZEN_CACHE_CONFIG: Record<string, number | null> = {
-  // 永続キャッシュ
+  // 永続キャッシュ - 絶対に変わらない値
   'name': null,
   'symbol': null,
   'MAX_ROYALTY_BPS': null,
-  'burnHistory': null,
-  'tokenLocked': null,
   
-  // 長期キャッシュ（1時間）
+  // 長期キャッシュ（1時間）- めったに変わらない値
   'mintFee': 3600000,
   'royaltyInfo': 3600000,
-  'creatorTokens': 3600000,
-  'normalTokens': 3600000,
-  'sbtTokens': 3600000,
   
-  // 中期キャッシュ（5分）
+  // 中期キャッシュ（5分）- 作品情報など
   'tokenURI': 300000,
+  'creatorTokens': 300000,
+  'normalTokens': 300000,
+  'sbtTokens': 300000,
   'creatorTokenCount': 300000,
   'normalTokenCount': 300000,
   'sbtTokenCount': 300000,
-  'gallery': 300000,
   
-  // 短期キャッシュ（30秒）
+  // 短期キャッシュ（30秒）- 頻繁に変わる可能性がある値
   'totalSupply': 30000,
-  'balanceOf': 30000,
-  'ownerOf': 30000,
-  'tokenOfOwnerByIndex': 30000
+  'tokenOfOwnerByIndex': 30000,
+  
+  // キャッシュしない動的メソッド（コメントとして記載）
+  // 'balanceOf': undefined - 残高は常に最新を取得
+  // 'ownerOf': undefined - 所有者は常に最新を取得
+  // 'checkUser': undefined - ユーザー権限は常に最新を取得
+  // 'checkOwner': undefined - オーナー確認は常に最新を取得
+  // 'checkToken': undefined - トークン確認は常に最新を取得
+  // 'isApprovedForAll': undefined - 承認状態は常に最新を取得
+  // 'getApproved': undefined - 承認状態は常に最新を取得
+  // 'tokenLocked': undefined - ロック状態は常に最新を取得
+  // 'burnHistory': undefined - バーン履歴は常に最新を取得
 };
 
 export class BizenDAOCache {
@@ -98,7 +104,7 @@ export class BizenDAOCache {
   }
 
   generateCacheKey(method: string, params: any, contractAddress?: string): string {
-    const chainId = CONST.CHAIN_ID;
+    const chainId = CONST.BC_NETWORK_ID;
     const paramsStr = JSON.stringify(params || {});
     
     if (contractAddress) {

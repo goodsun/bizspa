@@ -37,8 +37,12 @@ export const setManager = async (mode: string, input?: any) => {
     } else if (mode == "checkUser") {
       const result = await contract.checkUser().then((response) => {
         return response;
+      }).catch((error) => {
+        console.warn("checkUser error:", error);
+        // 空の結果やデコードエラーの場合は "none" を返す
+        return "none";
       });
-      return result;
+      return result || "none"; // 空文字列の場合も "none" を返す
     } else if (mode == "hiddenCreator") {
       const result = await contract.hiddenCreator(input[0]).then((response) => {
         return response;

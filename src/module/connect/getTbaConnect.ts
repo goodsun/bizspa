@@ -79,17 +79,26 @@ export const checkOwner = async (contractAddress: string) => {
 };
 
 export const checkToken = async (contractAddress: string) => {
+  if (!contractAddress) {
+    return false;
+  }
+  
   const abi = ABIS.tbaAccount;
-  const contract = createWrappedContract(new ethers.Contract(contractAddress, abi, provider));
-  const result = await contract
-    .token()
-    .then((response) => {
-      return response;
-    })
-    .catch(() => {
-      return false;
-    });
-  return result;
+  try {
+    const contract = createWrappedContract(new ethers.Contract(contractAddress, abi, provider));
+    const result = await contract
+      .token()
+      .then((response) => {
+        return response;
+      })
+      .catch(() => {
+        return false;
+      });
+    return result;
+  } catch (error) {
+    console.warn("checkToken error:", error);
+    return false;
+  }
 };
 
 export const executeCall = async (
