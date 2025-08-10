@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 import { LANGSET } from "../common/lang";
+import { bizenCache } from "../common/bizenCache";
 
 export const mint = async (
   contractAddress: string,
@@ -62,9 +63,17 @@ export const burn = async (contractAddress: string, id: string) => {
   const contract = await provider.getSigner().then((signer) => {
     return new ethers.Contract(contractAddress, abi, signer);
   });
+  
+  // 作者を取得（キャッシュ無効化のため）
+  const signer = await provider.getSigner();
+  const creator = await signer.getAddress();
+  
   const result = await contract
     .burn(id)
-    .then((response) => {
+    .then(async (response) => {
+      // バーン成功後、関連するキャッシュを無効化
+      await bizenCache.handleTokenBurn(id, creator);
+      console.log(`Cache invalidated for burned token: ${id}`);
       return response;
     })
     .catch((e) => {

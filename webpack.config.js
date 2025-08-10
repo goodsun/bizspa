@@ -4,6 +4,7 @@ export default {
   mode: 'production',
   entry: {
     main: './src/main.ts',
+    cacheinfo: './src/cacheinfo.ts',
   },
   output: {
     filename: '[name].bundle.js',

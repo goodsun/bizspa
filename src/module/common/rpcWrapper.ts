@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { showRPCModal, hideRPCModal } from '../snipet/rpcModal';
+import { bizenCache, BIZEN_CACHE_CONFIG } from './bizenCache';
 
 export async function wrapRPCCall<T>(
     contractOrProvider: ethers.Contract | ethers.Provider,
@@ -104,8 +105,26 @@ export function createWrappedContract(
                         return originalMethod.apply(target, args);
                     }
                     
-                    // スマートコントラクトのメソッド呼び出しを直接表示
+                    // キャッシュチェック
                     const contractAddress = target.target.toString();
+                    const cacheKey = bizenCache.generateCacheKey(prop, args, contractAddress);
+                    const ttl = BIZEN_CACHE_CONFIG[prop];
+                    
+                    // 読み取り専用メソッドかチェック（書き込みメソッドはキャッシュしない）
+                    const isReadMethod = !prop.startsWith('set') && !prop.startsWith('mint') && 
+                                       !prop.startsWith('burn') && !prop.startsWith('transfer') && 
+                                       !prop.startsWith('approve') && prop !== 'safeMint' &&
+                                       prop !== 'grantRole' && prop !== 'revokeRole';
+                    
+                    if (isReadMethod && ttl !== undefined) {
+                        const cached = await bizenCache.get(cacheKey);
+                        if (cached !== null) {
+                            console.log(`Cache hit: ${prop} on ${contractAddress}`);
+                            return cached;
+                        }
+                    }
+                    
+                    // スマートコントラクトのメソッド呼び出しを直接表示
                     const displayInfo = {
                         contract: contractAddress,
                         method: prop,
@@ -124,6 +143,12 @@ export function createWrappedContract(
                     try {
                         setSmartContractFlag(true);
                         const result = await originalMethod.apply(target, args);
+                        
+                        // 結果をキャッシュに保存
+                        if (isReadMethod && ttl !== undefined && result !== undefined) {
+                            await bizenCache.set(cacheKey, result, ttl, 'contract');
+                        }
+                        
                         return result;
                     } finally {
                         setSmartContractFlag(false);
