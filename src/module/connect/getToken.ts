@@ -84,7 +84,9 @@ export const getToken = async (
     }
   } catch (error) {
     console.error("can't get tokenInfo" + ca + ":" + method);
-    //throw new Error("can't get tokenInfo " + ca + " : " + method);
+    console.error("Error details:", error);
+    // エラー時はnullを返して、キャッシュされないようにする
+    return null;
   }
 };
 

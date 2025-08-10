@@ -105,12 +105,37 @@ export class BizenDAOCache {
 
   generateCacheKey(method: string, params: any, contractAddress?: string): string {
     const chainId = CONST.BC_NETWORK_ID;
-    const paramsStr = JSON.stringify(params || {});
+    
+    // BigIntを文字列に変換してからJSON.stringifyする
+    const sanitizedParams = this.sanitizeParams(params);
+    const paramsStr = JSON.stringify(sanitizedParams || {});
     
     if (contractAddress) {
       return `${chainId}:${contractAddress}:${method}:${paramsStr}`;
     }
     return `${chainId}:${method}:${paramsStr}`;
+  }
+  
+  private sanitizeParams(params: any): any {
+    if (params === null || params === undefined) return params;
+    
+    if (typeof params === 'bigint') {
+      return params.toString();
+    }
+    
+    if (Array.isArray(params)) {
+      return params.map(p => this.sanitizeParams(p));
+    }
+    
+    if (typeof params === 'object') {
+      const sanitized: any = {};
+      for (const key in params) {
+        sanitized[key] = this.sanitizeParams(params[key]);
+      }
+      return sanitized;
+    }
+    
+    return params;
   }
 
   private isExpired(entry: CacheEntry): boolean {
