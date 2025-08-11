@@ -23,6 +23,17 @@
         <a href="/meta">meta</a>
       </p>
     </section>
+    <!-- モバイル用ヘッダー（初期は非表示） -->
+    <section class="mobileHeaderArea" style="display: none;">
+      <div class="mobileHeaderContent">
+        <div class="mobileLogo" id="mobileHeaderTitle">now loading...</div>
+        <button class="hamburgerMenu" id="hamburgerMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </section>
     <section class="mainContainer">
       <div id="mainContents"></div>
       <div class="dummyarea"></div>
@@ -45,12 +56,55 @@
       <div>
         <span id="connectWallet">
           this site is use blockchain data. please install <a href="https://metamask.io/" target="_blank">metamask</a>
-        </spanspan>
+        </span>
       </div>
       <span id="langSelecter">
         <a href="?lang=en">en</a>
          | <a href="?lang=ja">ja</a>
+      </span>
     </section>
+    <!-- モバイル用ボトムナビゲーション（初期は非表示） -->
+    <nav class="mobileBottomNav" id="mobileBottomNav" style="display: none;">
+      <a href="/" class="navItem">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="/creators" class="navItem">
+        <i class="fas fa-users"></i>
+        <span>Creators</span>
+      </a>
+      <a href="/tokens" class="navItem">
+        <i class="fas fa-coins"></i>
+        <span>Tokens</span>
+      </a>
+      <a href="/contents" class="navItem">
+        <i class="fas fa-folder"></i>
+        <span>Contents</span>
+      </a>
+      <a href="/account" class="navItem" id="mobileAccountLink">
+        <i class="fas fa-user"></i>
+        <span>Account</span>
+      </a>
+    </nav>
+    <!-- モバイル用サイドバー（初期は非表示） -->
+    <div class="mobileSidebar" id="mobileSidebar">
+      <div class="sidebarHeader">
+        <button class="closeSidebar" id="closeSidebar">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="sidebarContent">
+        <a href="/donate">donate</a>
+        <a href="/meta">meta</a>
+        <div class="sidebarWalletInfo">
+          <div id="sidebarWalletInfo"></div>
+        </div>
+        <div class="sidebarLang">
+          <a href="?lang=en">English</a>
+          <a href="?lang=ja">日本語</a>
+        </div>
+      </div>
+    </div>
   </body>
   <footer id="pageFooter">
     <script src="/js/main.bundle.js?ver=###VERSION###"></script>

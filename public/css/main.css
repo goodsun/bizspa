@@ -1154,3 +1154,183 @@ div#mainContents > div > section.articleSection > div.articleArea {
     font-size: 0.7em;
   }
 }
+
+/* モバイル用ヘッダー */
+.mobileHeaderArea {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px; /* 60px → 120px */
+  background-color: #111111;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.mobileHeaderContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 40px; /* 20px → 40px */
+}
+
+.mobileLogo {
+  font-family: "KinoMT";
+  font-size: 3.6em; /* 1.8em → 3.6em */
+  color: #dddddd;
+}
+
+/* ハンバーガーメニューボタン */
+.hamburgerMenu {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 60px; /* 30px → 60px */
+  height: 50px; /* 25px → 50px */
+  position: relative;
+  padding: 0;
+}
+
+.hamburgerMenu span {
+  display: block;
+  width: 100%;
+  height: 6px; /* 3px → 6px */
+  background-color: #888;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburgerMenu span:nth-child(1) {
+  top: 0;
+}
+
+.hamburgerMenu span:nth-child(2) {
+  top: 22px; /* 11px → 22px */
+}
+
+.hamburgerMenu span:nth-child(3) {
+  bottom: 0;
+}
+
+/* モバイル用ボトムナビゲーション */
+.mobileBottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px; /* 60px → 120px */
+  background-color: #111111;
+  border-top: 2px solid #333; /* 1px → 2px */
+  z-index: 999;
+  display: flex;
+}
+
+.mobileBottomNav .navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  color: #888;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.mobileBottomNav .navItem:hover,
+.mobileBottomNav .navItem.active {
+  color: #64a193;
+}
+
+.mobileBottomNav .navItem i {
+  font-size: 40px; /* 20px → 40px */
+  margin-bottom: 8px; /* 4px → 8px */
+}
+
+.mobileBottomNav .navItem span {
+  font-size: 20px; /* 10px → 20px */
+  color: inherit;
+}
+
+/* モバイル用サイドバー */
+.mobileSidebar {
+  position: fixed;
+  top: 0;
+  right: -450px; /* -300px → -450px */
+  width: 450px; /* 300px → 450px (1.5倍) */
+  height: 100%;
+  background-color: #111111;
+  z-index: 1000;
+  transition: right 0.3s ease-in-out;
+  overflow-y: auto;
+  box-shadow: -2px 0 4px rgba(0,0,0,0.3);
+}
+
+.mobileSidebar.active {
+  right: 0;
+}
+
+.sidebarHeader {
+  padding: 30px; /* 20px → 30px (1.5倍) */
+  text-align: right;
+}
+
+.closeSidebar {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 24px; /* 48px → 24px (半分に) */
+  cursor: pointer;
+  padding: 0;
+}
+
+.sidebarContent {
+  padding: 60px; /* 40px → 60px (1.5倍) */
+}
+
+.sidebarContent a {
+  display: block;
+  color: #9999bb;
+  font-size: 1.8rem; /* 3.6rem → 1.8rem (半分に) */
+  margin-bottom: 20px; /* 40px → 20px (半分に) */
+  text-decoration: none;
+}
+
+.sidebarWalletInfo {
+  margin-top: 30px; /* 60px → 30px (半分に) */
+  padding-top: 30px; /* 60px → 30px (半分に) */
+  border-top: 1px solid #333; /* 2px → 1px */
+  font-size: 1.2rem; /* 2.4rem → 1.2rem (半分に) */
+}
+
+.sidebarLang {
+  margin-top: 30px; /* 60px → 30px (半分に) */
+  padding-top: 30px; /* 60px → 30px (半分に) */
+  border-top: 1px solid #333; /* 2px → 1px */
+}
+
+.sidebarLang a {
+  display: inline-block;
+  margin-right: 20px; /* 40px → 20px (半分に) */
+  font-size: 1.4rem; /* 2.8rem → 1.4rem (半分に) */
+}
+
+/* モバイル時のメインコンテンツ調整 */
+body.mobile .mainContainer {
+  margin-top: 120px; /* ヘッダーの高さ分 60px → 120px */
+  margin-bottom: 120px; /* ボトムナビの高さ分 60px → 120px */
+}
+
+/* サイドバーオープン時のオーバーレイ */
+body.sidebar-open::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}

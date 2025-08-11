@@ -440,6 +440,91 @@ const checkRoute = () => {
 
 if (utils.containsBrowserName("mobile")) {
   document.querySelector("html").style.fontSize = "30px";
+  
+  // モバイル用のUI切り替え
+  document.body.classList.add("mobile");
+  
+  // デスクトップ用のヘッダーとフッターを非表示
+  const headerArea = document.querySelector(".headerArea") as HTMLElement;
+  const footerArea = document.getElementById("footerArea");
+  if (headerArea) headerArea.style.display = "none";
+  if (footerArea) footerArea.style.display = "none";
+  
+  // モバイル用のヘッダーとボトムナビゲーションを表示
+  const mobileHeaderArea = document.querySelector(".mobileHeaderArea") as HTMLElement;
+  const mobileBottomNav = document.getElementById("mobileBottomNav");
+  if (mobileHeaderArea) mobileHeaderArea.style.display = "block";
+  if (mobileBottomNav) mobileBottomNav.style.display = "flex";
+  
+  // モバイルヘッダーのタイトルを設定
+  const mobileHeaderTitle = document.getElementById("mobileHeaderTitle");
+  if (mobileHeaderTitle) {
+    mobileHeaderTitle.innerHTML = CONST.HEADER_TITLE;
+  }
+  
+  // ハンバーガーメニューの動作を設定
+  const hamburgerMenu = document.getElementById("hamburgerMenu");
+  const mobileSidebar = document.getElementById("mobileSidebar");
+  const closeSidebar = document.getElementById("closeSidebar");
+  
+  if (hamburgerMenu && mobileSidebar) {
+    // ハンバーガーメニュークリックでサイドバーを開く
+    hamburgerMenu.addEventListener("click", () => {
+      mobileSidebar.classList.add("active");
+      document.body.classList.add("sidebar-open");
+    });
+  }
+  
+  if (closeSidebar && mobileSidebar) {
+    // 閉じるボタンクリックでサイドバーを閉じる
+    closeSidebar.addEventListener("click", () => {
+      mobileSidebar.classList.remove("active");
+      document.body.classList.remove("sidebar-open");
+    });
+  }
+  
+  // サイドバー外クリックで閉じる
+  if (mobileSidebar) {
+    document.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      if (
+        !mobileSidebar.contains(target) &&
+        !hamburgerMenu?.contains(target) &&
+        mobileSidebar.classList.contains("active")
+      ) {
+        mobileSidebar.classList.remove("active");
+        document.body.classList.remove("sidebar-open");
+      }
+    });
+  }
+  
+  // サイドバー内のリンククリックで閉じる
+  const sidebarLinks = mobileSidebar?.querySelectorAll("a");
+  sidebarLinks?.forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileSidebar?.classList.remove("active");
+      document.body.classList.remove("sidebar-open");
+    });
+  });
+  
+  // ウォレット情報をサイドバーにコピー
+  const updateSidebarWalletInfo = () => {
+    const sidebarWalletInfo = document.getElementById("sidebarWalletInfo");
+    const connectWallet = document.getElementById("connectWallet");
+    if (sidebarWalletInfo && connectWallet) {
+      sidebarWalletInfo.innerHTML = connectWallet.innerHTML;
+    }
+  };
+  
+  // ウォレット情報が更新されたときにサイドバーも更新
+  const observer = new MutationObserver(() => {
+    updateSidebarWalletInfo();
+  });
+  const connectWalletElement = document.getElementById("connectWallet");
+  if (connectWalletElement) {
+    observer.observe(connectWalletElement, { childList: true, subtree: true });
+  }
+  updateSidebarWalletInfo();
 }
 
 checkRoute();
