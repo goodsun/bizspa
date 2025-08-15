@@ -274,6 +274,7 @@ export const checkMetamask = async () => {
       }
     });
 
+    // PC版は元のコードに戻す
     connectWallet.appendChild(
       cSnip.eoa(
         balanceData.eoa,
@@ -285,6 +286,9 @@ export const checkMetamask = async () => {
         "wallet"
       )
     );
+    
+    // モバイル版のサイドバーだけシンプルな表示
+    // これはMutationObserverでコピーされるので、ここでは何もしない
 
     connectWallet.appendChild(
       cSnip.labeledElm("span", String(waiToEth(balanceData.balance)), [
@@ -295,6 +299,12 @@ export const checkMetamask = async () => {
 
     (document.getElementById("accountLink") as HTMLLinkElement).href =
       "/account/" + balanceData.eoa;
+    
+    // モバイル用のaccountリンクも更新
+    const mobileAccountLink = document.getElementById("mobileAccountLink") as HTMLLinkElement;
+    if (mobileAccountLink) {
+      mobileAccountLink.href = "/account/" + balanceData.eoa;
+    }
 
     if (balanceData.dpoint > 0) {
       connectWallet.appendChild(

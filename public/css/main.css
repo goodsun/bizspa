@@ -1164,7 +1164,7 @@ div#mainContents > div > section.articleSection > div.articleArea {
   height: 120px; /* 60px → 120px */
   background-color: #111111;
   z-index: 999;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .mobileHeaderContent {
@@ -1245,27 +1245,26 @@ div#mainContents > div > section.articleSection > div.articleArea {
 }
 
 .mobileBottomNav .navItem i {
-  font-size: 40px; /* 20px → 40px */
-  margin-bottom: 8px; /* 4px → 8px */
+  font-size: 50px;
+  margin-bottom: 8px;
 }
 
 .mobileBottomNav .navItem span {
-  font-size: 20px; /* 10px → 20px */
+  font-size: 25px;
   color: inherit;
 }
 
-/* モバイル用サイドバー */
 .mobileSidebar {
   position: fixed;
   top: 0;
-  right: -450px; /* -300px → -450px */
-  width: 450px; /* 300px → 450px (1.5倍) */
+  right: -450px;
+  width: 450px;
   height: 100%;
   background-color: #111111;
   z-index: 1000;
   transition: right 0.3s ease-in-out;
   overflow-y: auto;
-  box-shadow: -2px 0 4px rgba(0,0,0,0.3);
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.3);
 }
 
 .mobileSidebar.active {
@@ -1299,10 +1298,33 @@ div#mainContents > div > section.articleSection > div.articleArea {
 }
 
 .sidebarWalletInfo {
-  margin-top: 30px; /* 60px → 30px (半分に) */
-  padding-top: 30px; /* 60px → 30px (半分に) */
-  border-top: 1px solid #333; /* 2px → 1px */
-  font-size: 1.2rem; /* 2.4rem → 1.2rem (半分に) */
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #333;
+  font-size: 1.2rem;
+}
+
+/* sidebarWalletInfo内の要素を整列 */
+.sidebarWalletInfo span {
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.sidebarWalletInfo i {
+  margin-right: 5px;
+}
+
+.sidebarWalletInfo a {
+  color: #9999bb;
+  text-decoration: none;
+}
+
+.sidebarWalletInfo .eoaCopy {
+  margin-left: 5px;
+  color: #8888bb;
+  cursor: pointer;
 }
 
 .sidebarLang {
@@ -1323,9 +1345,91 @@ body.mobile .mainContainer {
   margin-bottom: 120px; /* ボトムナビの高さ分 60px → 120px */
 }
 
+/* モバイル用ウォレット情報スタイル */
+.mobile-wallet-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.mobile-discord-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.mobile-discord-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mobile-discord-name {
+  font-size: 1.1rem;
+  color: #9999bb;
+}
+
+.mobile-wallet-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.mobile-wallet-section i {
+  color: #9999bb;
+  font-size: 1.2rem;
+}
+
+.mobile-wallet-section a {
+  flex: 1;
+  color: #9999bb;
+  text-decoration: none;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+.mobile-copy-btn {
+  background: transparent;
+  color: #8888bb;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.mobile-copy-btn:hover {
+  background: #8888bb;
+  color: #fff;
+}
+
+.mobile-copy-btn i.fa-check {
+  color: #4caf50;
+}
+
+.mobile-balance-section,
+.mobile-dpoint-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+.mobile-balance-section i,
+.mobile-dpoint-section i {
+  color: #9999bb;
+}
+
 /* サイドバーオープン時のオーバーレイ */
 body.sidebar-open::before {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;

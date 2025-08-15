@@ -112,6 +112,13 @@ export const LANG = {
     RPC_PARAMS: "Parameters",
     ELAPSED_TIME: "Elapsed Time",
     SECONDS: "seconds",
+    metamask_mobile_title: "Access with MetaMask Browser",
+    metamask_mobile_desc: "Please access this site using the MetaMask mobile app's built-in browser for the best experience.",
+    metamask_desktop_title: "MetaMask Extension Required",
+    metamask_desktop_desc: "Please install the MetaMask browser extension to interact with this site.",
+    metamask_open_app: "Open in MetaMask",
+    metamask_download: "Download MetaMask",
+    metamask_continue: "Continue Anyway",
   },
   ja: {
     common: "BIZENDAOとは",
@@ -223,6 +230,13 @@ export const LANG = {
     APPROVED: "あなたの購入証明は正しく認証されました。",
     NOT_APPROVED: "不正なリクエストが送信されました。",
     DIFFERENT_USER: "接続されているウォレットが違います。",
+    metamask_mobile_title: "MetaMaskブラウザでアクセス",
+    metamask_mobile_desc: "このサイトを最適にご利用いただくには、MetaMaskモバイルアプリの内蔵ブラウザからアクセスしてください。",
+    metamask_desktop_title: "MetaMask拡張機能が必要です",
+    metamask_desktop_desc: "このサイトをご利用いただくには、MetaMaskブラウザ拡張機能をインストールしてください。",
+    metamask_open_app: "MetaMaskで開く",
+    metamask_download: "MetaMaskをダウンロード",
+    metamask_continue: "このまま続ける",
   },
 };
 

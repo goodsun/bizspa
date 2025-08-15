@@ -5,11 +5,16 @@ import utils from "../common/utils";
 import { router } from "../common/router";
 import articleSnipet from "../../module/snipet/article";
 import { LANGSET } from "../common/lang";
+import { initMetaMaskModal } from "./metamaskModalSimple";
 const mainContents = document.getElementById("mainContents");
 
 const getHome = async () => {
   const divElem = document.createElement("div");
   divElem.classList.add("homeContents");
+  
+  // インラインスタイルでのモーダル表示
+  initMetaMaskModal();
+  
   return divElem;
 };
 

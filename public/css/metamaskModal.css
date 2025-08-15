@@ -1,0 +1,131 @@
+.metamask-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.metamask-modal-overlay.show {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+}
+
+.metamask-modal-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.metamask-modal-overlay.show .metamask-modal-content {
+  transform: translateY(0);
+}
+
+.metamask-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #666;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.metamask-modal-close:hover {
+  background-color: #f0f0f0;
+}
+
+.metamask-modal-title {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.metamask-modal-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.metamask-modal-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metamask-modal-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.metamask-modal-button.primary {
+  background-color: #f6851b;
+  color: white;
+}
+
+.metamask-modal-button.primary:hover {
+  background-color: #e2761b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(246, 133, 27, 0.3);
+}
+
+.metamask-modal-button.secondary {
+  background-color: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.metamask-modal-button.secondary:hover {
+  background-color: #f8f8f8;
+  border-color: #ccc;
+}
+
+@media (max-width: 768px) {
+  .metamask-modal-content {
+    padding: 32px 24px;
+    margin: 16px;
+  }
+  
+  .metamask-modal-title {
+    font-size: 28px;
+  }
+  
+  .metamask-modal-description {
+    font-size: 18px;
+  }
+  
+  .metamask-modal-button {
+    font-size: 18px;
+    padding: 14px 28px;
+  }
+}

@@ -507,25 +507,168 @@ if (utils.containsBrowserName("mobile")) {
     });
   });
   
-  // ウォレット情報をサイドバーにコピー
-  const updateSidebarWalletInfo = () => {
-    const sidebarWalletInfo = document.getElementById("sidebarWalletInfo");
-    const connectWallet = document.getElementById("connectWallet");
-    if (sidebarWalletInfo && connectWallet) {
-      sidebarWalletInfo.innerHTML = connectWallet.innerHTML;
+  // サイドバーのウォレット情報をセットアップ
+  setupSidebarWalletInfo();
+}
+
+// モバイル用のウォレット情報レンダリング
+const renderMobileSidebarWalletInfo = async (container: HTMLElement) => {
+    container.innerHTML = ""; // クリア
+    
+    // 直接checkBalanceでデータを取得
+    const balanceData = await utils.checkBalance();
+    
+    if (!balanceData.eoa) return;
+    
+    // モバイル用のレイアウトを構築
+    const mobileWalletInfo = document.createElement('div');
+    mobileWalletInfo.className = 'mobile-wallet-info';
+    
+    // Discord情報を取得して表示
+    try {
+      const eoaUser = await utils.getUserByEoa(balanceData.eoa);
+      if (eoaUser.type === "discordConnect" && eoaUser.discordUser) {
+        const discordSection = document.createElement('div');
+        discordSection.className = 'mobile-discord-section';
+        
+        // Discordアイコン
+        if (eoaUser.discordUser.Icon) {
+          const discordIcon = document.createElement('img');
+          discordIcon.src = eoaUser.discordUser.Icon;
+          discordIcon.alt = eoaUser.discordUser.Name || '';
+          discordIcon.className = 'mobile-discord-avatar';
+          discordSection.appendChild(discordIcon);
+        }
+        
+        // Discord名
+        if (eoaUser.discordUser.Name) {
+          const discordName = document.createElement('span');
+          discordName.className = 'mobile-discord-name';
+          discordName.textContent = eoaUser.discordUser.Name;
+          discordSection.appendChild(discordName);
+        }
+        
+        mobileWalletInfo.appendChild(discordSection);
+      }
+    } catch (error) {
+      console.error('Failed to get Discord user info:', error);
     }
-  };
+    
+    // ウォレットアドレス表示
+    const walletSection = document.createElement('div');
+    walletSection.className = 'mobile-wallet-section';
+    
+    const walletIcon = document.createElement('i');
+    walletIcon.className = 'fa-solid fa-wallet';
+    walletSection.appendChild(walletIcon);
+    
+    const addressLink = document.createElement('a');
+    addressLink.href = `/account/${balanceData.eoa}`;
+    addressLink.textContent = `${balanceData.eoa.substring(0, 6)}...${balanceData.eoa.substring(balanceData.eoa.length - 4)}`;
+    walletSection.appendChild(addressLink);
+    
+    // コピーボタン
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'mobile-copy-btn';
+    copyBtn.innerHTML = '<i class="fa fa-copy"></i>';
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(balanceData.eoa)
+        .then(() => {
+          copyBtn.innerHTML = '<i class="fa fa-check"></i>';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<i class="fa fa-copy"></i>';
+          }, 2000);
+        })
+        .catch(err => console.error('Copy failed:', err));
+    };
+    walletSection.appendChild(copyBtn);
+    
+    mobileWalletInfo.appendChild(walletSection);
+    
+    // 残高表示
+    const balanceSection = document.createElement('div');
+    balanceSection.className = 'mobile-balance-section';
+    
+    const balanceIcon = document.createElement('i');
+    balanceIcon.className = 'fa-solid fa-coins';
+    balanceSection.appendChild(balanceIcon);
+    
+    const balanceText = document.createElement('span');
+    balanceText.textContent = String(utils.waiToEth(balanceData.balance));
+    balanceSection.appendChild(balanceText);
+    
+    mobileWalletInfo.appendChild(balanceSection);
+    
+    // DPointがあれば表示
+    if (balanceData.dpoint > 0) {
+      const dpointSection = document.createElement('div');
+      dpointSection.className = 'mobile-dpoint-section';
+      
+      const dpointIcon = document.createElement('i');
+      dpointIcon.className = 'fa-solid fa-database';
+      dpointSection.appendChild(dpointIcon);
+      
+      const dpointText = document.createElement('span');
+      dpointText.textContent = String(balanceData.dpoint);
+      dpointSection.appendChild(dpointText);
+      
+      mobileWalletInfo.appendChild(dpointSection);
+    }
+    
+    container.appendChild(mobileWalletInfo);
+};
+
+function setupSidebarWalletInfo() {
+  // PC版のウォレット情報をサイドバーにコピー（PC版のみ）
+  const isMobile = document.body.classList.contains('mobile');
   
-  // ウォレット情報が更新されたときにサイドバーも更新
-  const observer = new MutationObserver(() => {
-    updateSidebarWalletInfo();
-  });
-  const connectWalletElement = document.getElementById("connectWallet");
-  if (connectWalletElement) {
-    observer.observe(connectWalletElement, { childList: true, subtree: true });
+  if (!isMobile) {
+    const updatePCSidebarWalletInfo = () => {
+      const sidebarWalletInfo = document.getElementById("sidebarWalletInfo");
+      const connectWallet = document.getElementById("connectWallet");
+      if (sidebarWalletInfo && connectWallet) {
+        sidebarWalletInfo.innerHTML = connectWallet.innerHTML;
+      }
+    };
+    
+    const observer = new MutationObserver(() => {
+      updatePCSidebarWalletInfo();
+    });
+    const connectWalletElement = document.getElementById("connectWallet");
+    if (connectWalletElement) {
+      observer.observe(connectWalletElement, { childList: true, subtree: true });
+    }
+    updatePCSidebarWalletInfo();
   }
-  updateSidebarWalletInfo();
 }
 
 checkRoute();
 utils.checkMetamask();
+
+// モバイル版のウォレット情報を初期化（モバイル版のみ）
+const initMobileWalletInfo = async () => {
+  if (document.body.classList.contains('mobile')) {
+    const sidebarWalletInfo = document.getElementById("sidebarWalletInfo");
+    if (sidebarWalletInfo) {
+      // 既存の内容をクリア
+      sidebarWalletInfo.innerHTML = "";
+      
+      // 新しい内容をレンダリング
+      await renderMobileSidebarWalletInfo(sidebarWalletInfo);
+    }
+  }
+};
+
+// 初回レンダリング（MetaMask接続後に実行）
+setTimeout(() => {
+  initMobileWalletInfo();
+}, 1500);
+
+// MetaMaskのアカウント変更時に更新
+if (window.ethereum) {
+  window.ethereum.on('accountsChanged', () => {
+    setTimeout(() => {
+      initMobileWalletInfo();
+    }, 500);
+  });
+}
