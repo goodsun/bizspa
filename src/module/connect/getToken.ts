@@ -2,7 +2,11 @@ import { ethers } from "ethers";
 import { CONST } from "../common/const";
 import { ABIS } from "./abi";
 import manageConnect from "./getManager";
-import { createWrappedProvider, createWrappedContract } from "../common/rpcWrapper";
+import {
+  createWrappedProvider,
+  createWrappedContract,
+} from "../common/rpcWrapper";
+import { showLoadingSpinner, hideLoadingSpinner, updateLoadingMessage } from "../snipet/loadingSpinner";
 
 const abi = ABIS.nft;
 const rpc_url = CONST.RPC_URL;
@@ -13,7 +17,9 @@ export const getToken = async (
   ca: string,
   id?: string | null
 ) => {
-  const contract = createWrappedContract(new ethers.Contract(ca, abi, provider));
+  const contract = createWrappedContract(
+    new ethers.Contract(ca, abi, provider)
+  );
   try {
     if (method == "getInfo") {
       const result = await contract.getInfo().then((response) => {
@@ -119,13 +125,17 @@ export const getTokenInfo = async (ca: string) => {
 };
 
 export const getCallData = async (ca: string, mode, args) => {
-  const contract = createWrappedContract(new ethers.Contract(ca, abi, provider));
+  const contract = createWrappedContract(
+    new ethers.Contract(ca, abi, provider)
+  );
   const result = contract.interface.encodeFunctionData(mode, args);
   return result;
 };
 
 export const tokenOfOwnerByIndex = async (ca: string, eoa, index) => {
-  const contract = createWrappedContract(new ethers.Contract(ca, abi, provider));
+  const contract = createWrappedContract(
+    new ethers.Contract(ca, abi, provider)
+  );
   try {
     const result = await contract
       .tokenOfOwnerByIndex(eoa, index)
@@ -140,25 +150,47 @@ export const tokenOfOwnerByIndex = async (ca: string, eoa, index) => {
 
 export const hasTokenList = async (eoa: string) => {
   console.log("hasTokenList:" + eoa);
+  showLoadingSpinner("所有NFTを検索中...");
+  
   let result = [];
-  const contracts = await manageConnect.getManager("contracts");
-  for (const contract of contracts) {
-    if (contract[2] == "nft") {
-      const ca = contract[0];
-      const balance = await getToken("balanceOf", ca, eoa);
-      for (let i = balance; i > 0; i--) {
-        const tokenId = await tokenOfOwnerByIndex(ca, eoa, Number(i) - 1);
-        const name = await getToken("name", ca);
-        const tokenUri = await getToken("tokenURI", ca, tokenId);
-        result.push({
-          ca: ca,
-          tokenId: tokenId,
-          name: name,
-          tokenUri: tokenUri,
-        });
+  try {
+    const contracts = await manageConnect.getManager("contracts");
+    let nftContractCount = 0;
+    let processedCount = 0;
+    
+    // NFTコントラクトの数をカウント
+    for (const contract of contracts) {
+      if (contract[2] == "nft") {
+        nftContractCount++;
       }
     }
+    
+    for (const contract of contracts) {
+      if (contract[2] == "nft") {
+        processedCount++;
+        const ca = contract[0];
+        updateLoadingMessage(`NFTコントラクトを確認中... (${processedCount}/${nftContractCount})`);
+        
+        const balance = await getToken("balanceOf", ca, eoa);
+        for (let i = balance; i > 0; i--) {
+          updateLoadingMessage(`トークンを取得中... ${ca.slice(0,6)}...${ca.slice(-4)} #${i}`);
+          const tokenId = await tokenOfOwnerByIndex(ca, eoa, Number(i) - 1);
+          const name = await getToken("name", ca);
+          const tokenUri = await getToken("tokenURI", ca, tokenId);
+          result.push({
+            ca: ca,
+            tokenId: tokenId,
+            name: name,
+            tokenUri: tokenUri,
+          });
+        }
+      }
+    }
+  } finally {
+    hideLoadingSpinner();
   }
+  
+  console.log("hasTokenList:" + eoa + " END");
   return result;
 };
 

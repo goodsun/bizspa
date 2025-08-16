@@ -8,6 +8,7 @@ import { FORMATS } from "../common/formats";
 import getTokenConnect from "../connect/getToken";
 import { genre_names, type_names, sales_types } from "../common/genrelist";
 import setManagerConnect from "../connect/setManager";
+import { showLoadingSpinner, hideLoadingSpinner, updateLoadingMessage } from '../snipet/loadingSpinner';
 
 const usertype = await setManagerConnect.setManager("checkUser");
 
@@ -97,20 +98,28 @@ const setInterFace = async (parentDiv, item, eoa, title) => {
   parentDiv.appendChild(hasSel);
 
   const hasNftList = await getTokenConnect.hasTokenList(eoa);
+  
   const nftListForm = setElement.makeSelect("nftSelect", "BaseInput");
   nftListForm.classList.add("w8p");
 
   let metaDataInfo = [];
+  showLoadingSpinner("NFTメタデータを読み込み中...");
+  
   for (const key in hasNftList) {
     const option = document.createElement("option");
     option.value = key;
     const nftInfo = hasNftList[key];
+    
+    updateLoadingMessage(`NFTメタデータを読み込み中... (${Number(key) + 1}/${hasNftList.length})`);
     const metadata = await utils.fetchData(nftInfo.tokenUri);
+    
     option.innerHTML =
       nftInfo.name + " #" + nftInfo.tokenId + " | " + metadata.name;
     nftListForm.appendChild(option);
     metaDataInfo.push(metadata);
   }
+  
+  hideLoadingSpinner();
   parentDiv.appendChild(nftListForm);
   parentDiv.appendChild(cSnip.hr());
 

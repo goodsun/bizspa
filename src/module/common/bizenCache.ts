@@ -38,9 +38,9 @@ export const BIZEN_CACHE_CONFIG: Record<string, number | null> = {
   
   // 短期キャッシュ（30秒）- 頻繁に変わる可能性がある値
   'totalSupply': 30000,
-  'tokenOfOwnerByIndex': 30000,
   
   // キャッシュしない動的メソッド（コメントとして記載）
+  // 'tokenOfOwnerByIndex': undefined - 所有者のトークンインデックスは常に最新を取得
   // 'balanceOf': undefined - 残高は常に最新を取得
   // 'ownerOf': undefined - 所有者は常に最新を取得
   // 'checkUser': undefined - ユーザー権限は常に最新を取得

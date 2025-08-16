@@ -15,6 +15,20 @@
   font-size: 0.8rem;
   z-index: 99;
   max-width: 90%;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.rpc-modal-overlay.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rpc-modal-overlay.hide {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
 }
 
 .rpc-modal {

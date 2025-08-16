@@ -12,7 +12,10 @@ let currentRPCCall: RPCCallInfo | null = null;
 let modalElement: HTMLElement | null = null;
 let intervalId: NodeJS.Timeout | null = null;
 let showTimeoutId: NodeJS.Timeout | null = null;
+let hideTimeoutId: NodeJS.Timeout | null = null;
+let activeCallCount = 0;
 const SHOW_DELAY_MS = 300; // 0.3秒
+const HIDE_DELAY_MS = 200; // 0.2秒（フェードアウト時間）
 
 export function showRPCModal(
   method: string,
@@ -20,6 +23,14 @@ export function showRPCModal(
   contractAddress?: string,
   functionName?: string
 ): void {
+  activeCallCount++;
+  
+  // hideTimeoutがある場合はキャンセル
+  if (hideTimeoutId) {
+    clearTimeout(hideTimeoutId);
+    hideTimeoutId = null;
+  }
+  
   currentRPCCall = {
     method,
     params,
@@ -27,6 +38,12 @@ export function showRPCModal(
     contractAddress,
     functionName,
   };
+
+  // すでにモーダルが表示されている場合
+  if (modalElement && modalElement.classList.contains('show')) {
+    updateModalContent();
+    return;
+  }
 
   // 0.3秒後にモーダルを表示
   if (showTimeoutId) {
@@ -37,6 +54,13 @@ export function showRPCModal(
     createModal();
     updateModalContent();
     
+    // フェードイン開始
+    requestAnimationFrame(() => {
+      if (modalElement) {
+        modalElement.classList.add('show');
+      }
+    });
+    
     if (intervalId) {
       clearInterval(intervalId);
     }
@@ -45,6 +69,13 @@ export function showRPCModal(
 }
 
 export function hideRPCModal(): void {
+  activeCallCount = Math.max(0, activeCallCount - 1);
+  
+  // まだアクティブなコールがある場合は非表示にしない
+  if (activeCallCount > 0) {
+    return;
+  }
+  
   // タイムアウトをクリア
   if (showTimeoutId) {
     clearTimeout(showTimeoutId);
@@ -57,11 +88,21 @@ export function hideRPCModal(): void {
   }
 
   if (modalElement) {
-    modalElement.remove();
-    modalElement = null;
+    // フェードアウト開始
+    modalElement.classList.remove('show');
+    modalElement.classList.add('hide');
+    
+    // フェードアウト完了後に削除
+    hideTimeoutId = setTimeout(() => {
+      if (modalElement) {
+        modalElement.remove();
+        modalElement = null;
+      }
+      currentRPCCall = null;
+    }, HIDE_DELAY_MS);
+  } else {
+    currentRPCCall = null;
   }
-
-  currentRPCCall = null;
 }
 
 function createModal(): void {
